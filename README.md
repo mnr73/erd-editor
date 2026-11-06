@@ -6,6 +6,10 @@ Local, cross-platform ERD editor (Tauri 2 + Vue 3). Opens one `*.erd.json` file 
 ```
 src/            Vue app (JS, no auto-import; icons only via src/icons.js)
 src/locales/    en.json (default), fa.json
+src/model/      file format core: validate, migrate, serialize, history (pure JS, no Vue)
+src/stores/     Pinia document store (all mutations, undo/redo)
+schema/         erd.schema.json (JSON Schema of the file), spec in docs/FORMAT.md
+tests/          vitest
 src-tauri/      Rust shell (single-instance, initial_file, dialog)
 mime/           shared-mime-info type for *.erd.json
 design/         Claude Design mockups (mockups/ is git-ignored, extracted/ is the readable copy)
@@ -16,6 +20,7 @@ design/         Claude Design mockups (mockups/ is git-ignored, extracted/ is th
 npm install
 npm run tauri dev        # window + HMR (vite on :1421)
 npm run dev              # UI only in a browser
+npm test                 # vitest
 npm run lint && npm run format
 npm run tauri build -- --bundles deb,appimage
 ```

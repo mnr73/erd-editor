@@ -16,14 +16,14 @@
 
 ## مراحل (بعد از هر مرحله کامیت)
 
-### ۱. اسکلت پروژه و وابستگی‌ها ✅ (انجام شد)
+### ۱. اسکلت پروژه و وابستگی‌ها ✅
 - `create-tauri-app` (Vue + JS) → Tauri 2، Vite، Tailwind 4، Pinia، vue-i18n، plugin-fs/dialog/cli.
 - فونت‌های محلی، ESLint/Prettier طبق سبک erp-front.
 - capabilities حداقلی، CSP، پنجره‌ی خالی.
 - **file association** (`.erd.json`، mime مخصوص) در `tauri.conf.json` برای deb/AppImage و دریافت مسیر فایل از argv.
 - خروجی: `npm run tauri dev` پنجره‌ی خالی باز کند.
 
-### ۲. مدل داده و فرمت فایل (بدون UI)
+### ۲. مدل داده و فرمت فایل (بدون UI) ✅ (انجام شد)
 - spec فرمت در `docs/FORMAT.md` + `erd.schema.json`، فیلد `version`، id پایدار، حفظ کلیدهای ناشناخته.
 - store (Pinia): tables, columns, refs, groups, notes, palette, view.
 - validate/migrate هنگام باز کردن؛ undo/redo (command stack یا snapshot).

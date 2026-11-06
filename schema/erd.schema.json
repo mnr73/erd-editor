@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://shivadev.ir/schemas/erd-editor/v1.json",
+  "title": "ERD Editor file (v1)",
+  "type": "object",
+  "required": ["format", "version"],
+  "properties": {
+    "format": { "const": "erd-editor" },
+    "version": { "type": "integer", "minimum": 1 },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "dbType": { "enum": ["generic", "mysql", "postgres", "sqlite", "mssql"] },
+        "note": { "type": "string" }
+      }
+    },
+    "palette": { "type": "array", "items": { "$ref": "#/definitions/color" } },
+    "tables": { "type": "array", "items": { "$ref": "#/definitions/table" } },
+    "refs": { "type": "array", "items": { "$ref": "#/definitions/ref" } },
+    "groups": { "type": "array", "items": { "$ref": "#/definitions/group" } },
+    "enums": { "type": "array", "items": { "$ref": "#/definitions/enum" } },
+    "view": {
+      "type": "object",
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "zoom": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    }
+  },
+  "definitions": {
+    "id": { "type": "string", "minLength": 1 },
+    "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+    "cardinality": { "enum": ["1", "0..1", "1..*", "0..*"] },
+    "action": { "enum": ["cascade", "restrict", "set null", "set default", "no action"] },
+    "table": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "name": { "type": "string" },
+        "schema": { "type": "string" },
+        "color": { "oneOf": [{ "$ref": "#/definitions/color" }, { "type": "null" }] },
+        "note": { "type": "string" },
+        "noteVisible": { "type": "boolean" },
+        "groupId": { "type": ["string", "null"] },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "collapsed": { "type": "boolean" },
+        "columns": { "type": "array", "items": { "$ref": "#/definitions/column" } },
+        "indexes": { "type": "array", "items": { "$ref": "#/definitions/index" } }
+      }
+    },
+    "column": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "pk": { "type": "boolean" },
+        "unique": { "type": "boolean" },
+        "notNull": { "type": "boolean" },
+        "increment": { "type": "boolean" },
+        "default": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "index": {
+      "type": "object",
+      "required": ["id", "columns"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "name": { "type": "string" },
+        "columns": { "type": "array", "items": { "type": "string" } },
+        "unique": { "type": "boolean" },
+        "type": { "enum": ["btree", "hash", null] }
+      }
+    },
+    "refEnd": {
+      "type": "object",
+      "required": ["table", "columns"],
+      "properties": {
+        "table": { "type": "string" },
+        "columns": { "type": "array", "items": { "type": "string" } },
+        "cardinality": { "$ref": "#/definitions/cardinality" }
+      }
+    },
+    "ref": {
+      "type": "object",
+      "required": ["id", "from", "to"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "label": { "type": "string" },
+        "from": { "$ref": "#/definitions/refEnd" },
+        "to": { "$ref": "#/definitions/refEnd" },
+        "onDelete": { "oneOf": [{ "$ref": "#/definitions/action" }, { "type": "null" }] },
+        "onUpdate": { "oneOf": [{ "$ref": "#/definitions/action" }, { "type": "null" }] },
+        "note": { "type": "string" }
+      }
+    },
+    "group": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "name": { "type": "string" },
+        "color": { "oneOf": [{ "$ref": "#/definitions/color" }, { "type": "null" }] },
+        "note": { "type": "string" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "w": { "type": "number", "minimum": 120 },
+        "h": { "type": "number", "minimum": 120 },
+        "collapsed": { "type": "boolean" }
+      }
+    },
+    "enum": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "name": { "type": "string" },
+        "note": { "type": "string" },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": { "name": { "type": "string" }, "note": { "type": "string" } }
+          }
+        }
+      }
+    }
+  }
+}
