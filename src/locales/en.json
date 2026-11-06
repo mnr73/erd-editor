@@ -69,9 +69,9 @@
     "pan": "Pan",
     "table": "New table",
     "relation": "Relationship",
-    "legend": "Notation legend",
     "section": "Section",
-    "note": "Sticky note"
+    "note": "Sticky note",
+    "help": "Help"
   },
   "canvas": {
     "columnsCount": "{n} columns",
@@ -117,7 +117,8 @@
     "groupTables": "Group into section",
     "newSection": "New section here",
     "deleteSection": "Delete section (keeps tables)",
-    "newNote": "New note here"
+    "newNote": "New note here",
+    "exportSelection": "Export selection…"
   },
   "file": {
     "save": "Save",
@@ -186,15 +187,6 @@
     "label": "Label",
     "labelPlaceholder": "e.g. places",
     "edit": "Edit relationship"
-  },
-  "legend": {
-    "title": "Relationship notation",
-    "one": "Exactly one",
-    "zeroOne": "Zero or one",
-    "oneMany": "One or many",
-    "zeroMany": "Zero or many",
-    "read": "Each end says how many rows of THAT table can match one row on the other end. N:1 means many orders belong to one user.",
-    "how": "Drag from the dot on a column row to a column of another table to connect them. Double-click a line to edit it."
   },
   "section": {
     "name": "Section name",
@@ -274,5 +266,280 @@
     "color": "Color",
     "width": "Width",
     "height": "Height"
+  },
+  "export": {
+    "title": "Export",
+    "formats": "Formats",
+    "dialect": "Database",
+    "theme": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "scale": "Scale",
+    "guide": "Include the “how to read” guide",
+    "lines": "{n} lines",
+    "rendering": "Rendering…",
+    "copy": "Copy",
+    "copied": "Copied to clipboard",
+    "copyFailed": "Could not copy",
+    "save": "Save {ext}…",
+    "saved": "Saved {name}",
+    "downloaded": "Downloaded {name}",
+    "failed": "Could not save: {reason}",
+    "format": {
+      "sql": "SQL",
+      "dbml": "DBML",
+      "agent": "For an AI agent",
+      "svg": "SVG image",
+      "png": "PNG image"
+    },
+    "hint": {
+      "sql": "CREATE TABLE, indexes, foreign keys for one database",
+      "dbml": "Text for dbdiagram.io and DBML tools",
+      "agent": "Markdown with a guide, all notes and open points",
+      "svg": "Vector picture of the whole diagram",
+      "png": "Picture of the whole diagram"
+    },
+    "warn": {
+      "ref-skipped": "A relationship points at a missing table or column and was left out.",
+      "ref-many-to-many": "Many-to-many between {from} and {to} needs a junction table; it was left out.",
+      "enum-as-check": "{table}.{column}: ENUM is written as varchar + CHECK (this database has no ENUM).",
+      "unsigned-dropped": "{table}.{column}: UNSIGNED is not supported here and was dropped.",
+      "array-unsupported": "{table}.{column}: arrays are not supported here; written as a plain type.",
+      "autoincrement-dropped": "{table}.{column}: auto-increment needs an INTEGER primary key in SQLite and was dropped."
+    },
+    "scope": "Scope",
+    "scopeAll": "Whole board",
+    "scopeSelection": "Selection ({n})",
+    "cut": "{n} line(s) to tables outside the selection are left out"
+  },
+  "import": {
+    "title": "Import SQL",
+    "hint": "Paste CREATE TABLE statements (a schema dump from mysqldump, pg_dump, SQLite or SQL Server) or choose a .sql file. It opens as a new board; your current board is not changed.",
+    "chooseFile": "Choose .sql file…",
+    "dialect": "Dialect",
+    "detected": "detected",
+    "sql": "SQL text",
+    "placeholder": "CREATE TABLE users (\n  id bigint PRIMARY KEY,\n  email varchar(255) NOT NULL\n);",
+    "waiting": "Paste SQL on the left to see what will be imported.",
+    "found": "{tables} tables, {refs} relationships",
+    "noTables": "No CREATE TABLE found",
+    "skipped": "{n} statements skipped (data, views, …)",
+    "open": "Open as new board",
+    "readFailed": "Could not read the file: {reason}",
+    "warn": {
+      "column-without-type": "{table}.{column}: type not recognised, left empty.",
+      "ref-table-missing": "Relationship {from} → {to}: a table is not in the file.",
+      "ref-column-missing": "Relationship {from} → {to}: columns not found.",
+      "index-table-missing": "Index {index}: table {table} is not in the file.",
+      "index-column-missing": "An index on {table} refers to a missing column.",
+      "duplicate-table": "Table {table} appears twice; the first one is kept.",
+      "table-skipped": "{table}: CREATE TABLE … AS / LIKE is not supported.",
+      "generated-column-skipped": "{table}.{column}: generated column expression skipped.",
+      "constraint-skipped": "{table}: a {kind} constraint was skipped.",
+      "type-kept-as-text": "{type} columns are kept as written.",
+      "statement-failed": "A statement could not be read: {message}",
+      "index-skipped": "Index {index} skipped."
+    }
+  },
+  "help": {
+    "title": "Help",
+    "footer": "Press ? or F1 to open this help anywhere.",
+    "tab": {
+      "icons": "Icons & notation",
+      "about": "About the app",
+      "shortcuts": "Shortcuts & tips"
+    },
+    "group": {
+      "files": "Files and tabs",
+      "tools": "Tools",
+      "view": "View and navigation",
+      "edit": "Editing",
+      "columns": "Columns (select a row first)",
+      "mouse": "Mouse"
+    },
+    "icons": {
+      "relations": "Relationship lines (Crow's Foot)",
+      "relationsIntro": "Each end of a line says how many rows of THAT table can match one row of the table on the other end.",
+      "end": {
+        "one": "Exactly one",
+        "zeroOne": "Zero or one",
+        "oneMany": "One or many",
+        "zeroMany": "Zero or many"
+      },
+      "kinds": "Reading a whole line",
+      "kind": {
+        "1:1": "One-to-one: one row on each side",
+        "1:N": "One-to-many: one row here, many there",
+        "N:1": "Many-to-one: many orders belong to one user (the usual foreign key)",
+        "N:M": "Many-to-many: needs a junction table"
+      },
+      "readHow": "The foreign key lives on the “many” end. Drag from the dot at the edge of a column row to a column of another table to connect them; double-click a line to edit it.",
+      "columns": "On a column row",
+      "col": {
+        "key": "Primary key (a composite key marks several columns)",
+        "fk": "Foreign key: this column points to another table",
+        "unique": "Unique: no two rows share this value",
+        "increment": "Auto-increment: the database numbers it",
+        "default": "Has a default value (hover to read it)",
+        "index": "Part of an index (hover to see which)",
+        "comment": "Has a note (hover to read it)",
+        "nullable": "A “?” after the type means the column may be empty (NULL)"
+      },
+      "controls": "Controls that appear on hover",
+      "ctl": {
+        "dragHandle": "Drag to reorder the column",
+        "more": "Open the full column editor",
+        "insert": "Insert a column above or below this row",
+        "collapse": "Collapse / expand the table",
+        "tableNote": "The table has a note",
+        "linkDot": "Drag from this dot onto a column to draw a relationship"
+      },
+      "tools": "Tools",
+      "tool": {
+        "table": "New table",
+        "section": "Section: a frame that groups tables",
+        "note": "Sticky note anywhere on the board",
+        "relation": "Relationship"
+      },
+      "kindsNote": "These samples show the strict form (a row is always required). The editor also offers the optional forms: a circle means “zero”, so a line from “zero or many” to “exactly one” is a normal optional foreign key."
+    },
+    "about": {
+      "intro": "ERD Editor draws database diagrams on an infinite canvas. You describe tables, columns, keys and relationships once; the program draws them, checks them and turns them into SQL, DBML, images and a briefing for an AI agent.",
+      "file": "Everything lives in one .erd.json file next to your project: it is the only source of truth. SQL, DBML, PNG and SVG are generated from it and never edited by hand.",
+      "group": {
+        "draw": "Design",
+        "organize": "Organize",
+        "share": "Share and exchange"
+      }
+    },
+    "f": {
+      "tables": {
+        "title": "Tables",
+        "text": "Double-click the canvas (or press T) to add a table. Drag to move; a table grows with its longest name."
+      },
+      "columns": {
+        "title": "Columns",
+        "text": "Type a name and press Tab for the next column. Reorder with the drag handle or Alt+↑/↓; select several rows to move or delete them together."
+      },
+      "types": {
+        "title": "Column types",
+        "text": "Pick a type from the list and fill its parameters (length, precision, scale, enum values). Types that your database does not have are hidden; anything unusual stays editable as plain text."
+      },
+      "relations": {
+        "title": "Relationships",
+        "text": "Drag from a column's dot to another table. Set both cardinalities, ON DELETE / ON UPDATE and a label; parallel lines are separated automatically."
+      },
+      "indexes": {
+        "title": "Indexes",
+        "text": "Select several columns and press Ctrl+I for a composite index. Choose the column order, unique and the index type."
+      },
+      "sections": {
+        "title": "Sections",
+        "text": "A section is a frame that groups tables by area. A table belongs to it only while it lies completely inside; moving a section moves everything inside."
+      },
+      "notes": {
+        "title": "Notes",
+        "text": "Every table, column and section can carry a note, and sticky notes can sit anywhere with their own color. Notes travel into the exports."
+      },
+      "inspector": {
+        "title": "Inspector",
+        "text": "The side panel edits whatever is selected: table, columns, relationships, section or sticky note. Toggle it with Ctrl+\\."
+      },
+      "search": {
+        "title": "Search",
+        "text": "Ctrl+K finds tables, columns, sections, lines and notes by name, type or text, and jumps to the result."
+      },
+      "tabs": {
+        "title": "Tabs and undo",
+        "text": "Open several boards in tabs like an editor. Undo and redo cover everything, including moves and resizes."
+      },
+      "file": {
+        "title": "One file",
+        "text": "Open with from your file manager, or open and save from inside. Saving is atomic: a crash never leaves half a file."
+      },
+      "exportSql": {
+        "title": "Export SQL",
+        "text": "CREATE TABLE, indexes and foreign keys for MySQL, PostgreSQL, SQLite, SQL Server or plain ANSI. What a database cannot express is reported, not dropped silently."
+      },
+      "exportDbml": {
+        "title": "Export DBML",
+        "text": "Text for dbdiagram.io and other DBML tools, including colors, sections and notes."
+      },
+      "exportImage": {
+        "title": "Export image",
+        "text": "PNG or SVG of the whole board, or only of the tables and sections you selected, in dark or light."
+      },
+      "exportAgent": {
+        "title": "For an AI agent",
+        "text": "A Markdown briefing: a short how-to-read guide, every table with its notes, relationships and a list of open points."
+      },
+      "importSql": {
+        "title": "Import SQL",
+        "text": "Paste or choose a schema dump (mysqldump, pg_dump, SQLite, SQL Server). It opens as a new board and tables are laid out near their relatives."
+      }
+    },
+    "tip": {
+      "alt": "Select a column row, then [[Alt+↑]] / [[Alt+↓]] moves it (or the whole selection) up and down; keep pressing to keep moving. Inside the column editor the same keys jump to the previous / next column.",
+      "dblclick": "Double-click empty canvas for a table, a table name or a column to rename it, a line to edit it, a section title to rename it, a sticky note to type in it.",
+      "tab": "While naming a column, [[Tab]] saves it and starts the next one; [[Tab]] on the last row adds a new column.",
+      "selection": "Right-click a selection for “Export selection…”: only the chosen tables, a whole section or a sticky note go into the image or file.",
+      "dots": "The round dots on a row's edge draw relationships; the + dots on a row's border insert a column there.",
+      "color": "Header colors and section colors come from one palette; add your own colors and they are saved in the file.",
+      "undo": "[[Ctrl+Z]] / [[Ctrl+Y]] (or [[Ctrl+Shift+Z]]) undo and redo every change, including drags and resizes; one drag is one step.",
+      "persian": "The interface can be switched between Persian and English at the top right. Names, types and numbers inside the diagram always stay Latin."
+    },
+    "s": {
+      "new": "New board in a new tab",
+      "open": "Open a file",
+      "save": "Save",
+      "saveAs": "Save as…",
+      "closeTab": "Close the tab",
+      "nextTab": "Next / previous tab",
+      "gotoTab": "Go to tab 1–8 (9 = last)",
+      "export": "Export (selection if something is selected)",
+      "import": "Import SQL",
+      "select": "Select tool",
+      "pan": "Pan tool (or hold Space and drag)",
+      "table": "New table tool",
+      "section": "Section tool (drag a rectangle)",
+      "note": "Sticky note tool",
+      "relation": "Relationship tool",
+      "cancel": "Back to the select tool / clear the selection",
+      "search": "Search the board",
+      "inspector": "Show / hide the Inspector",
+      "help": "This help",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "zoomReset": "Zoom to 100%",
+      "fitAll": "Fit the whole board",
+      "fitSelection": "Fit the selection",
+      "wheel": "Scroll / scroll sideways / zoom",
+      "undo": "Undo",
+      "redo": "Redo",
+      "selectAll": "Select everything",
+      "duplicate": "Duplicate the selected tables / notes",
+      "delete": "Delete the selection",
+      "rename": "Rename the selected table or section",
+      "groupTables": "Wrap the selected tables in a section",
+      "indexes": "Index on the selected columns (or the table's indexes)",
+      "noteOf": "Note of the selected table / section (or a new sticky note)",
+      "colMove": "Move to the previous / next column",
+      "colExtend": "Extend the column selection",
+      "colReorder": "Move the selected column(s) up / down",
+      "colPick": "Select a column / add to / select a range",
+      "colDelete": "Delete the selected columns",
+      "colRename": "Rename the column",
+      "colTab": "Rename the next / previous column",
+      "colEditor": "Previous / next column while its editor is open",
+      "colClear": "Clear the column selection",
+      "dblCanvas": "New table here",
+      "marquee": "Select by dragging a box on empty canvas",
+      "moreSelect": "Add to / remove from the selection",
+      "linkDrag": "Draw a relationship from a column's dot",
+      "lineEdit": "Edit a relationship line",
+      "middleTab": "Close a tab",
+      "rightClick": "Context menu on anything"
+    },
+    "tipsTitle": "Tips that save time"
   }
 }

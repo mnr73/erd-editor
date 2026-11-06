@@ -25,6 +25,7 @@ import {
   IconToolNote,
   IconToolSection,
   IconToolTable,
+  IconUpload,
 } from "@/icons";
 import {
   MIN_GROUP_SIZE,
@@ -604,6 +605,11 @@ const freeNoteItems = () => [
   { id: "fn-edit", label: t("freeNote.edit"), icon: IconEdit, shortcut: "F2" },
   { id: "fn-color", label: t("menu.color"), icon: IconNote },
   {
+    id: "export-selection",
+    label: t("menu.exportSelection"),
+    icon: IconUpload,
+  },
+  {
     id: "fn-duplicate",
     label: t("common.duplicate"),
     icon: IconCopy,
@@ -655,6 +661,11 @@ const tableItems = (many) => [
     disabled: many,
   },
   { id: "group-tables", label: t("menu.groupTables"), icon: IconToolSection },
+  {
+    id: "export-selection",
+    label: t("menu.exportSelection"),
+    icon: IconUpload,
+  },
   {
     id: "duplicate",
     label: t("common.duplicate"),
@@ -757,6 +768,11 @@ const groupItems = () => [
   },
   { id: "group-color", label: t("menu.color"), icon: IconNote },
   { id: "group-note", label: t("menu.note"), icon: IconNote },
+  {
+    id: "export-selection",
+    label: t("menu.exportSelection"),
+    icon: IconUpload,
+  },
   { separator: true },
   {
     id: "group-delete",
@@ -826,6 +842,8 @@ function onMenuSelect(item) {
       editor.setSelection([id]);
       return editor.startRenameSoon({ kind: "group", groupId: id });
     }
+    case "export-selection":
+      return editor.openExport("selection");
     case "new-note":
       return placeNote(target.point);
     case "fn-edit":
@@ -1193,7 +1211,7 @@ function onKeyDown(e) {
     if (only && !doc.doc.notes.some((n) => n.id === only)) openNote(only);
     else editor.setTool("note");
   } else if (!mod && e.key === "?") {
-    editor.legendOpen = !editor.legendOpen;
+    editor.toggleHelp();
   } else if (!mod && !e.shiftKey && k === "r") {
     editor.setTool("relation");
   } else if (!mod && !e.shiftKey && k === "v") {

@@ -67,3 +67,41 @@ export async function onWindowCloseRequested(handler) {
         if (await handler()) await win.destroy();
     });
 }
+
+/** Native "save" dialog for an export. `ext` is one of sql | dbml | md | svg | png. */
+export async function pickExportPath(defaultName, ext) {
+    if (!isTauri()) return null;
+    const names = {
+        sql: "SQL",
+        dbml: "DBML",
+        md: "Markdown",
+        svg: "SVG",
+        png: "PNG",
+    };
+    const r = await save({
+        filters: [{ name: names[ext] ?? ext, extensions: [ext] }],
+        defaultPath: `${defaultName}.${ext}`,
+    });
+    if (!r) return null;
+    return r.toLowerCase().endsWith(`.${ext}`) ? r : `${r}.${ext}`;
+}
+
+/** Native "open" dialog for a SQL file to import. Returns a path or null. */
+export async function pickImportPath() {
+    if (!isTauri()) return null;
+    const r = await open({
+        multiple: false,
+        directory: false,
+        filters: [{ name: "SQL", extensions: ["sql", "ddl", "txt"] }],
+    });
+    return r ? [r].flat()[0] : null;
+}
+
+export const writeExport = (path, contents) =>
+    invoke("write_export", { path, contents });
+/** `bytes`: Uint8Array. Sent as a raw body (not a JSON number array); the path goes in a header. */
+export const writeExportBytes = (path, bytes) =>
+    invoke("write_export_bytes", bytes, {
+        headers: { path: encodeURIComponent(path) },
+    });
+export const readImport = (path) => invoke("read_import", { path });

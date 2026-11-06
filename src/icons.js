@@ -129,7 +129,9 @@ export { default as IconFile } from "~icons/hugeicons/file-01";
 export { default as IconRelationSwap } from "~icons/hugeicons/arrow-left-right";
 
 /** Notation legend toggle (the "?" in the tool rail) */
-export { default as IconLegend } from "~icons/hugeicons/help-circle";
 
 /** Toggle the Inspector side panel; flips in RTL via `rtl:-scale-x-100` */
 export { default as IconInspector } from "~icons/hugeicons/sidebar-right";
+export { default as IconImport } from "~icons/hugeicons/file-import";
+export { default as IconDownload } from "~icons/hugeicons/download-01";
+export { default as IconUpload } from "~icons/hugeicons/upload-01";

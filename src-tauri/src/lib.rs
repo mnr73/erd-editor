@@ -25,24 +25,31 @@ fn check_path(path: &str) -> Result<(), String> {
     }
 }
 
-/// Read an ERD file as UTF-8 text.
-#[tauri::command]
-fn read_erd(path: String) -> Result<String, String> {
-    check_path(&path)?;
-    std::fs::read_to_string(&path).map_err(|e| e.to_string())
+/// Extensions the export / import commands may touch. They are separate from `.erd.json` so that
+/// "export" can never overwrite a document by accident, and neither list allows executables.
+const EXPORT_EXTS: [&str; 5] = ["sql", "dbml", "md", "svg", "png"];
+const IMPORT_EXTS: [&str; 3] = ["sql", "ddl", "txt"];
+
+fn has_ext(path: &str, allowed: &[&str]) -> bool {
+    std::path::Path::new(path)
+        .extension()
+        .and_then(|e| e.to_str())
+        .map(|e| allowed.contains(&e.to_lowercase().as_str()))
+        .unwrap_or(false)
 }
 
 /// Write atomically: temp file next to the target, flushed, then renamed over it.
-/// A crash or full disk never leaves a half-written document.
-#[tauri::command]
-fn write_erd(path: String, contents: String) -> Result<(), String> {
+fn atomic_write(path: &str, contents: &[u8]) -> Result<(), String> {
     use std::io::Write;
-    check_path(&path)?;
-    let target = std::path::Path::new(&path);
-    let tmp = target.with_extension(format!("json.{}.tmp", std::process::id()));
+    let target = std::path::Path::new(path);
+    let name = target
+        .file_name()
+        .map(|n| n.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    let tmp = target.with_file_name(format!(".{name}.{}.tmp", std::process::id()));
     let result = (|| -> std::io::Result<()> {
         let mut f = std::fs::File::create(&tmp)?;
-        f.write_all(contents.as_bytes())?;
+        f.write_all(contents)?;
         f.sync_all()?;
         std::fs::rename(&tmp, target)
     })();
@@ -50,6 +57,80 @@ fn write_erd(path: String, contents: String) -> Result<(), String> {
         let _ = std::fs::remove_file(&tmp);
     }
     result.map_err(|e| e.to_string())
+}
+
+/// Save exported text (DBML, SQL, Markdown, SVG).
+#[tauri::command]
+fn write_export(path: String, contents: String) -> Result<(), String> {
+    if !has_ext(&path, &EXPORT_EXTS) {
+        return Err(format!("export files must end in .{}", EXPORT_EXTS.join(", .")));
+    }
+    atomic_write(&path, contents.as_bytes())
+}
+
+/// Percent-decoding of the path header (a header must be ASCII, a path may be Persian).
+fn percent_decode(s: &str) -> Option<String> {
+    let b = s.as_bytes();
+    let mut out = Vec::with_capacity(b.len());
+    let mut i = 0;
+    while i < b.len() {
+        if b[i] == b'%' {
+            let hex = std::str::from_utf8(b.get(i + 1..i + 3)?).ok()?;
+            out.push(u8::from_str_radix(hex, 16).ok()?);
+            i += 3;
+        } else {
+            out.push(b[i]);
+            i += 1;
+        }
+    }
+    String::from_utf8(out).ok()
+}
+
+/// Save exported bytes (PNG). The body is the raw file, the target path travels in the `path`
+/// header, so a large image is not turned into a JSON array of numbers.
+#[tauri::command]
+fn write_export_bytes(request: tauri::ipc::Request<'_>) -> Result<(), String> {
+    let tauri::ipc::InvokeBody::Raw(data) = request.body() else {
+        return Err("expected a raw body".into());
+    };
+    let path = request
+        .headers()
+        .get("path")
+        .and_then(|v| v.to_str().ok())
+        .and_then(percent_decode)
+        .ok_or("missing path header")?;
+    if !has_ext(&path, &EXPORT_EXTS) {
+        return Err(format!("export files must end in .{}", EXPORT_EXTS.join(", .")));
+    }
+    atomic_write(&path, data)
+}
+
+/// Read a SQL file chosen for import (at most 20 MB, UTF-8; a UTF-16 / odd encoding is reported).
+#[tauri::command]
+fn read_import(path: String) -> Result<String, String> {
+    if !has_ext(&path, &IMPORT_EXTS) {
+        return Err(format!("only .{} files can be imported", IMPORT_EXTS.join(", .")));
+    }
+    let meta = std::fs::metadata(&path).map_err(|e| e.to_string())?;
+    if meta.len() > 20 * 1024 * 1024 {
+        return Err("file is larger than 20 MB".into());
+    }
+    let bytes = std::fs::read(&path).map_err(|e| e.to_string())?;
+    String::from_utf8(bytes).map_err(|_| "file is not UTF-8 text".to_string())
+}
+
+/// Read an ERD file as UTF-8 text.
+#[tauri::command]
+fn read_erd(path: String) -> Result<String, String> {
+    check_path(&path)?;
+    std::fs::read_to_string(&path).map_err(|e| e.to_string())
+}
+
+/// A crash or full disk never leaves a half-written document.
+#[tauri::command]
+fn write_erd(path: String, contents: String) -> Result<(), String> {
+    check_path(&path)?;
+    atomic_write(&path, contents.as_bytes())
 }
 
 pub fn run() {
@@ -65,7 +146,14 @@ pub fn run() {
             }
         }))
         .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![initial_file, read_erd, write_erd])
+        .invoke_handler(tauri::generate_handler![
+            initial_file,
+            read_erd,
+            write_erd,
+            write_export,
+            write_export_bytes,
+            read_import
+        ])
         .run(tauri::generate_context!())
         .expect("error while running ERD Editor");
 }
@@ -74,8 +162,12 @@ pub fn run() {
 mod tests {
     use super::*;
 
+    /// Tests run in parallel: each file name gets a directory of its own, so one test never sees
+    /// another's in-flight temp file.
     fn scratch(name: &str) -> String {
-        let dir = std::env::temp_dir().join(format!("erd-test-{}", std::process::id()));
+        let dir = std::env::temp_dir()
+            .join(format!("erd-test-{}", std::process::id()))
+            .join(name.replace('.', "_"));
         std::fs::create_dir_all(&dir).unwrap();
         dir.join(name).to_string_lossy().into_owned()
     }
@@ -109,6 +201,44 @@ mod tests {
         let bad = format!("{p}/nested.erd.json");
         assert!(write_erd(bad, "new".into()).is_err());
         assert_eq!(read_erd(p).unwrap(), "old");
+    }
+
+    #[test]
+    fn export_writes_only_known_extensions_and_no_temp_files() {
+        let p = scratch("out.sql");
+        write_export(p.clone(), "CREATE TABLE a (x int);".into()).unwrap();
+        assert_eq!(std::fs::read_to_string(&p).unwrap(), "CREATE TABLE a (x int);");
+        assert!(write_export(scratch("run.sh"), "x".into()).is_err());
+        assert!(write_export(scratch("noext"), "x".into()).is_err());
+        assert!(write_export(scratch("a.erd.json"), "x".into()).is_err());
+        assert!(write_export(scratch("up.PNG"), "x".into()).is_ok());
+        let dir = std::path::Path::new(&p).parent().unwrap();
+        let tmp = std::fs::read_dir(dir)
+            .unwrap()
+            .filter(|e| e.as_ref().unwrap().file_name().to_string_lossy().ends_with(".tmp"))
+            .count();
+        assert_eq!(tmp, 0);
+    }
+
+    #[test]
+    fn import_reads_sql_only_and_reports_bad_encoding() {
+        let p = scratch("in.sql");
+        write_export(p.clone(), "select 1;".into()).unwrap();
+        assert_eq!(read_import(p).unwrap(), "select 1;");
+        assert!(read_import("/etc/passwd".into()).is_err());
+        let bin = scratch("bin.txt");
+        atomic_write(&bin, &[0xff, 0xfe, 0x00]).unwrap();
+        assert!(read_import(bin).unwrap_err().contains("UTF-8"));
+        assert!(read_import(scratch("missing.sql")).is_err());
+    }
+
+    #[test]
+    fn decodes_the_path_header() {
+        assert_eq!(percent_decode("%2Ftmp%2Fa%20b.png").as_deref(), Some("/tmp/a b.png"));
+        assert_eq!(percent_decode("%2Ftmp%2F%D9%86.svg").as_deref(), Some("/tmp/ن.svg"));
+        assert_eq!(percent_decode("plain").as_deref(), Some("plain"));
+        assert_eq!(percent_decode("%zz"), None);
+        assert_eq!(percent_decode("%4"), None);
     }
 
     #[test]

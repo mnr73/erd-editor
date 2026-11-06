@@ -181,3 +181,18 @@ documentation data: exporters ignore the position, the agent export includes the
 
 `notes` is optional and omitted when empty, so files written before this existed are unchanged. Like
 tables, a note inside a section that is moved moves with it (it must lie completely inside).
+
+## Exports and import
+
+The `.erd.json` file is the only source of truth; everything below is generated from it.
+
+| Output            | What is kept                                                                                                                                          | What is left out                                                          |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| SQL (per dialect) | tables, columns, types, PK, NOT NULL, UNIQUE, defaults, auto-increment, indexes (order, unique, type), foreign keys with ON DELETE / UPDATE, comments | positions, colors, sections, free notes; many-to-many refs (no single FK) |
+| DBML              | all of the above plus `headercolor`, sections as `TableGroup`, free notes as `Note`                                                                   | positions, sizes                                                          |
+| Agent Markdown    | everything with its notes, sections, a how-to-read guide, open points                                                                                 | positions, colors                                                         |
+| SVG / PNG         | what the canvas shows                                                                                                                                 | nothing                                                                   |
+
+Anything a database cannot express is converted and reported, never dropped silently (ENUM → `varchar` + `CHECK` outside MySQL, `unsigned` outside MySQL, arrays outside PostgreSQL).
+
+SQL import reads `CREATE TABLE` (columns, types, `NOT NULL`, `DEFAULT`, auto-increment / identity / serial, `PRIMARY KEY`, `UNIQUE`, inline and table-level foreign keys, MySQL `COMMENT`), `CREATE [UNIQUE] INDEX`, `ALTER TABLE … ADD FOREIGN KEY / PRIMARY KEY / UNIQUE` and `ALTER COLUMN … SET DEFAULT`, `COMMENT ON`, `CREATE TYPE … AS ENUM`. Data, views, triggers and grants are skipped and counted. A foreign key becomes a relationship: `0..*` on the FK side (`0..1` when the FK is unique), `1` on the referenced side (`0..1` when the FK column is nullable).

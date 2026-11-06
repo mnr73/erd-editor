@@ -7,7 +7,7 @@ import { useCanvasCamera } from "@/canvas/useCanvasCamera";
 import { useTheme } from "@/composables/useTheme";
 import {
   IconFit,
-  IconLegend,
+  IconHelp,
   IconThemeDark,
   IconThemeLight,
   IconToolNote,
@@ -99,13 +99,13 @@ const { theme, toggleTheme } = useTheme();
 
     <UiIconButton
       size="lg"
-      :label="t('tools.legend')"
+      :label="t('tools.help')"
       shortcut="?"
       tooltip-side="inline-end"
-      :active="editor.legendOpen"
-      @click="editor.legendOpen = !editor.legendOpen"
+      :active="editor.helpOpen"
+      @click="editor.toggleHelp()"
     >
-      <IconLegend class="size-[18px]" />
+      <IconHelp class="size-[18px]" />
     </UiIconButton>
 
     <div

@@ -2,10 +2,12 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
 import AppAskDialog from "@/components/AppAskDialog.vue";
+import AppExportDialog from "@/components/AppExportDialog.vue";
+import AppHelpDialog from "@/components/AppHelpDialog.vue";
+import AppImportDialog from "@/components/AppImportDialog.vue";
 import AppInspector from "@/components/AppInspector.vue";
 import AppTabBar from "@/components/AppTabBar.vue";
 import AppTitleBar from "@/components/AppTitleBar.vue";
-import RelationLegend from "@/components/RelationLegend.vue";
 import StartPage from "@/components/StartPage.vue";
 import ToolRail from "@/components/ToolRail.vue";
 import UiToastHost from "@/components/ui/UiToastHost.vue";
@@ -36,6 +38,12 @@ const titleBar = ref(null);
 
 /** App-wide file shortcuts. They work even while typing (they never insert text). */
 function onKeyDown(e) {
+  if (e.key === "F1") {
+    e.preventDefault();
+    e.stopPropagation();
+    editor.toggleHelp();
+    return;
+  }
   const mod = e.ctrlKey || e.metaKey;
   if (!mod || e.altKey) return;
   const k = e.key.toLowerCase();
@@ -47,6 +55,13 @@ function onKeyDown(e) {
     fn();
   };
   if (k === "k") run(() => titleBar.value?.focusSearch());
+  else if (k === "e" && !e.shiftKey)
+    run(
+      () =>
+        !doc.isFresh &&
+        editor.openExport(editor.selected.size ? "selection" : "all"),
+    );
+  else if (k === "i" && e.shiftKey) run(() => editor.openImport());
   else if (e.key === "\\") run(() => editor.toggleInspector());
   else if (k === "s") run(() => saveActive({ forceDialog: e.shiftKey }));
   else if (k === "o") run(openWithDialog);
@@ -97,14 +112,13 @@ onBeforeUnmount(() => cleanups.forEach((fn) => fn?.()));
       <ToolRail />
       <main class="relative min-w-0 flex-1">
         <EditorCanvas />
-        <RelationLegend
-          v-if="editor.legendOpen"
-          class="absolute bottom-4 inset-s-4 z-20"
-        />
       </main>
       <AppInspector v-if="editor.inspectorOpen" />
     </div>
   </div>
   <AppAskDialog />
+  <AppExportDialog />
+  <AppHelpDialog />
+  <AppImportDialog />
   <UiToastHost />
 </template>

@@ -8,7 +8,7 @@ import UiIconButton from "@/components/ui/UiIconButton.vue";
 import UiSegmented from "@/components/ui/UiSegmented.vue";
 
 import { setLocale } from "@/i18n";
-import { IconInspector } from "@/icons";
+import { IconDownload, IconInspector, IconUpload } from "@/icons";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
 import { splitPath } from "@/utils/path";
@@ -50,6 +50,21 @@ const lang = computed({
     </div>
     <span class="flex-1" />
     <AppSearch ref="search" />
+    <UiIconButton
+      :label="t('import.title')"
+      shortcut="Ctrl+Shift+I"
+      @click="editor.openImport()"
+    >
+      <IconDownload class="size-4" />
+    </UiIconButton>
+    <UiIconButton
+      :label="t('export.title')"
+      shortcut="Ctrl+E"
+      :disabled="doc.isFresh"
+      @click="editor.openExport(editor.selected.size ? 'selection' : 'all')"
+    >
+      <IconUpload class="size-4" />
+    </UiIconButton>
     <UiIconButton
       :label="t('inspector.toggle')"
       shortcut="Ctrl+\\"

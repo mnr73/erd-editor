@@ -38,7 +38,6 @@ export const useEditorStore = defineStore("editor", () => {
     const selectedRefId = ref(null);
     const hoverRefId = ref(null);
     // Relation editor popover: { refId, anchor: {x,y} }
-    const legendOpen = ref(false);
     // Inspector (right panel). When it is open, editing a column / line / note happens there instead
     // of in a popover. `inspectorColumn` = the column expanded in its Columns tab.
     const inspectorOpen = ref(readInspectorOpen());
@@ -157,6 +156,29 @@ export const useEditorStore = defineStore("editor", () => {
         setTimeout(() => startRename(target), 0);
     const stopRename = () => (renaming.value = null);
 
+    // Help dialog (modal): tab = "icons" | "about" | "shortcuts"
+    const helpOpen = ref(false);
+    const helpTab = ref("icons");
+    const openHelp = (tab = null) => {
+        if (tab) helpTab.value = tab;
+        helpOpen.value = true;
+    };
+    const closeHelp = () => (helpOpen.value = false);
+    const toggleHelp = () => (helpOpen.value ? closeHelp() : openHelp());
+
+    // Export / import dialogs (modal, not saved)
+    const exportOpen = ref(false);
+    const importOpen = ref(false);
+    // "selection" = only what is selected (opened from a menu); "all" = the whole board
+    const exportScope = ref("all");
+    const openExport = (scope = "all") => {
+        exportScope.value = scope;
+        exportOpen.value = true;
+    };
+    const closeExport = () => (exportOpen.value = false);
+    const openImport = () => (importOpen.value = true);
+    const closeImport = () => (importOpen.value = false);
+
     // free sticky note whose text is being typed on the canvas (not saved, not undoable)
     const editingNote = ref(null);
     const startNoteEdit = (id) => (editingNote.value = id);
@@ -220,7 +242,6 @@ export const useEditorStore = defineStore("editor", () => {
         columnSelection,
         selectedRefId,
         hoverRefId,
-        legendOpen,
         inspectorOpen,
         inspectorTab,
         inspectorColumn,
@@ -240,6 +261,18 @@ export const useEditorStore = defineStore("editor", () => {
         startRename,
         startRenameSoon,
         stopRename,
+        helpOpen,
+        helpTab,
+        openHelp,
+        closeHelp,
+        toggleHelp,
+        exportOpen,
+        exportScope,
+        importOpen,
+        openExport,
+        closeExport,
+        openImport,
+        closeImport,
         editingNote,
         startNoteEdit,
         startNoteEditSoon,

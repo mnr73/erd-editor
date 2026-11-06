@@ -163,6 +163,22 @@ export const useDocumentStore = defineStore("document", () => {
         return { id: tab.id, issues: result.issues };
     }
 
+    /**
+     * Open an in-memory document (e.g. imported from SQL) as a new, UNSAVED tab: it has no path and
+     * no saved snapshot, so it shows the unsaved dot and closing it asks first. A pristine untitled
+     * tab is reused, like `openText`.
+     */
+    function openDocument(document) {
+        const tab = createTab(document, null, []);
+        tab.savedSnapshot = null;
+        const reuse = isPristine(active.value);
+        if (reuse) tabs.value.splice(tabs.value.indexOf(active.value), 1, tab);
+        else tabs.value.push(tab);
+        activeId.value = tab.id;
+        shown();
+        return tab.id;
+    }
+
     /** Leave the start page and work on the (empty) board of the current tab. */
     function startBoard() {
         if (!active.value.fresh) return;
@@ -687,6 +703,7 @@ export const useDocumentStore = defineStore("document", () => {
         load,
         newDocument,
         openText,
+        openDocument,
         newTab,
         startBoard,
         activateTab,
