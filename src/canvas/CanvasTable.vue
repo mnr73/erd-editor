@@ -78,6 +78,19 @@ const renamingTable = computed(() =>
   editor.isRenaming("table", props.table.id),
 );
 
+/** Tooltip of the index icon: every index the column is part of, with its position in it. */
+function indexTitle(columnId) {
+  return props.table.indexes
+    .filter((ix) => ix.columns.includes(columnId))
+    .map((ix) => {
+      const names = ix.columns.map(
+        (id) => props.table.columns.find((c) => c.id === id)?.name ?? "?",
+      );
+      return `${ix.unique ? "UNIQUE " : ""}INDEX (${names.join(", ")})`;
+    })
+    .join("\n");
+}
+
 const rows = computed(() =>
   props.table.columns.map((c) => {
     const key = `${props.table.id}.${c.id}`;
@@ -93,6 +106,10 @@ const rows = computed(() =>
       def: c.default,
       note: c.note,
       indexed: props.indexKeys.has(key),
+      indexTitle: indexTitle(c.id),
+      composite: props.table.indexes.some(
+        (ix) => ix.columns.length > 1 && ix.columns.includes(c.id),
+      ),
     };
   }),
 );
@@ -423,7 +440,12 @@ function focusRow(id) {
               class="size-3"
               :title="`DEFAULT ${r.def}`"
             />
-            <IconColIndex v-if="r.indexed" class="size-3" title="INDEX" />
+            <IconColIndex
+              v-if="r.indexed"
+              class="size-3"
+              :title="r.indexTitle"
+              :data-composite="r.composite || undefined"
+            />
             <IconColComment v-if="r.note" class="size-3" :title="r.note" />
           </span>
           <span class="shrink-0 text-[10.5px] text-faint"

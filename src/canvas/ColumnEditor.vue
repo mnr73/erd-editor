@@ -7,6 +7,8 @@ import UiButton from "@/components/ui/UiButton.vue";
 import UiCombobox from "@/components/ui/UiCombobox.vue";
 import UiInput from "@/components/ui/UiInput.vue";
 
+import { IconColIndex } from "@/icons";
+import { indexName, indexesOfColumn } from "@/model/indexes";
 import { typeSuggestions } from "@/model/types";
 import { useDocumentStore } from "@/stores/document";
 
@@ -19,7 +21,7 @@ const props = defineProps({
   tableId: { type: String, required: true },
   columnId: { type: String, required: true },
 });
-const emit = defineEmits(["close", "navigate"]);
+const emit = defineEmits(["close", "navigate", "index"]);
 
 const { t } = useI18n();
 const doc = useDocumentStore();
@@ -27,6 +29,9 @@ const doc = useDocumentStore();
 const table = computed(() => doc.tableById.get(props.tableId));
 const column = computed(() =>
   table.value?.columns.find((c) => c.id === props.columnId),
+);
+const columnIndexes = computed(() =>
+  table.value ? indexesOfColumn(table.value, props.columnId) : [],
 );
 const dbType = computed(() => doc.doc.meta.dbType);
 
@@ -149,6 +154,32 @@ function onKey(e) {
         @input="set({ note: $event.target.value }, 'note')"
       />
     </label>
+
+    <div class="flex items-center gap-2" dir="ltr">
+      <span class="w-[70px] shrink-0 text-[11px] text-muted">{{
+        t("index.title")
+      }}</span>
+      <div class="flex min-w-0 flex-1 flex-wrap items-center gap-1">
+        <button
+          v-for="ix in columnIndexes"
+          :key="ix.id"
+          type="button"
+          class="max-w-full truncate rounded-chip border border-line-strong px-1.5 py-px font-mono text-[10.5px] text-fg-soft hover:border-accent hover:text-accent-text"
+          :title="t('index.badge', { names: ix.columns.length })"
+          @click="emit('index', ix.id)"
+        >
+          {{ indexName(table, ix) }}
+        </button>
+        <button
+          type="button"
+          class="inline-flex h-5 items-center gap-1 rounded-chip border border-dashed border-line-strong px-1.5 text-[10.5px] text-muted hover:border-accent hover:text-accent-text"
+          @click="emit('index', null)"
+        >
+          <IconColIndex class="size-3" />
+          {{ t("index.menuTable") }}
+        </button>
+      </div>
+    </div>
 
     <div class="flex items-center">
       <UiButton variant="danger" size="sm" @click="remove">{{

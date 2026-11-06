@@ -20,6 +20,8 @@ export const useEditorStore = defineStore("editor", () => {
     // column popover. Values are ids; null = nothing. Not saved, not undoable.
     const renaming = ref(null); // { kind: "table" | "column", tableId, columnId? }
     const columnPopover = ref(null); // { tableId, columnId }
+    // Index editor popover: { tableId, columns: [columnId] (prefilled new index), focus: indexId|null }
+    const indexEditor = ref(null);
     // Selected columns of ONE table: { tableId, ids: Set, anchor } (anchor = last plain-clicked id,
     // the start of Shift ranges). Replaced, never mutated.
     const columnSelection = shallowRef(null);
@@ -91,6 +93,9 @@ export const useEditorStore = defineStore("editor", () => {
     const openColumnPopover = (tableId, columnId) =>
         (columnPopover.value = { tableId, columnId });
     const closeColumnPopover = () => (columnPopover.value = null);
+    const openIndexEditor = (tableId, { columns = [], focus = null } = {}) =>
+        (indexEditor.value = { tableId, columns, focus });
+    const closeIndexEditor = () => (indexEditor.value = null);
 
     function setViewportSize(w, h) {
         viewportSize.value = { w, h };
@@ -109,6 +114,9 @@ export const useEditorStore = defineStore("editor", () => {
         setViewportSize,
         renaming,
         columnPopover,
+        indexEditor,
+        openIndexEditor,
+        closeIndexEditor,
         columnSelection,
         selectColumn,
         clearColumnSelection,

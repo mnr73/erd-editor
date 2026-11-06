@@ -107,7 +107,8 @@
     "newTable": "New table here",
     "rename": "Rename",
     "color": "Header color",
-    "deleteTable": "Delete table"
+    "deleteTable": "Delete table",
+    "indexes": "Indexes…"
   },
   "file": {
     "save": "Save",
@@ -136,5 +137,30 @@
     "open": "Open file…",
     "openHint": "Pick a .erd.json from disk",
     "browserNote": "File dialogs are only available in the desktop app."
+  },
+  "index": {
+    "title": "Indexes",
+    "existing": "Existing indexes",
+    "none": "No indexes yet",
+    "newTitle": "New index",
+    "name": "Index name",
+    "namePlaceholder": "Automatic name",
+    "unique": "Unique",
+    "type": "Index type",
+    "typeDefault": "Default",
+    "pick": "Pick the columns in index order",
+    "addColumn": "Add {name}",
+    "removeColumn": "Remove {name} from the index",
+    "earlier": "Move {name} earlier",
+    "later": "Move {name} later",
+    "create": "Create index",
+    "delete": "Delete index",
+    "needColumn": "Pick at least one column",
+    "menuCreate": "Index on {n} columns…",
+    "menuOne": "Index on this column…",
+    "menuTable": "Indexes…",
+    "column": "Column {name}",
+    "badge": "Index: {names}",
+    "position": "Position {n}"
   }
 }

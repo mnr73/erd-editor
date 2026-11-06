@@ -16,6 +16,7 @@ import UiContextMenu from "@/components/ui/UiContextMenu.vue";
 import UiPopover from "@/components/ui/UiPopover.vue";
 
 import {
+  IconColIndex,
   IconCopy,
   IconDelete,
   IconEdit,
@@ -33,6 +34,7 @@ import {
   resizeRect,
   tableRect,
 } from "@/model/geometry";
+import { inTableOrder } from "@/model/indexes";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
 
@@ -40,6 +42,7 @@ import CanvasGroup from "./CanvasGroup.vue";
 import CanvasMinimap from "./CanvasMinimap.vue";
 import CanvasTable from "./CanvasTable.vue";
 import ColumnEditor from "./ColumnEditor.vue";
+import IndexEditor from "./IndexEditor.vue";
 import { useCanvasCamera } from "./useCanvasCamera";
 import { screenToWorld } from "./viewport";
 
@@ -376,6 +379,13 @@ const tableItems = (many) => [
   },
   { id: "color", label: t("menu.color"), icon: IconNote, disabled: false },
   {
+    id: "indexes",
+    label: t("menu.indexes"),
+    icon: IconColIndex,
+    shortcut: "Ctrl I",
+    disabled: many,
+  },
+  {
     id: "duplicate",
     label: t("common.duplicate"),
     icon: IconCopy,
@@ -390,8 +400,19 @@ const tableItems = (many) => [
     shortcut: "Del",
   },
 ];
-const columnItems = () => [
-  { id: "edit-column", label: t("column.more"), icon: IconEdit },
+const columnItems = (n = 1) => [
+  {
+    id: "edit-column",
+    label: t("column.more"),
+    icon: IconEdit,
+    disabled: n > 1,
+  },
+  {
+    id: "index-columns",
+    label: n > 1 ? t("index.menuCreate", { n }) : t("index.menuOne"),
+    icon: IconColIndex,
+    shortcut: "Ctrl I",
+  },
   { id: "insert-above", label: t("column.insertAbove"), icon: IconToolTable },
   { id: "insert-below", label: t("column.insertBelow"), icon: IconToolTable },
   { separator: true },
@@ -439,7 +460,11 @@ function openColumnMenu(e, table, columnId) {
     columnId,
     anchor: { x: e.clientX, y: e.clientY },
   };
-  ctx.value.show(e, columnItems());
+  // right-clicking inside a multi-selection acts on all of it, otherwise on the clicked column
+  const sel = editor.columnSelection;
+  if (!(sel?.tableId === table.id && sel.ids.has(columnId)))
+    editor.selectColumn(table, columnId);
+  ctx.value.show(e, columnItems(editor.columnSelection?.ids.size ?? 1));
 }
 
 function onMenuSelect(item) {
@@ -459,6 +484,10 @@ function onMenuSelect(item) {
       return deleteSelected(ids);
     case "edit-column":
       return editor.openColumnPopover(target.tableId, target.columnId);
+    case "indexes":
+      return openIndexes(target.tableId);
+    case "index-columns":
+      return openIndexForSelection(target.tableId, target.columnId);
     case "insert-above":
     case "insert-below": {
       const t0 = doc.tableById.get(target.tableId);
@@ -475,6 +504,58 @@ function onMenuSelect(item) {
     case "delete-column":
       return doc.removeColumn(target.tableId, target.columnId);
   }
+}
+
+/* -------------------------------- indexes ---------------------------------- */
+
+const indexAnchor = ref(null);
+const indexOpen = computed({
+  get: () => !!editor.indexEditor,
+  set: (v) => !v && editor.closeIndexEditor(),
+});
+
+function tableAnchor(tableId) {
+  const el = root.value.querySelector(`[data-table-id="${tableId}"]`);
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  return {
+    left: r.left,
+    right: r.right,
+    top: r.top,
+    bottom: r.bottom,
+    width: r.width,
+    height: r.height,
+  };
+}
+
+async function showIndexEditor(tableId, options) {
+  indexAnchor.value = tableAnchor(tableId);
+  editor.openIndexEditor(tableId, options);
+}
+function openIndexFromColumn(indexId) {
+  const v = editor.columnPopover;
+  if (!v) return;
+  const { tableId, columnId } = v;
+  editor.closeColumnPopover();
+  // an existing index opens expanded; "new" starts from this column
+  showIndexEditor(
+    tableId,
+    indexId ? { focus: indexId } : { columns: [columnId] },
+  );
+}
+const openIndexes = (tableId) => showIndexEditor(tableId, {});
+
+/** Start a new index from the selected columns (or from `fallbackColumn` when none is selected). */
+function openIndexForSelection(tableId, fallbackColumn = null) {
+  const sel = editor.columnSelection;
+  const ids =
+    sel?.tableId === tableId && sel.ids.size
+      ? [...sel.ids]
+      : fallbackColumn
+        ? [fallbackColumn]
+        : [];
+  const tb = doc.tableById.get(tableId);
+  showIndexEditor(tableId, { columns: inTableOrder(tb, ids) });
 }
 
 function openColor(tableId, anchor) {
@@ -583,6 +664,14 @@ function onKeyDown(e) {
     camera.fitAll();
   } else if (e.shiftKey && !mod && e.code === "Digit2") {
     camera.fitSelection(editor.selected);
+  } else if (mod && k === "i") {
+    e.preventDefault();
+    const sel = editor.columnSelection;
+    if (sel?.ids.size) openIndexForSelection(sel.tableId);
+    else if (editor.selected.size === 1) {
+      const id = [...editor.selected][0];
+      if (doc.tableById.has(id)) openIndexes(id);
+    }
   } else if (mod && k === "d") {
     e.preventDefault();
     duplicateSelected();
@@ -755,6 +844,23 @@ defineExpose({ camera });
     </UiPopover>
 
     <UiPopover
+      v-model:open="indexOpen"
+      :anchor="indexAnchor"
+      side="inline-end"
+      align="start"
+      :offset="8"
+    >
+      <IndexEditor
+        v-if="editor.indexEditor"
+        :key="`${editor.indexEditor.tableId}:${editor.indexEditor.columns.join(',')}:${editor.indexEditor.focus}`"
+        :table-id="editor.indexEditor.tableId"
+        :initial="editor.indexEditor.columns"
+        :focus="editor.indexEditor.focus"
+        @close="editor.closeIndexEditor()"
+      />
+    </UiPopover>
+
+    <UiPopover
       v-model:open="columnOpen"
       :anchor="columnAnchor"
       side="inline-end"
@@ -768,6 +874,7 @@ defineExpose({ camera });
         :column-id="editor.columnPopover.columnId"
         @close="editor.closeColumnPopover()"
         @navigate="navigateColumn"
+        @index="openIndexFromColumn"
       />
     </UiPopover>
   </div>

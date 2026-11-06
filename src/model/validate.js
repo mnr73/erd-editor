@@ -281,6 +281,10 @@ function crossCheck(doc, warn) {
         const path = `tables[${ti}]`;
         const colIds = new Set(t.columns.map((c) => c.id));
         t.indexes.forEach((ix, ii) => {
+            if (!ix.columns.length)
+                warn("index-empty", `${path}.indexes[${ii}]`, {});
+            if (new Set(ix.columns).size !== ix.columns.length)
+                warn("index-duplicate-column", `${path}.indexes[${ii}]`, {});
             for (const c of ix.columns) {
                 if (!colIds.has(c))
                     warn("index-column-missing", `${path}.indexes[${ii}]`, {

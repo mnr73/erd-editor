@@ -60,6 +60,10 @@ FK is **not** a column flag: it is derived from `refs`.
 
 ## Index
 `{ "id", "name"?, "columns": [columnId, ...], "unique"?: bool, "type"?: "btree"|"hash" }`
+- `columns` has one or more column ids; **the order is the index order** (leftmost-prefix rule), so a composite index `(status, customer_id)` is not the same as `(customer_id, status)`.
+- `name` is optional. Exporters generate `<table>_<col1>_<col2>_idx` (`_uq` when `unique`) when it is empty.
+- Deleting a column removes it from every index; an index left with no columns is deleted.
+- Validation warns on `index-empty`, `index-duplicate-column` and `index-column-missing`.
 
 ## Ref (relationship)
 ```jsonc

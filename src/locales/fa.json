@@ -107,7 +107,8 @@
     "newTable": "جدول جدید اینجا",
     "rename": "تغییر نام",
     "color": "رنگ هدر",
-    "deleteTable": "حذف جدول"
+    "deleteTable": "حذف جدول",
+    "indexes": "ایندکس‌ها…"
   },
   "file": {
     "save": "ذخیره",
@@ -136,5 +137,30 @@
     "open": "باز کردن فایل…",
     "openHint": "انتخاب یک فایل .erd.json از دیسک",
     "browserNote": "پنجره‌ی انتخاب فایل فقط در برنامه‌ی دسکتاپ هست."
+  },
+  "index": {
+    "title": "ایندکس‌ها",
+    "existing": "ایندکس‌های موجود",
+    "none": "هنوز ایندکسی نیست",
+    "newTitle": "ایندکس جدید",
+    "name": "نام ایندکس",
+    "namePlaceholder": "نام خودکار",
+    "unique": "یکتا",
+    "type": "نوع ایندکس",
+    "typeDefault": "پیش‌فرض",
+    "pick": "ستون‌ها را به ترتیب ایندکس انتخاب کنید",
+    "addColumn": "افزودن {name}",
+    "removeColumn": "حذف {name} از ایندکس",
+    "earlier": "جلوتر بردن {name}",
+    "later": "عقب‌تر بردن {name}",
+    "create": "ساخت ایندکس",
+    "delete": "حذف ایندکس",
+    "needColumn": "حداقل یک ستون انتخاب کنید",
+    "menuCreate": "ایندکس روی {n} ستون…",
+    "menuOne": "ایندکس روی این ستون…",
+    "menuTable": "ایندکس‌ها…",
+    "column": "ستون {name}",
+    "badge": "ایندکس: {names}",
+    "position": "جایگاه {n}"
   }
 }

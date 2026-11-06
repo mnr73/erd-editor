@@ -9,11 +9,13 @@ import {
     createDefaultTable,
     createDocument,
     createGroup,
+    createIndex,
     createRef,
     createTable,
 } from "@/model/document";
 import { movedWith } from "@/model/geometry";
 import { History } from "@/model/history";
+import { findSameIndex, inTableOrder } from "@/model/indexes";
 import { nextName, uniqueName } from "@/model/names";
 import { serializeErd, snapshotErd } from "@/model/serialize";
 import { parseErd } from "@/model/validate";
@@ -334,6 +336,57 @@ export const useDocumentStore = defineStore("document", () => {
         });
     }
 
+    /* -------------------------------- indexes --------------------------------- */
+
+    /**
+     * Add an index. Columns that are not in the table are dropped; an index with no columns is
+     * refused (returns null). An identical existing index (same columns, same order) is reused
+     * instead of creating a duplicate, its id is returned.
+     */
+    function addIndex(tableId, partial = {}) {
+        const tb = doc.value.tables.find((x) => x.id === tableId);
+        if (!tb) return null;
+        const have = new Set(tb.columns.map((c) => c.id));
+        const columns = [...new Set(partial.columns ?? [])].filter((c) =>
+            have.has(c),
+        );
+        if (!columns.length) return null;
+        const same = findSameIndex(tb, columns);
+        if (same) return same.id;
+        const ix = createIndex({ ...partial, columns });
+        commit((d) => d.tables.find((x) => x.id === tableId).indexes.push(ix));
+        return ix.id;
+    }
+
+    /** Index over the given columns in table order (a column selection is unordered). */
+    function createIndexFromColumns(tableId, columnIds, partial = {}) {
+        const tb = doc.value.tables.find((x) => x.id === tableId);
+        if (!tb) return null;
+        return addIndex(tableId, {
+            ...partial,
+            columns: inTableOrder(tb, columnIds),
+        });
+    }
+
+    function updateIndex(tableId, indexId, patch, key = null) {
+        commit(
+            (d) => {
+                const ix = d.tables
+                    .find((t) => t.id === tableId)
+                    ?.indexes.find((x) => x.id === indexId);
+                if (ix) Object.assign(ix, patch);
+            },
+            key && `${key}:${indexId}`,
+        );
+    }
+
+    function removeIndex(tableId, indexId) {
+        commit((d) => {
+            const t = d.tables.find((x) => x.id === tableId);
+            if (t) t.indexes = t.indexes.filter((x) => x.id !== indexId);
+        });
+    }
+
     function addRef(partial = {}) {
         const r = createRef(partial);
         commit((d) => d.refs.push(r));
@@ -492,6 +545,10 @@ export const useDocumentStore = defineStore("document", () => {
         updateColumn,
         removeColumn,
         moveColumn,
+        addIndex,
+        createIndexFromColumns,
+        updateIndex,
+        removeIndex,
         addRef,
         updateRef,
         removeRef,
