@@ -94,6 +94,11 @@ export function groupRect(group) {
     return { x: group.x, y: group.y, w: group.w, h: group.h };
 }
 
+/** Rect of a free note. */
+export function noteRect(note) {
+    return { x: note.x, y: note.y, w: note.w, h: note.h };
+}
+
 export function rectsIntersect(a, b) {
     return (
         a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y
@@ -140,6 +145,7 @@ export function contentBounds(doc) {
     return unionRects([
         ...doc.groups.map(groupRect),
         ...doc.tables.map(tableRect),
+        ...(doc.notes ?? []).map(noteRect),
     ]);
 }
 
@@ -177,7 +183,7 @@ export function groupMembership(doc) {
 
 /**
  * Everything that moves when the items in `ids` move: the items themselves plus, for every moved
- * group, each table and each group lying completely inside it. Returns { tables, groups } as Sets of ids.
+ * group, each table, group and free note lying completely inside it. Returns { tables, groups, notes } as Sets of ids.
  */
 export function movedWith(doc, ids) {
     const idSet = new Set(ids);
@@ -187,8 +193,14 @@ export function movedWith(doc, ids) {
     const tables = new Set(
         doc.tables.filter((t) => idSet.has(t.id)).map((t) => t.id),
     );
+    const notes = new Set(
+        (doc.notes ?? []).filter((n) => idSet.has(n.id)).map((n) => n.id),
+    );
     for (const gid of [...groups]) {
         const outer = groupRect(doc.groups.find((g) => g.id === gid));
+        for (const n of doc.notes ?? []) {
+            if (rectContains(outer, noteRect(n))) notes.add(n.id);
+        }
         for (const g of doc.groups) {
             if (g.id !== gid && rectContains(outer, groupRect(g)))
                 groups.add(g.id);
@@ -197,7 +209,7 @@ export function movedWith(doc, ids) {
             if (rectContains(outer, tableRect(t))) tables.add(t.id);
         }
     }
-    return { tables, groups };
+    return { tables, groups, notes };
 }
 
 /** Space a section keeps around the tables it was built from (extra on top for the title chip). */

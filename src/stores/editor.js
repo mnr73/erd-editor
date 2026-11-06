@@ -13,7 +13,7 @@ const readInspectorOpen = () => {
     }
 };
 
-export const TOOLS = ["select", "pan", "table", "relation", "section"];
+export const TOOLS = ["select", "pan", "table", "relation", "section", "note"];
 
 /**
  * Transient editor state (not saved in the file): active tool, selection, viewport size.
@@ -156,6 +156,13 @@ export const useEditorStore = defineStore("editor", () => {
     const startRenameSoon = (target) =>
         setTimeout(() => startRename(target), 0);
     const stopRename = () => (renaming.value = null);
+
+    // free sticky note whose text is being typed on the canvas (not saved, not undoable)
+    const editingNote = ref(null);
+    const startNoteEdit = (id) => (editingNote.value = id);
+    /** Same timing issue as `startRenameSoon`: the press that created the note would blur it. */
+    const startNoteEditSoon = (id) => setTimeout(() => startNoteEdit(id), 0);
+    const stopNoteEdit = () => (editingNote.value = null);
     const isRenamingGroup = (groupId) =>
         renaming.value?.kind === "group" && renaming.value.groupId === groupId;
     const isRenaming = (kind, tableId, columnId = null) =>
@@ -233,6 +240,10 @@ export const useEditorStore = defineStore("editor", () => {
         startRename,
         startRenameSoon,
         stopRename,
+        editingNote,
+        startNoteEdit,
+        startNoteEditSoon,
+        stopNoteEdit,
         isRenaming,
         isRenamingGroup,
         openColumnPopover,

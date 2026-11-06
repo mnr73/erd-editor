@@ -19,6 +19,7 @@ import {
   IconDelete,
   IconToolSection,
 } from "@/icons";
+import { MIN_NOTE_SIZE } from "@/model/constants";
 import {
   columnAfterRemoval,
   docStats,
@@ -27,6 +28,7 @@ import {
   sectionOfTable,
   tablesInSection,
 } from "@/model/inspector";
+import { DEFAULT_NOTE_COLOR } from "@/model/palette";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
 
@@ -46,9 +48,13 @@ const target = computed(() => {
   const groupIds = [...editor.selected].filter((id) =>
     doc.doc.groups.some((g) => g.id === id),
   );
+  const noteIds = [...editor.selected].filter((id) =>
+    doc.doc.notes.some((n) => n.id === id),
+  );
   return inspectorTarget(doc.doc, {
     tableIds,
     groupIds,
+    noteIds,
     refId: editor.selectedRefId,
   });
 });
@@ -56,6 +62,7 @@ const stats = computed(() => docStats(doc.doc));
 
 const table = computed(() => target.value.table);
 const group = computed(() => target.value.group);
+const freeNote = computed(() => target.value.note);
 const section = computed(() =>
   table.value ? sectionOfTable(doc.doc, table.value) : null,
 );
@@ -149,7 +156,21 @@ function groupSelected() {
 function removeSelected() {
   doc.removeTables(target.value.tables.map((x) => x.id));
   for (const g of target.value.groups) doc.removeGroup(g.id);
+  if (target.value.notes?.length)
+    doc.removeNotes(target.value.notes.map((x) => x.id));
   editor.clearSelection();
+}
+/** Applied on Enter / blur, not per keystroke: "3" on the way to "300" must not be clamped to the minimum. */
+function onNoteSize(key, e) {
+  const n = Number(e.target.value);
+  const value = Number.isFinite(n)
+    ? Math.max(MIN_NOTE_SIZE, Math.round(n))
+    : freeNote.value[key];
+  doc.updateNote(freeNote.value.id, { [key]: value });
+  e.target.value = value;
+}
+function duplicateNote() {
+  editor.setSelection(doc.duplicateNotes([freeNote.value.id]));
 }
 function close() {
   if (editor.selectedRefId) editor.selectRef(null);
@@ -160,10 +181,14 @@ const title = computed(() => {
   const m = target.value.mode;
   if (m === "table") return table.value.name;
   if (m === "group") return group.value.name;
+  if (m === "note") return t("freeNote.title");
   if (m === "ref") return t("relation.title");
   if (m === "multi")
     return t("inspector.multi", {
-      n: target.value.tables.length + target.value.groups.length,
+      n:
+        target.value.tables.length +
+        target.value.groups.length +
+        target.value.notes.length,
     });
   return t("inspector.title");
 });
@@ -185,12 +210,13 @@ const title = computed(() => {
         {{ t("inspector.title") }}
       </h2>
       <p class="text-xs leading-[1.8] text-muted">{{ t("inspector.empty") }}</p>
-      <div class="grid grid-cols-3 gap-2" data-workspace>
+      <div class="grid grid-cols-2 gap-2" data-workspace>
         <div
           v-for="s in [
             [stats.tables, t('inspector.tables')],
             [stats.refs, t('inspector.relationships')],
             [stats.groups, t('inspector.sections')],
+            [stats.notes, t('inspector.notes')],
           ]"
           :key="s[1]"
           class="rounded-control border border-line bg-canvas p-2.5"
@@ -558,6 +584,102 @@ const title = computed(() => {
         </div>
       </div>
 
+      <!-- FREE NOTE -->
+      <div
+        v-else-if="target.mode === 'note'"
+        class="min-h-0 flex-1 overflow-y-auto"
+        data-pane="free-note"
+      >
+        <div class="flex flex-col gap-4 p-3.5" data-workspace>
+          <label class="flex flex-col gap-1.5">
+            <span class="text-[11px] text-muted">{{ t("freeNote.text") }}</span>
+            <textarea
+              :value="freeNote.text"
+              :placeholder="t('freeNote.placeholder')"
+              :aria-label="t('freeNote.text')"
+              rows="8"
+              dir="auto"
+              class="resize-y rounded-control border border-line-strong bg-canvas px-2.5 py-2 text-[12.5px] leading-[1.8] text-fg focus-visible:border-accent"
+              data-free-note-field
+              @input="
+                doc.updateNote(
+                  freeNote.id,
+                  { text: $event.target.value },
+                  'text',
+                )
+              "
+            />
+          </label>
+          <div class="flex flex-col gap-2">
+            <span class="text-[11px] text-muted">{{
+              t("freeNote.color")
+            }}</span>
+            <UiColorPalette
+              flush
+              :allow-none="false"
+              :model-value="freeNote.color ?? DEFAULT_NOTE_COLOR"
+              :custom="doc.doc.palette"
+              @update:model-value="
+                (c) => doc.updateNote(freeNote.id, { color: c })
+              "
+              @add="doc.addPaletteColor"
+              @remove="doc.removePaletteColor"
+            />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex flex-col gap-1">
+              <span class="text-[11px] text-muted">{{
+                t("freeNote.width")
+              }}</span>
+              <input
+                :value="Math.round(freeNote.w)"
+                :aria-label="t('freeNote.width')"
+                :data-note-size="'w'"
+                inputmode="numeric"
+                dir="ltr"
+                spellcheck="false"
+                class="h-[30px] w-full min-w-0 rounded-control border border-line-strong bg-canvas px-2.5 font-mono text-xs text-fg focus-visible:border-accent focus-visible:outline-none"
+                @change="onNoteSize('w', $event)"
+                @keydown.enter.prevent="onNoteSize('w', $event)"
+              />
+            </label>
+            <label class="flex flex-col gap-1">
+              <span class="text-[11px] text-muted">{{
+                t("freeNote.height")
+              }}</span>
+              <input
+                :value="Math.round(freeNote.h)"
+                :aria-label="t('freeNote.height')"
+                :data-note-size="'h'"
+                inputmode="numeric"
+                dir="ltr"
+                spellcheck="false"
+                class="h-[30px] w-full min-w-0 rounded-control border border-line-strong bg-canvas px-2.5 font-mono text-xs text-fg focus-visible:border-accent focus-visible:outline-none"
+                @change="onNoteSize('h', $event)"
+                @keydown.enter.prevent="onNoteSize('h', $event)"
+              />
+            </label>
+          </div>
+          <div class="flex gap-2">
+            <UiButton class="flex-1" @click="duplicateNote">
+              <template #icon><IconCopy class="size-3.5" /></template>
+              {{ t("inspector.duplicate") }}
+            </UiButton>
+            <UiButton
+              class="flex-1"
+              variant="danger"
+              @click="
+                doc.removeNotes([freeNote.id]);
+                editor.clearSelection();
+              "
+            >
+              <template #icon><IconDelete class="size-3.5" /></template>
+              {{ t("freeNote.delete") }}
+            </UiButton>
+          </div>
+        </div>
+      </div>
+
       <!-- RELATIONSHIP -->
       <div
         v-else-if="target.mode === 'ref'"
@@ -576,11 +698,11 @@ const title = computed(() => {
       <div v-else class="flex flex-col gap-3 p-3.5" data-pane="multi">
         <ul class="flex flex-wrap gap-1" dir="ltr" data-workspace>
           <li
-            v-for="x in [...target.tables, ...target.groups]"
+            v-for="x in [...target.tables, ...target.groups, ...target.notes]"
             :key="x.id"
-            class="rounded-chip border border-line-strong px-1.5 py-px font-mono text-[11px] text-fg-soft"
+            class="max-w-full truncate rounded-chip border border-line-strong px-1.5 py-px font-mono text-[11px] text-fg-soft"
           >
-            {{ x.name }}
+            {{ x.name ?? (x.text.split("\n")[0] || t("freeNote.title")) }}
           </li>
         </ul>
         <UiButton v-if="target.tables.length" @click="groupSelected">

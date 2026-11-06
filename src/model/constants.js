@@ -20,3 +20,8 @@ export const DEFAULT_FROM_CARDINALITY = "0..*";
 export const DEFAULT_TO_CARDINALITY = "1";
 
 export const MIN_GROUP_SIZE = 120;
+
+/** Free sticky notes on the canvas. */
+export const NOTE_DEFAULT_W = 220;
+export const NOTE_DEFAULT_H = 140;
+export const MIN_NOTE_SIZE = 80;

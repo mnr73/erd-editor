@@ -16,6 +16,9 @@ export const DEFAULT_PALETTE = [
     { id: "gray", hex: "#8792A6" },
 ];
 
+/** Color of a free note that has none set (palette "amber"). */
+export const DEFAULT_NOTE_COLOR = "#E0A33A";
+
 /** Normalise user input ("4c8dff", "#4C8DFF") to lowercase `#rrggbb`, or null if invalid. */
 export function normalizeHex(input) {
     const m = /^#?([0-9a-fA-F]{6})$/.exec(String(input).trim());

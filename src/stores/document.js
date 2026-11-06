@@ -14,6 +14,7 @@ import {
     createDocument,
     createGroup,
     createIndex,
+    createNote,
     createRef,
     createRefEnd,
     createTable,
@@ -25,6 +26,7 @@ import {
     tableRect,
 } from "@/model/geometry";
 import { History } from "@/model/history";
+import { ID_PREFIX, newId } from "@/model/ids";
 import { findSameIndex, inTableOrder } from "@/model/indexes";
 import { nextName, nextTitle, uniqueName } from "@/model/names";
 import { DEFAULT_PALETTE } from "@/model/palette";
@@ -523,7 +525,7 @@ export const useDocumentStore = defineStore("document", () => {
         if (!dx && !dy) return;
         commit(
             (d) => {
-                const { tables, groups } = movedWith(d, ids);
+                const { tables, groups, notes } = movedWith(d, ids);
                 for (const g of d.groups) {
                     if (groups.has(g.id)) {
                         g.x += dx;
@@ -534,6 +536,12 @@ export const useDocumentStore = defineStore("document", () => {
                     if (tables.has(t.id)) {
                         t.x += dx;
                         t.y += dy;
+                    }
+                }
+                for (const n of d.notes) {
+                    if (notes.has(n.id)) {
+                        n.x += dx;
+                        n.y += dy;
                     }
                 }
             },
@@ -564,6 +572,56 @@ export const useDocumentStore = defineStore("document", () => {
         commit((d) => {
             d.groups = d.groups.filter((g) => g.id !== id);
         });
+    }
+
+    /* ------------------------------ free notes ------------------------------ */
+
+    /** A sticky note at `rect` ({x, y} and optionally w / h). Returns its id. */
+    function addNote(partial = {}) {
+        const n = createNote(partial);
+        commit((d) => d.notes.push(n));
+        return n.id;
+    }
+
+    function updateNote(id, patch, key = null) {
+        commit(
+            (d) => {
+                const n = d.notes.find((x) => x.id === id);
+                if (n) Object.assign(n, patch);
+            },
+            key && `${key}:${id}`,
+        );
+    }
+
+    /** Position / size of a note (one undo step per call, used on drop). */
+    function setNoteRect(id, rect) {
+        updateNote(id, rect);
+    }
+
+    function removeNotes(ids) {
+        const set = new Set(ids);
+        commit((d) => {
+            d.notes = d.notes.filter((n) => !set.has(n.id));
+        });
+    }
+
+    function duplicateNotes(ids, offset = { x: 32, y: 32 }) {
+        const created = [];
+        commit((d) => {
+            for (const id of ids) {
+                const src = d.notes.find((n) => n.id === id);
+                if (!src) continue;
+                const copy = createNote({
+                    ...src,
+                    id: newId(ID_PREFIX.note),
+                    x: src.x + offset.x,
+                    y: src.y + offset.y,
+                });
+                d.notes.push(copy);
+                created.push(copy.id);
+            }
+        });
+        return created;
     }
 
     /* ---------------------------- column selections ---------------------------- */
@@ -668,6 +726,11 @@ export const useDocumentStore = defineStore("document", () => {
         removeColumns,
         moveColumns,
         removeGroup,
+        addNote,
+        updateNote,
+        setNoteRect,
+        removeNotes,
+        duplicateNotes,
         addPaletteColor,
         removePaletteColor,
     };

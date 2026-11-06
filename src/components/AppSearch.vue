@@ -7,11 +7,12 @@ import { useCanvasCamera } from "@/canvas/useCanvasCamera";
 import {
   IconColComment,
   IconSearch,
+  IconToolNote,
   IconToolRelation,
   IconToolSection,
   IconToolTable,
 } from "@/icons";
-import { groupRect, tableRect } from "@/model/geometry";
+import { groupRect, noteRect, tableRect } from "@/model/geometry";
 import { searchDocument } from "@/model/search";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
@@ -42,6 +43,7 @@ const ICONS = {
   column: IconColComment,
   group: IconToolSection,
   ref: IconToolRelation,
+  note: IconToolNote,
 };
 
 function focus() {
@@ -65,6 +67,11 @@ function jump(r) {
     editor.setSelection([tb.id]);
     camera.focusRect(tableRect(tb));
     if (r.kind === "column") editor.openColumnPopover(tb.id, r.id);
+  } else if (r.kind === "note") {
+    const n = d.notes.find((x) => x.id === r.id);
+    if (!n) return;
+    editor.setSelection([n.id]);
+    camera.focusRect(noteRect(n));
   } else if (r.kind === "group") {
     const g = d.groups.find((x) => x.id === r.id);
     if (!g) return;

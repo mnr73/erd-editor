@@ -70,7 +70,8 @@
     "table": "جدول جدید",
     "relation": "رابطه",
     "legend": "راهنمای علامت‌ها",
-    "section": "سکشن"
+    "section": "سکشن",
+    "note": "یادداشت آزاد"
   },
   "canvas": {
     "columnsCount": "{n} ستون",
@@ -115,7 +116,8 @@
     "note": "یادداشت…",
     "groupTables": "گروه‌بندی در سکشن",
     "newSection": "سکشن جدید اینجا",
-    "deleteSection": "حذف سکشن (جدول‌ها می‌مانند)"
+    "deleteSection": "حذف سکشن (جدول‌ها می‌مانند)",
+    "newNote": "یادداشت جدید اینجا"
   },
   "file": {
     "save": "ذخیره",
@@ -236,11 +238,41 @@
     "multi": "{n} مورد انتخاب شده",
     "groupSelected": "گروه‌بندی در سکشن",
     "deleteSelected": "حذف انتخاب‌شده",
-    "hintClick": "برای ویرایش، روی سطر ستون کلیک کنید"
+    "hintClick": "برای ویرایش، روی سطر ستون کلیک کنید",
+    "notes": "یادداشت"
   },
   "search": {
     "label": "جستجو در نمودار",
     "placeholder": "جستجوی جدول و ستون…",
     "none": "چیزی پیدا نشد"
+  },
+  "type": {
+    "custom": "سفارشی",
+    "picker": "انتخاب نوع",
+    "none": "ندارد",
+    "values": "مقادیر",
+    "valuesHint": "draft, paid, shipped",
+    "group": {
+      "numbers": "عددی",
+      "text": "متنی",
+      "datetime": "تاریخ و زمان",
+      "other": "سایر"
+    },
+    "param": {
+      "length": "طول",
+      "precision": "دقت (کل ارقام)",
+      "scale": "اعشار",
+      "fsp": "کسر ثانیه"
+    }
+  },
+  "freeNote": {
+    "title": "یادداشت آزاد",
+    "placeholder": "یادداشت بنویسید…",
+    "edit": "ویرایش متن",
+    "delete": "حذف یادداشت",
+    "text": "متن",
+    "color": "رنگ",
+    "width": "عرض",
+    "height": "ارتفاع"
   }
 }

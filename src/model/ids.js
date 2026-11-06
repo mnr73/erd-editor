@@ -11,4 +11,5 @@ export const ID_PREFIX = {
     ref: "r",
     group: "g",
     enum: "e",
+    note: "n",
 };

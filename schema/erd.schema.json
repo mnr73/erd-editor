@@ -3,10 +3,7 @@
   "$id": "https://shivadev.ir/schemas/erd-editor/v1.json",
   "title": "ERD Editor file (v1)",
   "type": "object",
-  "required": [
-    "format",
-    "version"
-  ],
+  "required": ["format", "version"],
   "properties": {
     "format": {
       "const": "erd-editor"
@@ -22,13 +19,7 @@
           "type": "string"
         },
         "dbType": {
-          "enum": [
-            "generic",
-            "mysql",
-            "postgres",
-            "sqlite",
-            "mssql"
-          ]
+          "enum": ["generic", "mysql", "postgres", "sqlite", "mssql"]
         },
         "note": {
           "type": "string"
@@ -57,6 +48,12 @@
       "type": "array",
       "items": {
         "$ref": "#/definitions/group"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/note"
       }
     },
     "enums": {
@@ -91,28 +88,14 @@
       "pattern": "^#[0-9a-fA-F]{6}$"
     },
     "cardinality": {
-      "enum": [
-        "1",
-        "0..1",
-        "1..*",
-        "0..*"
-      ]
+      "enum": ["1", "0..1", "1..*", "0..*"]
     },
     "action": {
-      "enum": [
-        "cascade",
-        "restrict",
-        "set null",
-        "set default",
-        "no action"
-      ]
+      "enum": ["cascade", "restrict", "set null", "set default", "no action"]
     },
     "table": {
       "type": "object",
-      "required": [
-        "id",
-        "name"
-      ],
+      "required": ["id", "name"],
       "properties": {
         "id": {
           "$ref": "#/definitions/id"
@@ -164,10 +147,7 @@
     },
     "column": {
       "type": "object",
-      "required": [
-        "id",
-        "name"
-      ],
+      "required": ["id", "name"],
       "properties": {
         "id": {
           "$ref": "#/definitions/id"
@@ -200,10 +180,7 @@
     },
     "index": {
       "type": "object",
-      "required": [
-        "id",
-        "columns"
-      ],
+      "required": ["id", "columns"],
       "properties": {
         "id": {
           "$ref": "#/definitions/id"
@@ -221,20 +198,13 @@
           "type": "boolean"
         },
         "type": {
-          "enum": [
-            "btree",
-            "hash",
-            null
-          ]
+          "enum": ["btree", "hash", null]
         }
       }
     },
     "refEnd": {
       "type": "object",
-      "required": [
-        "table",
-        "columns"
-      ],
+      "required": ["table", "columns"],
       "properties": {
         "table": {
           "type": "string"
@@ -252,11 +222,7 @@
     },
     "ref": {
       "type": "object",
-      "required": [
-        "id",
-        "from",
-        "to"
-      ],
+      "required": ["id", "from", "to"],
       "properties": {
         "id": {
           "$ref": "#/definitions/id"
@@ -297,10 +263,7 @@
     },
     "group": {
       "type": "object",
-      "required": [
-        "id",
-        "name"
-      ],
+      "required": ["id", "name"],
       "properties": {
         "id": {
           "$ref": "#/definitions/id"
@@ -345,10 +308,7 @@
     },
     "enum": {
       "type": "object",
-      "required": [
-        "id",
-        "name"
-      ],
+      "required": ["id", "name"],
       "properties": {
         "id": {
           "$ref": "#/definitions/id"
@@ -363,9 +323,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": [
-              "name"
-            ],
+            "required": ["name"],
             "properties": {
               "name": {
                 "type": "string"
@@ -375,6 +333,42 @@
               }
             }
           }
+        }
+      }
+    },
+    "note": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/id"
+        },
+        "text": {
+          "type": "string"
+        },
+        "color": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/color"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "w": {
+          "type": "number",
+          "minimum": 80
+        },
+        "h": {
+          "type": "number",
+          "minimum": 80
         }
       }
     }

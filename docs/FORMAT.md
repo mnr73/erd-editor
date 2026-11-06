@@ -23,6 +23,7 @@ Reference implementation: `src/model/`.
   "tables": [],
   "refs": [],
   "groups": [],
+  "notes": [],
   "enums": [],
   "view": { "x": 0, "y": 0, "zoom": 1 },
 }
@@ -50,17 +51,17 @@ Reference implementation: `src/model/`.
 
 ## Column
 
-| key         | type   | default | meaning                                              |
-| ----------- | ------ | ------- | ---------------------------------------------------- |
-| `id`        | string | —       | stable id                                            |
-| `name`      | string | —       | column name                                          |
-| `type`      | string | `""`    | raw SQL type, e.g. `varchar(255)`, `bigint unsigned` |
-| `pk`        | bool   | false   | primary key (several columns ⇒ composite PK)         |
-| `unique`    | bool   | false   |                                                      |
-| `notNull`   | bool   | false   | absent = nullable                                    |
-| `increment` | bool   | false   | auto-increment                                       |
-| `default`   | string | ""      | raw default expression, e.g. `0`, `'draft'`, `now()` |
-| `note`      | string | ""      | comment                                              |
+| key         | type   | default | meaning                                                          |
+| ----------- | ------ | ------- | ---------------------------------------------------------------- |
+| `id`        | string | —       | stable id                                                        |
+| `name`      | string | —       | column name                                                      |
+| `type`      | string | `""`    | raw SQL type, e.g. `varchar(255)`, `bigint unsigned` (see below) |
+| `pk`        | bool   | false   | primary key (several columns ⇒ composite PK)                     |
+| `unique`    | bool   | false   |                                                                  |
+| `notNull`   | bool   | false   | absent = nullable                                                |
+| `increment` | bool   | false   | auto-increment                                                   |
+| `default`   | string | ""      | raw default expression, e.g. `0`, `'draft'`, `now()`             |
+| `note`      | string | ""      | comment                                                          |
 
 FK is **not** a column flag: it is derived from `refs`.
 
@@ -144,3 +145,39 @@ FK is **not** a column flag: it is derived from `refs`.
 ## Change log
 
 - v1 — initial.
+
+## Column types
+
+`type` is always plain text: the file never stores a parsed form, so DBML / SQL export and hand
+editing stay trivial. The editor's type picker reads this text with `parseType` (`src/model/types.js`)
+and writes it back with `formatType`:
+
+- Catalog types (`int`, `varchar(n)`, `decimal(p,s)`, `datetime(fsp)`, `enum('a','b')`, ...) are shown as a
+  type select plus one field per parameter (length, precision, scale, fraction), clamped to the type's
+  range; the scale never exceeds the precision.
+- Modifiers: `unsigned` (suffix; offered for MySQL integer types) and `[]` (array, PostgreSQL).
+- Types the database does not have are hidden from the select (`meta.dbType`), except the type the
+  column already has.
+- Anything else (`geometry(Point,4326)`, a custom domain, ...) is kept verbatim and edited as free text.
+  A file is never rewritten just because it was opened.
+
+## Free notes
+
+Sticky notes placed anywhere on the canvas. They are independent of tables and sections (unlike the
+`note` / `noteVisible` pair of a table or section, which belongs to that item). Visual and
+documentation data: exporters ignore the position, the agent export includes the text.
+
+```jsonc
+{
+  "id": "n_...",
+  "text": "TODO: split orders", // may be multi-line
+  "color": "#4CB86B", // or null / absent = the default amber
+  "x": 120,
+  "y": 80,
+  "w": 220, // min 80
+  "h": 140, // min 80
+}
+```
+
+`notes` is optional and omitted when empty, so files written before this existed are unchanged. Like
+tables, a note inside a section that is moved moves with it (it must lie completely inside).

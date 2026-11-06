@@ -22,15 +22,21 @@ import {
   IconEdit,
   IconNote,
   IconRelationSwap,
+  IconToolNote,
   IconToolSection,
   IconToolTable,
 } from "@/icons";
-import { MIN_GROUP_SIZE } from "@/model/constants";
+import {
+  MIN_GROUP_SIZE,
+  MIN_NOTE_SIZE,
+  NOTE_DEFAULT_W,
+} from "@/model/constants";
 import { fkColumnKeys } from "@/model/document";
 import {
   groupMembership,
   groupRect,
   movedWith,
+  noteRect,
   pinnedNotes,
   rectContains,
   rectFromPoints,
@@ -49,6 +55,7 @@ import {
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
 
+import CanvasFreeNote from "./CanvasFreeNote.vue";
 import CanvasGroup from "./CanvasGroup.vue";
 import CanvasMinimap from "./CanvasMinimap.vue";
 import CanvasNote from "./CanvasNote.vue";
@@ -141,8 +148,8 @@ const memberCounts = computed(() => {
 
 /** Ids that follow the pointer while dragging: selected items + everything inside selected sections. */
 const dragIds = computed(() => {
-  const { tables, groups } = movedWith(doc.doc, [...editor.selected]);
-  return new Set([...editor.selected, ...tables, ...groups]);
+  const { tables, groups, notes } = movedWith(doc.doc, [...editor.selected]);
+  return new Set([...editor.selected, ...tables, ...groups, ...notes]);
 });
 
 /* ---------------------------------- state ----------------------------------- */
@@ -234,6 +241,10 @@ function onPointerDown(e) {
     placeTable(p);
     return;
   }
+  if (editor.tool === "note") {
+    placeNote(worldPoint(e));
+    return;
+  }
   if (editor.tool === "section") {
     const p = worldPoint(e);
     sectionDraw.value = { a: p, b: p };
@@ -268,7 +279,16 @@ function onPointerMove(e) {
     const r = resize.value;
     const dx = (e.clientX - r.startX) / view.value.zoom;
     const dy = (e.clientY - r.startY) / view.value.zoom;
-    resize.value = { ...r, live: resizeRect(r.rect, r.handle, dx, dy) };
+    resize.value = {
+      ...r,
+      live: resizeRect(
+        r.rect,
+        r.handle,
+        dx,
+        dy,
+        r.kind === "note" ? MIN_NOTE_SIZE : MIN_GROUP_SIZE,
+      ),
+    };
   } else if (drag.value) {
     const dx = (e.clientX - drag.value.startX) / view.value.zoom;
     const dy = (e.clientY - drag.value.startY) / view.value.zoom;
@@ -400,13 +420,16 @@ function startResize(e, id, handle) {
   if (e.button !== 0) return;
   e.stopPropagation();
   const g = doc.doc.groups.find((x) => x.id === id);
+  const n = !g && doc.doc.notes.find((x) => x.id === id);
+  const rect = g ? groupRect(g) : noteRect(n);
   resize.value = {
     id,
+    kind: g ? "group" : "note",
     handle,
     startX: e.clientX,
     startY: e.clientY,
-    rect: groupRect(g),
-    live: groupRect(g),
+    rect,
+    live: rect,
   };
   root.value.setPointerCapture(e.pointerId);
 }
@@ -421,7 +444,8 @@ function finishResize() {
       r.live.w !== r.rect.w ||
       r.live.h !== r.rect.h)
   ) {
-    doc.setGroupRect(r.id, r.live);
+    if (r.kind === "note") doc.setNoteRect(r.id, r.live);
+    else doc.setGroupRect(r.id, r.live);
   }
 }
 
@@ -432,6 +456,8 @@ function selectInMarquee() {
   const ids = new Set(marquee.value.base);
   for (const t of doc.doc.tables)
     if (rectsIntersect(box, tableRect(t))) ids.add(t.id);
+  for (const n of doc.doc.notes)
+    if (rectsIntersect(box, noteRect(n))) ids.add(n.id);
   // a section is picked only when the marquee fully covers it (otherwise it would always win)
   for (const g of doc.doc.groups)
     if (rectContains(box, groupRect(g))) ids.add(g.id);
@@ -479,6 +505,9 @@ function isDoubleDown(e, id) {
 
 /** Double-click on a table: name in the header renames the table, a column row renames the column. */
 function onItemDoubleClick(e, id) {
+  if (doc.doc.notes.some((n) => n.id === id)) {
+    return editor.startNoteEditSoon(id);
+  }
   if (doc.doc.groups.some((g) => g.id === id)) {
     return editor.startRenameSoon({ kind: "group", groupId: id });
   }
@@ -520,6 +549,17 @@ function placeTable(p) {
   editor.startRenameSoon({ kind: "table", tableId: id });
 }
 
+/** Create a sticky note centred on world point `p`, select it and start typing in it. */
+function placeNote(p) {
+  const id = doc.addNote({
+    x: Math.round(p.x - NOTE_DEFAULT_W / 2),
+    y: Math.round(p.y - 20),
+  });
+  editor.setSelection([id]);
+  editor.setTool("select");
+  editor.startNoteEditSoon(id);
+}
+
 /**
  * Double-click on empty canvas creates a table. While an item is pressed the root holds pointer
  * capture, which makes the browser report `dblclick` on the root, so `e.target` can't be trusted:
@@ -530,7 +570,7 @@ function onDoubleClick(e) {
   const hit = document.elementFromPoint(e.clientX, e.clientY);
   if (
     hit?.closest(
-      "[data-table-id], [data-group-id], [role=dialog], button, input",
+      "[data-table-id], [data-group-id], [data-free-note], [role=dialog], button, input",
     )
   )
     return;
@@ -552,7 +592,41 @@ const canvasItems = () => [
     icon: IconToolSection,
     shortcut: "S",
   },
+  {
+    id: "new-note",
+    label: t("menu.newNote"),
+    icon: IconToolNote,
+    shortcut: "N",
+  },
 ];
+
+const freeNoteItems = () => [
+  { id: "fn-edit", label: t("freeNote.edit"), icon: IconEdit, shortcut: "F2" },
+  { id: "fn-color", label: t("menu.color"), icon: IconNote },
+  {
+    id: "fn-duplicate",
+    label: t("common.duplicate"),
+    icon: IconCopy,
+    shortcut: "Ctrl D",
+  },
+  { separator: true },
+  {
+    id: "fn-delete",
+    label: t("freeNote.delete"),
+    icon: IconDelete,
+    danger: true,
+    shortcut: "Del",
+  },
+];
+function openFreeNoteMenu(e, n) {
+  if (!editor.isSelected(n.id)) editor.setSelection([n.id]);
+  ctxTarget.value = {
+    kind: "free-note",
+    noteId: n.id,
+    anchor: { x: e.clientX, y: e.clientY },
+  };
+  ctx.value.show(e, freeNoteItems());
+}
 
 /** Wrap the selected tables in a new section. */
 function groupSelected() {
@@ -628,7 +702,7 @@ function isEmptyCanvasAt(e) {
     (hit === root.value ||
       hit.hasAttribute("data-world") ||
       !hit.closest(
-        "[data-table-id], [data-group-id], [role=dialog], [role=img], button",
+        "[data-table-id], [data-group-id], [data-free-note], [role=dialog], [role=img], button",
       ))
   );
 }
@@ -752,6 +826,16 @@ function onMenuSelect(item) {
       editor.setSelection([id]);
       return editor.startRenameSoon({ kind: "group", groupId: id });
     }
+    case "new-note":
+      return placeNote(target.point);
+    case "fn-edit":
+      return editor.startNoteEditSoon(target.noteId);
+    case "fn-color":
+      return openColor(target.noteId, target.anchor);
+    case "fn-duplicate":
+      return duplicateSelected();
+    case "fn-delete":
+      return deleteSelected();
     case "rename":
       return editor.startRename({ kind: "table", tableId: target.tableId });
     case "color":
@@ -932,23 +1016,44 @@ function openColor(tableId, anchor) {
 
 function duplicateSelected() {
   const ids = [...editor.selected].filter((id) => doc.tableById.has(id));
-  if (ids.length) editor.setSelection(doc.duplicateTables(ids));
+  const noteIds = [...editor.selected].filter((id) =>
+    doc.doc.notes.some((n) => n.id === id),
+  );
+  const created = [
+    ...(ids.length ? doc.duplicateTables(ids) : []),
+    ...(noteIds.length ? doc.duplicateNotes(noteIds) : []),
+  ];
+  if (created.length) editor.setSelection(created);
 }
 function deleteSelected(ids = [...editor.selected]) {
   const tables = ids.filter((id) => doc.tableById.has(id));
   const groups = ids.filter((id) => doc.doc.groups.some((g) => g.id === id));
+  const notes = ids.filter((id) => doc.doc.notes.some((n) => n.id === id));
   if (tables.length) doc.removeTables(tables);
   for (const g of groups) doc.removeGroup(g);
+  if (notes.length) doc.removeNotes(notes);
   editor.clearSelection();
 }
 
 const colorTable = computed(() =>
   colorFor.value
     ? (doc.tableById.get(colorFor.value) ??
-      doc.doc.groups.find((g) => g.id === colorFor.value))
+      doc.doc.groups.find((g) => g.id === colorFor.value) ??
+      doc.doc.notes.find((n) => n.id === colorFor.value))
     : null,
 );
 function setTableColor(color) {
+  if (doc.doc.notes.some((n) => n.id === colorFor.value)) {
+    // a multi-selection of notes gets the same color
+    const ids = editor.isSelected(colorFor.value)
+      ? [...editor.selected].filter((id) =>
+          doc.doc.notes.some((n) => n.id === id),
+        )
+      : [colorFor.value];
+    return doc.commit((d) => {
+      for (const n of d.notes) if (ids.includes(n.id)) n.color = color;
+    });
+  }
   if (doc.doc.groups.some((g) => g.id === colorFor.value)) {
     return doc.updateGroup(colorFor.value, { color });
   }
@@ -1022,6 +1127,7 @@ function onKeyDown(e) {
     editor.setSelection([
       ...doc.doc.tables.map((t) => t.id),
       ...doc.doc.groups.map((g) => g.id),
+      ...doc.doc.notes.map((n) => n.id),
     ]);
   } else if (mod && k === "z") {
     e.preventDefault();
@@ -1071,6 +1177,9 @@ function onKeyDown(e) {
     } else if (only && doc.doc.groups.some((g) => g.id === only)) {
       e.preventDefault();
       editor.startRename({ kind: "group", groupId: only });
+    } else if (only && doc.doc.notes.some((n) => n.id === only)) {
+      e.preventDefault();
+      editor.startNoteEdit(only);
     }
   } else if (!mod && !e.shiftKey && k === "t") {
     editor.setTool("table");
@@ -1081,7 +1190,8 @@ function onKeyDown(e) {
     editor.setTool("section");
   } else if (!mod && !e.shiftKey && k === "n") {
     const only = editor.selected.size === 1 ? [...editor.selected][0] : null;
-    if (only) openNote(only);
+    if (only && !doc.doc.notes.some((n) => n.id === only)) openNote(only);
+    else editor.setTool("note");
   } else if (!mod && e.key === "?") {
     editor.legendOpen = !editor.legendOpen;
   } else if (!mod && !e.shiftKey && k === "r") {
@@ -1162,14 +1272,21 @@ watch(
 );
 // keep the selection free of ids that were deleted / undone away
 watch(
-  () => [doc.doc.tables, doc.doc.groups],
-  () =>
+  () => [doc.doc.tables, doc.doc.groups, doc.doc.notes],
+  () => {
     editor.prune(
       new Set([
         ...doc.doc.tables.map((t) => t.id),
         ...doc.doc.groups.map((g) => g.id),
+        ...doc.doc.notes.map((n) => n.id),
       ]),
-    ),
+    );
+    if (
+      editor.editingNote &&
+      !doc.doc.notes.some((n) => n.id === editor.editingNote)
+    )
+      editor.stopNoteEdit();
+  },
 );
 
 defineExpose({ camera });
@@ -1214,6 +1331,26 @@ defineExpose({ camera });
         @menu="openGroupMenu($event, g)"
         @note="openNote(g.id)"
         @resize-start="(ev, handle) => startResize(ev, g.id, handle)"
+      />
+      <CanvasFreeNote
+        v-for="n in doc.doc.notes"
+        :key="n.id"
+        :note="n"
+        :selected="editor.isSelected(n.id)"
+        :dragging="!!drag?.moved && dragIds.has(n.id)"
+        :dx="drag?.moved && dragIds.has(n.id) ? drag.dx : 0"
+        :dy="drag?.moved && dragIds.has(n.id) ? drag.dy : 0"
+        :zoom="view.zoom"
+        :resizing="
+          resize?.kind === 'note' && resize.id === n.id ? resize.live : null
+        "
+        :editing="editor.editingNote === n.id"
+        :placeholder="t('freeNote.placeholder')"
+        @pointerdown="onItemDown($event, n.id)"
+        @resize-start="(ev, handle) => startResize(ev, n.id, handle)"
+        @text="(text) => doc.updateNote(n.id, { text }, 'text')"
+        @stop-edit="editor.stopNoteEdit()"
+        @menu="openFreeNoteMenu($event, n)"
       />
       <CanvasNote
         v-for="n in liveNotes"

@@ -107,7 +107,12 @@ describe("sections and relations for the panel", () => {
         expect(relationsOfTable(doc, "t_c")).toEqual([]);
     });
     it("docStats", () => {
-        expect(docStats(doc)).toEqual({ tables: 3, refs: 1, groups: 1 });
+        expect(docStats(doc)).toEqual({
+            tables: 3,
+            refs: 1,
+            groups: 1,
+            notes: 0,
+        });
     });
 });
 

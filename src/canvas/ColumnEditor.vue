@@ -4,12 +4,11 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import UiButton from "@/components/ui/UiButton.vue";
-import UiCombobox from "@/components/ui/UiCombobox.vue";
 import UiInput from "@/components/ui/UiInput.vue";
+import UiTypeInput from "@/components/ui/UiTypeInput.vue";
 
 import { IconColIndex } from "@/icons";
 import { indexName, indexesOfColumn } from "@/model/indexes";
-import { typeSuggestions } from "@/model/types";
 import { useDocumentStore } from "@/stores/document";
 
 /**
@@ -89,23 +88,20 @@ function onKey(e) {
     :class="props.fluid ? 'w-full' : 'w-[300px]'"
     @keydown="onKey"
   >
-    <div class="flex gap-2" dir="ltr">
+    <div class="flex flex-col gap-2" dir="ltr">
       <UiInput
         :model-value="column.name"
         mono
         :label="t('column.name')"
-        class="flex-1"
         @update:model-value="set({ name: $event }, 'name')"
       />
-      <div class="w-[116px] shrink-0">
-        <UiCombobox
-          :model-value="column.type"
-          mono
-          :label="t('column.type')"
-          :suggest="(q) => typeSuggestions(q, dbType)"
-          @update:model-value="set({ type: $event }, 'type')"
-        />
-      </div>
+      <UiTypeInput
+        :model-value="column.type"
+        :db-type="dbType"
+        :column-key="props.columnId"
+        :label="t('column.type')"
+        @update:model-value="set({ type: $event }, 'type')"
+      />
     </div>
 
     <div

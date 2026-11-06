@@ -10,6 +10,7 @@ import {
   IconLegend,
   IconThemeDark,
   IconThemeLight,
+  IconToolNote,
   IconToolPan,
   IconToolRelation,
   IconToolSection,
@@ -72,6 +73,16 @@ const { theme, toggleTheme } = useTheme();
       @click="editor.setTool('section')"
     >
       <IconToolSection class="size-[18px]" />
+    </UiIconButton>
+    <UiIconButton
+      size="lg"
+      :label="t('tools.note')"
+      shortcut="N"
+      tooltip-side="inline-end"
+      :active="editor.tool === 'note'"
+      @click="editor.setTool('note')"
+    >
+      <IconToolNote class="size-[18px]" />
     </UiIconButton>
     <UiIconButton
       size="lg"

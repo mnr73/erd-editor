@@ -6,9 +6,11 @@ import { useI18n } from "vue-i18n";
 import {
   contentBounds,
   groupRect,
+  noteRect,
   tableRect,
   unionRects,
 } from "@/model/geometry";
+import { DEFAULT_NOTE_COLOR } from "@/model/palette";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
 
@@ -49,6 +51,13 @@ const tables = computed(() =>
     id: tb.id,
     color: tb.color,
     style: toMini(tableRect(tb)),
+  })),
+);
+const notes = computed(() =>
+  doc.doc.notes.map((n) => ({
+    id: n.id,
+    color: n.color ?? DEFAULT_NOTE_COLOR,
+    style: toMini(noteRect(n)),
   })),
 );
 const frame = computed(() => toMini(visible.value));
@@ -98,6 +107,12 @@ function onMove(e) {
       :key="tb.id"
       class="absolute rounded-[1.5px] opacity-80"
       :style="{ ...tb.style, background: tb.color ?? 'var(--c-faint)' }"
+    />
+    <div
+      v-for="n in notes"
+      :key="n.id"
+      class="absolute rounded-[1.5px] opacity-60"
+      :style="{ ...n.style, background: n.color }"
     />
     <div
       class="pointer-events-none absolute rounded-[3px] border-[1.5px] border-accent-text"

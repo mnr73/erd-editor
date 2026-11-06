@@ -2,6 +2,8 @@ import {
     DEFAULT_FROM_CARDINALITY,
     DEFAULT_TO_CARDINALITY,
     FORMAT,
+    NOTE_DEFAULT_H,
+    NOTE_DEFAULT_W,
     VERSION,
 } from "./constants";
 import { ID_PREFIX, newId } from "./ids";
@@ -18,6 +20,7 @@ export function createDocument(name = "") {
         tables: [],
         refs: [],
         groups: [],
+        notes: [],
         enums: [],
         view: { x: 0, y: 0, zoom: 1 },
     };
@@ -100,6 +103,20 @@ export function createGroup(partial = {}) {
         h: 320,
         collapsed: false,
         noteVisible: false,
+        ...partial,
+    };
+}
+
+/** A free sticky note: lives on the canvas on its own, not attached to a table or section. */
+export function createNote(partial = {}) {
+    return {
+        id: newId(ID_PREFIX.note),
+        text: "",
+        color: null,
+        x: 0,
+        y: 0,
+        w: NOTE_DEFAULT_W,
+        h: NOTE_DEFAULT_H,
         ...partial,
     };
 }

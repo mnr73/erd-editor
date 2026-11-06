@@ -6,6 +6,9 @@ import {
     FORMAT,
     HEX_COLOR,
     MIN_GROUP_SIZE,
+    MIN_NOTE_SIZE,
+    NOTE_DEFAULT_H,
+    NOTE_DEFAULT_W,
     REF_ACTIONS,
 } from "./constants";
 import { ID_PREFIX, newId } from "./ids";
@@ -41,12 +44,14 @@ export function validateErd(raw) {
             tables: [],
             refs: [],
             groups: [],
+            notes: [],
             enums: [],
             view: view(src.view),
         };
         doc.groups = list(src.groups, "groups").map((g, i) =>
             group(g, `groups[${i}]`, warn),
         );
+        doc.notes = items(src.notes, "notes", warn, (n, p) => note(n, p, warn));
         doc.tables = list(src.tables, "tables").map((t, i) =>
             table(t, `tables[${i}]`, warn),
         );
@@ -58,6 +63,7 @@ export function validateErd(raw) {
         );
         uniqueIds(doc.tables, "tables");
         uniqueIds(doc.groups, "groups");
+        uniqueIds(doc.notes, "notes");
         uniqueIds(doc.refs, "refs");
         uniqueIds(doc.enums, "enums");
         crossCheck(doc, warn);
@@ -256,6 +262,19 @@ function group(r, path, warn) {
         w: Math.max(MIN_GROUP_SIZE, num(r.w, 480)),
         h: Math.max(MIN_GROUP_SIZE, num(r.h, 320)),
         collapsed: bool(r.collapsed),
+    };
+}
+
+function note(r, path, warn) {
+    return {
+        ...r,
+        id: withId(r, ID_PREFIX.note, path, warn),
+        text: str(r.text),
+        color: color(r.color, `${path}.color`, warn),
+        x: num(r.x),
+        y: num(r.y),
+        w: Math.max(MIN_NOTE_SIZE, num(r.w, NOTE_DEFAULT_W)),
+        h: Math.max(MIN_NOTE_SIZE, num(r.h, NOTE_DEFAULT_H)),
     };
 }
 

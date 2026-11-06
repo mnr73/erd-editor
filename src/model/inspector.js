@@ -7,12 +7,13 @@ import { groupAt, groupMembership, tableRect } from "./geometry";
  *   "none"   nothing selected
  *   "table"  exactly one table
  *   "group"  exactly one section
+ *   "note"   exactly one free note
  *   "ref"    one relationship line
  *   "multi"  several tables / sections
  */
 export function inspectorTarget(
     doc,
-    { tableIds = [], groupIds = [], refId = null },
+    { tableIds = [], groupIds = [], noteIds = [], refId = null },
 ) {
     if (refId) {
         const ref = doc.refs.find((r) => r.id === refId);
@@ -20,10 +21,12 @@ export function inspectorTarget(
     }
     const tables = doc.tables.filter((t) => tableIds.includes(t.id));
     const groups = doc.groups.filter((g) => groupIds.includes(g.id));
-    if (tables.length + groups.length === 0) return { mode: "none" };
-    if (tables.length + groups.length > 1)
-        return { mode: "multi", tables, groups };
+    const notes = (doc.notes ?? []).filter((n) => noteIds.includes(n.id));
+    const total = tables.length + groups.length + notes.length;
+    if (total === 0) return { mode: "none" };
+    if (total > 1) return { mode: "multi", tables, groups, notes };
     if (tables.length === 1) return { mode: "table", table: tables[0] };
+    if (notes.length === 1) return { mode: "note", note: notes[0] };
     return { mode: "group", group: groups[0] };
 }
 
@@ -74,6 +77,7 @@ export function docStats(doc) {
         tables: doc.tables.length,
         refs: doc.refs.length,
         groups: doc.groups.length,
+        notes: (doc.notes ?? []).length,
     };
 }
 

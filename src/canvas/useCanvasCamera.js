@@ -3,6 +3,7 @@ import { computed } from "vue";
 import {
     contentBounds,
     groupRect,
+    noteRect,
     tableRect,
     unionRects,
 } from "@/model/geometry";
@@ -57,6 +58,7 @@ export function useCanvasCamera() {
             ...doc.doc.groups
                 .filter((g) => selectedIds.has(g.id))
                 .map(groupRect),
+            ...doc.doc.notes.filter((n) => selectedIds.has(n.id)).map(noteRect),
         ];
         const b = unionRects(rects);
         if (!b) return fitAll();

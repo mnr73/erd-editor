@@ -4,7 +4,7 @@
  * name contains > other fields (type / note / label), then tables before columns before the rest.
  */
 
-const KIND_ORDER = { table: 0, column: 1, group: 2, ref: 3 };
+const KIND_ORDER = { table: 0, column: 1, group: 2, ref: 3, note: 4 };
 
 /** Rank of `text` for query `q` (lower is better), or null when it does not match. */
 function rank(text, q, base) {
@@ -23,7 +23,7 @@ const best = (...ranks) => {
 
 /**
  * Returns [{ kind, id, tableId?, name, detail, rank }] sorted best first, at most `limit`.
- * `kind` is "table" | "column" | "group" | "ref"; for a column `id` is the column id.
+ * `kind` is "table" | "column" | "group" | "ref" | "note"; for a column `id` is the column id.
  */
 export function searchDocument(doc, query, limit = 40) {
     const q = String(query ?? "")
@@ -87,6 +87,17 @@ export function searchDocument(doc, query, limit = 40) {
                     `${tableName(r.from.table)} → ${tableName(r.to.table)}`,
                 detail: `${tableName(r.from.table)} → ${tableName(r.to.table)}`,
                 rank: rr,
+            });
+    }
+    for (const n of doc.notes ?? []) {
+        const r = rank(n.text, q, 9);
+        if (r !== null)
+            out.push({
+                kind: "note",
+                id: n.id,
+                name: String(n.text).split("\n")[0].slice(0, 60),
+                detail: "",
+                rank: r,
             });
     }
     return out

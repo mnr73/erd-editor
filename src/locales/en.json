@@ -70,7 +70,8 @@
     "table": "New table",
     "relation": "Relationship",
     "legend": "Notation legend",
-    "section": "Section"
+    "section": "Section",
+    "note": "Sticky note"
   },
   "canvas": {
     "columnsCount": "{n} columns",
@@ -115,7 +116,8 @@
     "note": "Note…",
     "groupTables": "Group into section",
     "newSection": "New section here",
-    "deleteSection": "Delete section (keeps tables)"
+    "deleteSection": "Delete section (keeps tables)",
+    "newNote": "New note here"
   },
   "file": {
     "save": "Save",
@@ -236,11 +238,41 @@
     "multi": "{n} items selected",
     "groupSelected": "Group into section",
     "deleteSelected": "Delete selected",
-    "hintClick": "Click a column row to edit it"
+    "hintClick": "Click a column row to edit it",
+    "notes": "notes"
   },
   "search": {
     "label": "Search the diagram",
     "placeholder": "Search tables, columns…",
     "none": "Nothing found"
+  },
+  "type": {
+    "custom": "Custom",
+    "picker": "Pick a type",
+    "none": "none",
+    "values": "Values",
+    "valuesHint": "draft, paid, shipped",
+    "group": {
+      "numbers": "Numbers",
+      "text": "Text",
+      "datetime": "Date & time",
+      "other": "Other"
+    },
+    "param": {
+      "length": "Length",
+      "precision": "Precision",
+      "scale": "Scale",
+      "fsp": "Fraction"
+    }
+  },
+  "freeNote": {
+    "title": "Sticky note",
+    "placeholder": "Type a note…",
+    "edit": "Edit text",
+    "delete": "Delete note",
+    "text": "Text",
+    "color": "Color",
+    "width": "Width",
+    "height": "Height"
   }
 }

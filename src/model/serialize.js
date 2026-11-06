@@ -14,10 +14,11 @@ const SPEC = {
             "tables",
             "refs",
             "groups",
+            "notes",
             "enums",
             "view",
         ],
-        omit: { palette: [], refs: [], groups: [], enums: [] },
+        omit: { palette: [], refs: [], groups: [], notes: [], enums: [] },
     },
     meta: {
         order: ["name", "dbType", "note"],
@@ -92,6 +93,10 @@ const SPEC = {
         ],
         omit: { color: null, note: "", noteVisible: false, collapsed: false },
     },
+    note: {
+        order: ["id", "text", "color", "x", "y", "w", "h"],
+        omit: { text: "", color: null },
+    },
     enum: { order: ["id", "name", "note", "values"], omit: { note: "" } },
     enumValue: { order: ["name", "note"], omit: { note: "" } },
     view: { order: ["x", "y", "zoom"], omit: {} },
@@ -134,6 +139,7 @@ export function toPlain(doc) {
         tables: many(tableOut),
         refs: many(refOut),
         groups: many((g) => write(g, SPEC.group)),
+        notes: many((n) => write(n, SPEC.note)),
         enums: many((e) =>
             write(e, SPEC.enum, {
                 values: many((v) => write(v, SPEC.enumValue)),
