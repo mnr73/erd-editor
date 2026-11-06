@@ -22,13 +22,16 @@ import {
   IconEdit,
   IconNote,
   IconRelationSwap,
+  IconToolSection,
   IconToolTable,
 } from "@/icons";
+import { MIN_GROUP_SIZE } from "@/model/constants";
 import { fkColumnKeys } from "@/model/document";
 import {
   groupMembership,
   groupRect,
   movedWith,
+  pinnedNotes,
   rectContains,
   rectFromPoints,
   rectsIntersect,
@@ -48,10 +51,12 @@ import { useEditorStore } from "@/stores/editor";
 
 import CanvasGroup from "./CanvasGroup.vue";
 import CanvasMinimap from "./CanvasMinimap.vue";
+import CanvasNote from "./CanvasNote.vue";
 import CanvasRelations from "./CanvasRelations.vue";
 import CanvasTable from "./CanvasTable.vue";
 import ColumnEditor from "./ColumnEditor.vue";
 import IndexEditor from "./IndexEditor.vue";
+import NoteEditor from "./NoteEditor.vue";
 import RelationEditor from "./RelationEditor.vue";
 import { useCanvasCamera } from "./useCanvasCamera";
 import { screenToWorld, worldToScreen } from "./viewport";
@@ -97,6 +102,22 @@ const liveDoc = computed(() => {
   };
 });
 const refLayout = computed(() => layoutRefs(liveDoc.value));
+/** Pinned notes follow drags and section resizes, so they are laid out from the live geometry. */
+const liveNotes = computed(() => {
+  const d = liveDoc.value;
+  const groups = resize.value
+    ? d.groups.map((g) =>
+        g.id === resize.value.id ? { ...g, ...resize.value.live } : g,
+      )
+    : drag.value?.moved
+      ? d.groups.map((g) =>
+          dragIds.value.has(g.id)
+            ? { ...g, x: g.x + drag.value.dx, y: g.y + drag.value.dy }
+            : g,
+        )
+      : d.groups;
+  return pinnedNotes({ tables: d.tables, groups });
+});
 const focusRefs = computed(() =>
   focusedRefIds(doc.doc, {
     refId: editor.selectedRefId,
@@ -131,6 +152,7 @@ const marquee = ref(null); // { a, b } in screen px relative to the canvas
 const panning = ref(null); // { x, y }
 const spaceDown = ref(false);
 const resize = ref(null);
+const sectionDraw = ref(null); // { a, b } world points while dragging a new section
 const link = ref(null); // { tableId, columnId, x, y (world), target: {tableId, columnId}|null } // { id, handle, startX, startY, rect, live }
 const ctx = useTemplateRef("ctx");
 const ctxTarget = ref(null); // what the open context menu was opened on
@@ -212,6 +234,12 @@ function onPointerDown(e) {
     placeTable(p);
     return;
   }
+  if (editor.tool === "section") {
+    const p = worldPoint(e);
+    sectionDraw.value = { a: p, b: p };
+    root.value.setPointerCapture(e.pointerId);
+    return;
+  }
   // empty canvas (tables / group chips stop propagation themselves)
   if (!e.shiftKey) {
     editor.clearSelection();
@@ -232,6 +260,8 @@ function onPointerMove(e) {
   } else if (marquee.value) {
     marquee.value = { ...marquee.value, b: localPoint(e) };
     selectInMarquee();
+  } else if (sectionDraw.value) {
+    sectionDraw.value = { ...sectionDraw.value, b: worldPoint(e) };
   } else if (link.value) {
     updateLink(e);
   } else if (resize.value) {
@@ -260,9 +290,37 @@ function onPointerUp(e) {
     root.value.releasePointerCapture(e.pointerId);
   panning.value = null;
   marquee.value = null;
+  if (sectionDraw.value) finishSection();
   if (link.value) finishLink();
   if (resize.value) finishResize();
   if (drag.value) finishDrag();
+}
+
+/* ------------------------------- new section -------------------------------- */
+
+const sectionPreview = computed(() => {
+  if (!sectionDraw.value) return null;
+  return rectFromPoints(sectionDraw.value.a, sectionDraw.value.b);
+});
+
+/** Drop of the section tool: a drag makes a section of that size, a plain click a default-size one. */
+function finishSection() {
+  const d = sectionDraw.value;
+  sectionDraw.value = null;
+  const r = rectFromPoints(d.a, d.b);
+  const dragged = r.w > 24 && r.h > 24;
+  const rect = dragged
+    ? {
+        x: Math.round(r.x),
+        y: Math.round(r.y),
+        w: Math.max(MIN_GROUP_SIZE, Math.round(r.w)),
+        h: Math.max(MIN_GROUP_SIZE, Math.round(r.h)),
+      }
+    : { x: Math.round(d.a.x - 240), y: Math.round(d.a.y - 20), w: 480, h: 320 };
+  const id = doc.addSection(rect);
+  editor.setSelection([id]);
+  editor.setTool("select");
+  editor.startRenameSoon({ kind: "group", groupId: id });
 }
 
 /* --------------------------- drawing a relationship ------------------------- */
@@ -421,6 +479,9 @@ function isDoubleDown(e, id) {
 
 /** Double-click on a table: name in the header renames the table, a column row renames the column. */
 function onItemDoubleClick(e, id) {
+  if (doc.doc.groups.some((g) => g.id === id)) {
+    return editor.startRenameSoon({ kind: "group", groupId: id });
+  }
   const hit = document.elementFromPoint(e.clientX, e.clientY);
   if (!hit || !doc.tableById.has(id)) return;
   const row = hit.closest("[data-column-id]");
@@ -485,7 +546,23 @@ const canvasItems = () => [
     icon: IconToolTable,
     shortcut: "T",
   },
+  {
+    id: "new-section",
+    label: t("menu.newSection"),
+    icon: IconToolSection,
+    shortcut: "S",
+  },
 ];
+
+/** Wrap the selected tables in a new section. */
+function groupSelected() {
+  const ids = [...editor.selected].filter((id) => doc.tableById.has(id));
+  const id = doc.groupTables(ids);
+  if (id) {
+    editor.setSelection([id]);
+    editor.startRenameSoon({ kind: "group", groupId: id });
+  }
+}
 const tableItems = (many) => [
   {
     id: "rename",
@@ -495,6 +572,7 @@ const tableItems = (many) => [
     disabled: many,
   },
   { id: "color", label: t("menu.color"), icon: IconNote, disabled: false },
+  { id: "table-note", label: t("menu.note"), icon: IconNote },
   {
     id: "indexes",
     label: t("menu.indexes"),
@@ -502,6 +580,7 @@ const tableItems = (many) => [
     shortcut: "Ctrl I",
     disabled: many,
   },
+  { id: "group-tables", label: t("menu.groupTables"), icon: IconToolSection },
   {
     id: "duplicate",
     label: t("common.duplicate"),
@@ -595,6 +674,39 @@ function onPickRef(id, e) {
   } else lastRefDown = { id, t: now };
 }
 
+const groupItems = () => [
+  {
+    id: "group-rename",
+    label: t("menu.rename"),
+    icon: IconEdit,
+    shortcut: "F2",
+  },
+  { id: "group-color", label: t("menu.color"), icon: IconNote },
+  { id: "group-note", label: t("menu.note"), icon: IconNote },
+  { separator: true },
+  {
+    id: "group-delete",
+    label: t("menu.deleteSection"),
+    icon: IconDelete,
+    danger: true,
+    shortcut: "Del",
+  },
+];
+function openGroupMenu(e, g) {
+  if (!editor.isSelected(g.id)) editor.setSelection([g.id]);
+  ctxTarget.value = {
+    kind: "group",
+    groupId: g.id,
+    anchor: { x: e.clientX, y: e.clientY },
+  };
+  ctx.value.show(e, groupItems());
+}
+function commitGroupName(g, value) {
+  editor.stopRename();
+  const name = value.trim();
+  if (name && name !== g.name) doc.updateGroup(g.id, { name });
+}
+
 const refItems = () => [
   {
     id: "ref-edit",
@@ -629,6 +741,17 @@ function onMenuSelect(item) {
   switch (item.id) {
     case "new-table":
       return placeTable(target.point);
+    case "new-section": {
+      const p = target.point;
+      const id = doc.addSection({
+        x: Math.round(p.x - 240),
+        y: Math.round(p.y - 20),
+        w: 480,
+        h: 320,
+      });
+      editor.setSelection([id]);
+      return editor.startRenameSoon({ kind: "group", groupId: id });
+    }
     case "rename":
       return editor.startRename({ kind: "table", tableId: target.tableId });
     case "color":
@@ -656,6 +779,19 @@ function onMenuSelect(item) {
         columnId: id,
       });
     }
+    case "group-rename":
+      return editor.startRename({ kind: "group", groupId: target.groupId });
+    case "group-color":
+      return openColor(target.groupId, target.anchor);
+    case "group-note":
+      return openNote(target.groupId);
+    case "group-delete":
+      doc.removeGroup(target.groupId);
+      return editor.clearSelection();
+    case "table-note":
+      return openNote(target.tableId);
+    case "group-tables":
+      return groupSelected();
     case "ref-edit":
       return editor.openRelationEditor(target.refId, target.anchor);
     case "ref-swap":
@@ -700,6 +836,32 @@ const relationAnchor = computed(() => {
     height: bottom - top,
   };
 });
+
+const noteOpen = computed({
+  get: () => !!editor.noteEditor,
+  set: (v) => !v && editor.closeNoteEditor(),
+});
+/** Screen box of the item whose note is being edited. */
+const noteAnchor = computed(() => {
+  const id = editor.noteEditor;
+  if (!id || !root.value) return null;
+  const el = root.value.querySelector(
+    `[data-table-id="${id}"], [data-group-id="${id}"]`,
+  );
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  return {
+    left: r.left,
+    right: r.right,
+    top: r.top,
+    bottom: r.bottom,
+    width: r.width,
+    height: r.height,
+  };
+});
+function openNote(id) {
+  editor.openNoteEditor(id);
+}
 
 const relationOpen = computed({
   get: () => !!editor.relationEditor,
@@ -779,9 +941,15 @@ function deleteSelected(ids = [...editor.selected]) {
 }
 
 const colorTable = computed(() =>
-  colorFor.value ? doc.tableById.get(colorFor.value) : null,
+  colorFor.value
+    ? (doc.tableById.get(colorFor.value) ??
+      doc.doc.groups.find((g) => g.id === colorFor.value))
+    : null,
 );
 function setTableColor(color) {
+  if (doc.doc.groups.some((g) => g.id === colorFor.value)) {
+    return doc.updateGroup(colorFor.value, { color });
+  }
   // a multi-selection gets the same color (the clicked table is part of it)
   const ids = editor.isSelected(colorFor.value)
     ? [...editor.selected].filter((id) => doc.tableById.has(id))
@@ -896,9 +1064,20 @@ function onKeyDown(e) {
     if (only && doc.tableById.has(only)) {
       e.preventDefault();
       editor.startRename({ kind: "table", tableId: only });
+    } else if (only && doc.doc.groups.some((g) => g.id === only)) {
+      e.preventDefault();
+      editor.startRename({ kind: "group", groupId: only });
     }
   } else if (!mod && !e.shiftKey && k === "t") {
     editor.setTool("table");
+  } else if (mod && k === "g") {
+    e.preventDefault();
+    groupSelected();
+  } else if (!mod && !e.shiftKey && k === "s") {
+    editor.setTool("section");
+  } else if (!mod && !e.shiftKey && k === "n") {
+    const only = editor.selected.size === 1 ? [...editor.selected][0] : null;
+    if (only) openNote(only);
   } else if (!mod && e.key === "?") {
     editor.legendOpen = !editor.legendOpen;
   } else if (!mod && !e.shiftKey && k === "r") {
@@ -1024,8 +1203,19 @@ defineExpose({ camera });
         :ui-dir="uiDir"
         :zoom="view.zoom"
         :resizing="resize?.id === g.id ? resize.live : null"
+        :renaming="editor.isRenamingGroup(g.id)"
         @pointerdown="onItemDown($event, g.id)"
+        @rename="(name) => commitGroupName(g, name)"
+        @cancel-rename="editor.stopRename()"
+        @menu="openGroupMenu($event, g)"
+        @note="openNote(g.id)"
         @resize-start="(ev, handle) => startResize(ev, g.id, handle)"
+      />
+      <CanvasNote
+        v-for="n in liveNotes"
+        :key="`note-${n.id}`"
+        :note="n"
+        @open="openNote"
       />
       <CanvasRelations
         :refs="doc.doc.refs"
@@ -1056,6 +1246,7 @@ defineExpose({ camera });
         :relation-tool="editor.tool === 'relation'"
         @pointerdown="onItemDown($event, tb.id)"
         @link-start="(ev, colId) => startLink(ev, tb.id, colId)"
+        @note="openNote(tb.id)"
         @header-menu="openTableMenu($event, tb)"
         @color="openColor(tb.id, $event)"
         @column-menu="(ev, colId) => openColumnMenu(ev, tb, colId)"
@@ -1107,6 +1298,17 @@ defineExpose({ camera });
     </svg>
 
     <div
+      v-if="sectionPreview"
+      class="pointer-events-none absolute rounded-[10px] border-2 border-dashed border-accent bg-accent-soft"
+      :style="{
+        left: `${sectionPreview.x * view.zoom + view.x}px`,
+        top: `${sectionPreview.y * view.zoom + view.y}px`,
+        width: `${sectionPreview.w * view.zoom}px`,
+        height: `${sectionPreview.h * view.zoom}px`,
+      }"
+    />
+
+    <div
       v-if="marqueeStyle"
       class="pointer-events-none absolute rounded-[3px] border border-accent bg-accent-soft"
       :style="marqueeStyle"
@@ -1130,6 +1332,21 @@ defineExpose({ camera });
         @update:model-value="setTableColor"
         @add="doc.addPaletteColor"
         @remove="doc.removePaletteColor"
+      />
+    </UiPopover>
+
+    <UiPopover
+      v-model:open="noteOpen"
+      :anchor="noteAnchor"
+      side="inline-end"
+      align="start"
+      :offset="12"
+    >
+      <NoteEditor
+        v-if="editor.noteEditor"
+        :id="editor.noteEditor"
+        :key="editor.noteEditor"
+        @close="editor.closeNoteEditor()"
       />
     </UiPopover>
 

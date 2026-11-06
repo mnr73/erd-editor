@@ -113,6 +113,7 @@ FK is **not** a column flag: it is derived from `refs`.
   "name": "Sales",
   "color": "#E8B54A",
   "note": "",
+  "noteVisible": false, // note pinned on canvas
   "x": 0,
   "y": 0,
   "w": 800,

@@ -69,7 +69,8 @@
     "pan": "Pan",
     "table": "New table",
     "relation": "Relationship",
-    "legend": "Notation legend"
+    "legend": "Notation legend",
+    "section": "Section"
   },
   "canvas": {
     "columnsCount": "{n} columns",
@@ -108,9 +109,13 @@
   "menu": {
     "newTable": "New table here",
     "rename": "Rename",
-    "color": "Header color",
+    "color": "Color",
     "deleteTable": "Delete table",
-    "indexes": "Indexes…"
+    "indexes": "Indexes…",
+    "note": "Note…",
+    "groupTables": "Group into section",
+    "newSection": "New section here",
+    "deleteSection": "Delete section (keeps tables)"
   },
   "file": {
     "save": "Save",
@@ -188,5 +193,17 @@
     "zeroMany": "Zero or many",
     "read": "Each end says how many rows of THAT table can match one row on the other end. N:1 means many orders belong to one user.",
     "how": "Drag from the dot on a column row to a column of another table to connect them. Double-click a line to edit it."
+  },
+  "section": {
+    "name": "Section name",
+    "tables": "{n} tables"
+  },
+  "note": {
+    "title": "Note",
+    "placeholder": "Write a note…",
+    "pin": "Show on canvas",
+    "hint": "Notes are saved in the file and included in exports.",
+    "clear": "Remove note",
+    "open": "Open note"
   }
 }

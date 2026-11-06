@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from "vue";
 
+import UiInlineEdit from "@/components/ui/UiInlineEdit.vue";
+
+import { IconNote } from "@/icons";
 import { RESIZE_HANDLES } from "@/model/geometry";
 
 /**
@@ -19,8 +22,16 @@ const props = defineProps({
   resizing: { type: Object, default: null },
   uiDir: { type: String, default: "ltr" }, // the chip sits at the start edge of the UI language
   zoom: { type: Number, default: 1 },
+  renaming: Boolean, // the title is being edited inline
 });
-const emit = defineEmits(["pointerdown", "resize-start"]);
+const emit = defineEmits([
+  "pointerdown",
+  "resize-start",
+  "rename",
+  "cancel-rename",
+  "menu",
+  "note",
+]);
 
 const color = computed(() => props.group.color ?? "#8792A6");
 const mix = (pct, base = "transparent") =>
@@ -132,7 +143,10 @@ const edges = computed(() => {
           : undefined,
       }"
     />
-    <div class="absolute inset-x-0 -top-[11px] flex px-4" :dir="props.uiDir">
+    <div
+      class="pointer-events-none absolute inset-x-0 -top-[11px] z-10 flex px-4"
+      :dir="props.uiDir"
+    >
       <span
         class="pointer-events-auto flex h-[22px] cursor-grab items-center gap-1.5 rounded-chip border px-2.5 text-[11.5px] font-semibold active:cursor-grabbing"
         :style="{
@@ -143,9 +157,28 @@ const edges = computed(() => {
           color: props.selected ? 'var(--c-accent-fg)' : mix(60, 'var(--c-fg)'),
         }"
         @pointerdown="emit('pointerdown', $event)"
+        @contextmenu.stop.prevent="emit('menu', $event)"
       >
-        {{ props.group.name }}
+        <UiInlineEdit
+          v-if="props.renaming"
+          class="w-32 text-[11.5px] font-semibold"
+          :value="props.group.name"
+          label="Section name"
+          @pointerdown.stop
+          @commit="emit('rename', $event)"
+          @cancel="emit('cancel-rename')"
+        />
+        <template v-else>{{ props.group.name }}</template>
         <span class="font-normal opacity-75">{{ props.memberCount }}</span>
+        <button
+          v-if="props.group.note"
+          type="button"
+          class="inline-flex size-4 items-center justify-center rounded-kbd opacity-80 hover:opacity-100"
+          @pointerdown.stop
+          @click.stop="emit('note')"
+        >
+          <IconNote class="size-3" />
+        </button>
       </span>
     </div>
 
@@ -154,7 +187,7 @@ const edges = computed(() => {
       <div
         v-for="e in edges"
         :key="`edge-${e.h}`"
-        class="pointer-events-auto absolute"
+        class="pointer-events-auto absolute z-[1]"
         :style="e.style"
         :data-resize="e.h"
         @pointerdown.stop="emit('resize-start', $event, e.h)"

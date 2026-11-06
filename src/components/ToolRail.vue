@@ -12,6 +12,7 @@ import {
   IconThemeLight,
   IconToolPan,
   IconToolRelation,
+  IconToolSection,
   IconToolSelect,
   IconToolTable,
   IconZoomIn,
@@ -61,6 +62,16 @@ const { theme, toggleTheme } = useTheme();
       @click="editor.setTool('table')"
     >
       <IconToolTable class="size-[18px]" />
+    </UiIconButton>
+    <UiIconButton
+      size="lg"
+      :label="t('tools.section')"
+      shortcut="S"
+      tooltip-side="inline-end"
+      :active="editor.tool === 'section'"
+      @click="editor.setTool('section')"
+    >
+      <IconToolSection class="size-[18px]" />
     </UiIconButton>
     <UiIconButton
       size="lg"

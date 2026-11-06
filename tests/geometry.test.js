@@ -8,10 +8,15 @@ import {
     createTable,
 } from "@/model/document";
 import {
+    NOTE_MAX_W,
+    NOTE_MIN_W,
     groupAt,
     groupMembership,
     movedWith,
+    noteHeight,
+    pinnedNotes,
     resizeRect,
+    sectionAround,
     tableRect,
     tableWidth,
     textWidth,
@@ -211,5 +216,60 @@ describe("column selection helpers", () => {
         expect(stepColumn(cols, "b", 1)).toBe("c");
         expect(stepColumn(cols, "e", 1)).toBe("e");
         expect(stepColumn([], "a", 1)).toBeNull();
+    });
+});
+
+describe("sections around tables", () => {
+    it("sectionAround leaves every table completely inside, with room for the title", () => {
+        const a = table("a", 100, 200);
+        const b = table("b", 500, 350);
+        const rect = sectionAround([tableRect(a), tableRect(b)]);
+        const doc = createDocument();
+        doc.tables.push(a, b);
+        doc.groups.push(createGroup({ id: "g_new", ...rect }));
+        expect(groupAt(doc, tableRect(a))).toBe("g_new");
+        expect(groupAt(doc, tableRect(b))).toBe("g_new");
+        expect(rect.y).toBeLessThan(200 - 32);
+        expect(sectionAround([])).toBeNull();
+    });
+});
+
+describe("pinned notes", () => {
+    it("only visible, non-empty notes are placed, under their owner", () => {
+        const doc = createDocument();
+        const a = table("a", 100, 100);
+        a.note = "hello";
+        a.noteVisible = true;
+        const b = table("b", 400, 100);
+        b.note = "hidden";
+        const c = table("c", 700, 100);
+        c.noteVisible = true;
+        doc.tables.push(a, b, c);
+        const g = createGroup({
+            id: "g1",
+            x: 0,
+            y: 0,
+            w: 900,
+            h: 300,
+            note: "about",
+            noteVisible: true,
+        });
+        doc.groups.push(g);
+        const notes = pinnedNotes(doc);
+        expect(notes.map((n) => n.id).sort()).toEqual(["g1", "t_a"]);
+        const na = notes.find((n) => n.id === "t_a");
+        expect(na.y).toBeGreaterThan(tableRect(a).y + tableRect(a).h);
+        expect(na.x).toBe(100);
+        const ng = notes.find((n) => n.id === "g1");
+        expect(ng.y).toBeGreaterThan(300);
+        expect(ng.w).toBe(NOTE_MAX_W);
+    });
+    it("width is clamped and height grows with the text", () => {
+        expect(noteHeight("one", NOTE_MIN_W)).toBeLessThan(
+            noteHeight("x".repeat(400), NOTE_MIN_W),
+        );
+        expect(noteHeight("a\nb\nc", 240)).toBeGreaterThan(
+            noteHeight("a", 240),
+        );
     });
 });

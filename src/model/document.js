@@ -99,6 +99,7 @@ export function createGroup(partial = {}) {
         w: 480,
         h: 320,
         collapsed: false,
+        noteVisible: false,
         ...partial,
     };
 }

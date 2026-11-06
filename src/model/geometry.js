@@ -200,6 +200,22 @@ export function movedWith(doc, ids) {
     return { tables, groups };
 }
 
+/** Space a section keeps around the tables it was built from (extra on top for the title chip). */
+export const SECTION_PAD = 32;
+export const SECTION_TOP = 48;
+
+/** Frame rect around `rects` with padding; every rect ends up completely inside it. */
+export function sectionAround(rects, pad = SECTION_PAD, top = SECTION_TOP) {
+    const u = unionRects(rects);
+    if (!u) return null;
+    return {
+        x: u.x - pad,
+        y: u.y - top,
+        w: Math.max(MIN_GROUP_SIZE, u.w + pad * 2),
+        h: Math.max(MIN_GROUP_SIZE, u.h + pad + top),
+    };
+}
+
 export const RESIZE_HANDLES = ["nw", "n", "ne", "e", "se", "s", "sw", "w"];
 
 /**
@@ -219,4 +235,46 @@ export function resizeRect(rect, handle, dx, dy, min = MIN_GROUP_SIZE) {
         y = rect.y + rect.h - h;
     }
     return { x, y, w, h };
+}
+
+/** Width of a pinned note card: as wide as its owner, within sensible limits. */
+export const NOTE_MIN_W = 180;
+export const NOTE_MAX_W = 320;
+const NOTE_GAP = 8;
+const NOTE_LINE = 20;
+const NOTE_PAD = 16;
+
+/** Rough height of a note card: wrapped lines at ~6px/char, plus padding. */
+export function noteHeight(text, w) {
+    const perLine = Math.max(12, Math.floor((w - 40) / 6.2));
+    const lines = String(text)
+        .split("\n")
+        .reduce((n, l) => n + Math.max(1, Math.ceil(l.length / perLine)), 0);
+    return lines * NOTE_LINE + NOTE_PAD;
+}
+
+/**
+ * Pinned notes of a document, positioned from the (possibly live-dragged) geometry:
+ * a table's note sits right under the table, a section's note under its frame.
+ * Returns [{ id, kind, text, x, y, w, h }].
+ */
+export function pinnedNotes(doc) {
+    const out = [];
+    const place = (id, kind, text, rect) => {
+        const w = Math.min(NOTE_MAX_W, Math.max(NOTE_MIN_W, rect.w));
+        out.push({
+            id,
+            kind,
+            text,
+            x: rect.x,
+            y: rect.y + rect.h + NOTE_GAP,
+            w,
+            h: noteHeight(text, w),
+        });
+    };
+    for (const t of doc.tables)
+        if (t.noteVisible && t.note) place(t.id, "table", t.note, tableRect(t));
+    for (const g of doc.groups)
+        if (g.noteVisible && g.note) place(g.id, "group", g.note, groupRect(g));
+    return out;
 }

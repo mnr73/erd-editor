@@ -18,3 +18,11 @@ export function nextName(taken, base) {
     while (set.has(lower(`${base}_${n}`))) n++;
     return `${base}_${n}`;
 }
+
+/** `Base 1`, `Base 2`, ... first free title (names the user sees: sections). */
+export function nextTitle(taken, base) {
+    const set = new Set([...taken].map(lower));
+    let n = 1;
+    while (set.has(lower(`${base} ${n}`))) n++;
+    return `${base} ${n}`;
+}

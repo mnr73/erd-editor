@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 
 import { rangeIds } from "@/model/columns";
 
-export const TOOLS = ["select", "pan", "table", "relation"];
+export const TOOLS = ["select", "pan", "table", "relation", "section"];
 
 /**
  * Transient editor state (not saved in the file): active tool, selection, viewport size.
@@ -30,6 +30,10 @@ export const useEditorStore = defineStore("editor", () => {
     const hoverRefId = ref(null);
     // Relation editor popover: { refId, anchor: {x,y} }
     const legendOpen = ref(false);
+    // Note editor popover: the id of the table / section whose note is open
+    const noteEditor = ref(null);
+    const openNoteEditor = (id) => (noteEditor.value = id);
+    const closeNoteEditor = () => (noteEditor.value = null);
     const relationEditor = ref(null);
     const openRelationEditor = (refId, anchor) =>
         (relationEditor.value = { refId, anchor });
@@ -106,6 +110,8 @@ export const useEditorStore = defineStore("editor", () => {
     const startRenameSoon = (target) =>
         setTimeout(() => startRename(target), 0);
     const stopRename = () => (renaming.value = null);
+    const isRenamingGroup = (groupId) =>
+        renaming.value?.kind === "group" && renaming.value.groupId === groupId;
     const isRenaming = (kind, tableId, columnId = null) =>
         renaming.value?.kind === kind &&
         renaming.value.tableId === tableId &&
@@ -142,6 +148,9 @@ export const useEditorStore = defineStore("editor", () => {
         selectedRefId,
         hoverRefId,
         legendOpen,
+        noteEditor,
+        openNoteEditor,
+        closeNoteEditor,
         relationEditor,
         openRelationEditor,
         closeRelationEditor,
@@ -152,6 +161,7 @@ export const useEditorStore = defineStore("editor", () => {
         startRenameSoon,
         stopRename,
         isRenaming,
+        isRenamingGroup,
         openColumnPopover,
         closeColumnPopover,
     };

@@ -18,10 +18,16 @@ import {
     createRefEnd,
     createTable,
 } from "@/model/document";
-import { movedWith } from "@/model/geometry";
+import {
+    movedWith,
+    pinnedNotes,
+    sectionAround,
+    tableRect,
+} from "@/model/geometry";
 import { History } from "@/model/history";
 import { findSameIndex, inTableOrder } from "@/model/indexes";
-import { nextName, uniqueName } from "@/model/names";
+import { nextName, nextTitle, uniqueName } from "@/model/names";
+import { DEFAULT_PALETTE } from "@/model/palette";
 import { serializeErd, snapshotErd } from "@/model/serialize";
 import { parseErd } from "@/model/validate";
 
@@ -481,6 +487,33 @@ export const useDocumentStore = defineStore("document", () => {
         return g.id;
     }
 
+    /** A named, colored section at `rect` ({x, y, w, h}); names and colors rotate automatically. */
+    function addSection(rect, partial = {}) {
+        const groups = doc.value.groups;
+        return addGroup({
+            name: nextTitle(
+                groups.map((g) => g.name),
+                "Section",
+            ),
+            color: DEFAULT_PALETTE[groups.length % DEFAULT_PALETTE.length].hex,
+            ...rect,
+            ...partial,
+        });
+    }
+
+    /** Wrap tables in a new section just big enough to hold them. Returns its id, or null. */
+    function groupTables(tableIds, partial = {}) {
+        const set = new Set(tableIds);
+        const tables = doc.value.tables.filter((t) => set.has(t.id));
+        const notes = pinnedNotes({ tables, groups: [] });
+        const rects = [
+            ...tables.map(tableRect),
+            ...notes.map((n) => ({ x: n.x, y: n.y, w: n.w, h: n.h })),
+        ];
+        const rect = sectionAround(rects);
+        return rect ? addSection(rect, partial) : null;
+    }
+
     /**
      * Move a mixed selection by (dx, dy) as ONE undo step (coalesced while dragging).
      * A moved group carries everything lying completely inside it (tables and nested groups);
@@ -627,6 +660,8 @@ export const useDocumentStore = defineStore("document", () => {
         swapRef,
         removeRef,
         addGroup,
+        addSection,
+        groupTables,
         moveItems,
         setGroupRect,
         updateGroup,

@@ -2,6 +2,9 @@ import { readFileSync } from "node:fs";
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
 
+import { pinnedNotes } from "@/model/geometry";
+import { serializeErd } from "@/model/serialize";
+import { parseErd } from "@/model/validate";
 import { useDocumentStore } from "@/stores/document";
 
 const shop = readFileSync(
@@ -440,5 +443,53 @@ describe("relations", () => {
         );
         s.removeTables(["t_users"]);
         expect(s.doc.refs.some((r) => r.id === id)).toBe(false);
+    });
+});
+
+describe("sections and notes", () => {
+    it("groupTables wraps the tables and they become members", () => {
+        const id = s.groupTables(["t_users", "t_orders"]);
+        const g = s.doc.groups.find((x) => x.id === id);
+        expect(g.name).toMatch(/^Section \d+$/);
+        expect(g.color).toMatch(/^#[0-9a-fA-F]{6}$/);
+        for (const t of s.doc.tables) {
+            expect(t.x).toBeGreaterThan(g.x);
+            expect(t.x + 200).toBeLessThan(g.x + g.w + 400);
+        }
+        expect(s.groupTables([])).toBeNull();
+        s.undo();
+        expect(s.doc.groups.some((x) => x.id === id)).toBe(false);
+    });
+
+    it("section names and colors rotate", () => {
+        const a = s.addSection({ x: 0, y: 0, w: 300, h: 300 });
+        const b = s.addSection({ x: 400, y: 0, w: 300, h: 300 });
+        const [ga, gb] = [a, b].map((id) =>
+            s.doc.groups.find((g) => g.id === id),
+        );
+        expect(ga.name).not.toBe(gb.name);
+        expect(ga.color).not.toBe(gb.color);
+    });
+
+    it("notes: typing coalesces into one undo step; pin flag is saved with the group", () => {
+        s.updateTable("t_users", { note: "a" }, "note");
+        s.updateTable("t_users", { note: "ab" }, "note");
+        s.updateTable("t_users", { noteVisible: true });
+        const gid = s.doc.groups[0].id;
+        s.updateGroup(gid, { note: "about sales", noteVisible: true }, "note");
+        const back = parseErd(serializeErd(s.doc)).doc;
+        expect(back.groups[0].noteVisible).toBe(true);
+        expect(back.groups[0].note).toBe("about sales");
+        expect(back.tables[0].noteVisible).toBe(true);
+    });
+});
+
+describe("sections and pinned notes", () => {
+    it("groupTables makes room for the pinned notes of the wrapped tables", () => {
+        s.updateTable("t_users", { note: "x\ny\nz\nw", noteVisible: true });
+        const id = s.groupTables(["t_users"]);
+        const g = s.doc.groups.find((x) => x.id === id);
+        const [note] = pinnedNotes(s.doc).filter((n) => n.id === "t_users");
+        expect(note.y + note.h).toBeLessThanOrEqual(g.y + g.h);
     });
 });

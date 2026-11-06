@@ -54,6 +54,7 @@ const props = defineProps({
 const emit = defineEmits([
   "pointerdown",
   "link-start",
+  "note",
   "toggle-collapse",
   "header-menu",
   "column-menu",
@@ -361,7 +362,17 @@ function focusRow(id) {
       >
         {{ t("canvas.columnsCount", { n: props.table.columns.length }) }}
       </span>
-      <IconNote v-if="props.table.note" class="size-3.5 shrink-0 text-muted" />
+      <button
+        v-if="props.table.note"
+        type="button"
+        class="inline-flex size-4 shrink-0 items-center justify-center rounded-kbd text-muted hover:bg-hover hover:text-fg"
+        :aria-label="t('note.open')"
+        :title="props.table.note"
+        @pointerdown.stop
+        @click.stop="emit('note')"
+      >
+        <IconNote class="size-3.5" />
+      </button>
       <button
         type="button"
         :aria-label="

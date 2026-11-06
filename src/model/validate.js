@@ -250,6 +250,7 @@ function group(r, path, warn) {
         name: str(r.name),
         color: color(r.color, `${path}.color`, warn),
         note: str(r.note),
+        noteVisible: bool(r.noteVisible),
         x: num(r.x),
         y: num(r.y),
         w: Math.max(MIN_GROUP_SIZE, num(r.w, 480)),
