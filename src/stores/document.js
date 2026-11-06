@@ -21,13 +21,20 @@ import { parseErd } from "@/model/validate";
 let tabSeq = 0;
 
 /** One open document: its content, file path, saved baseline and own undo history. */
-function createTab(document = createDocument(), path = null, issues = []) {
+function createTab(
+    document = createDocument(),
+    path = null,
+    issues = [],
+    fresh = false,
+) {
     const baseline = snapshotErd(document);
     return {
         id: `tab_${++tabSeq}`,
         doc: document,
         path,
         issues,
+        // untouched start-up tab: the UI shows the start page (new board / open file) instead of a canvas
+        fresh,
         savedSnapshot: baseline,
         // not reactive on purpose: changes are announced through `tick`
         history: markRaw(new History(baseline)),
@@ -41,7 +48,7 @@ function createTab(document = createDocument(), path = null, issues = []) {
  * Visual-only changes (view pan/zoom) use `setView()` and are not undoable and not dirty.
  */
 export const useDocumentStore = defineStore("document", () => {
-    const tabs = ref([createTab()]);
+    const tabs = ref([createTab(createDocument(), null, [], true)]);
     const activeId = ref(tabs.value[0].id);
     // bumped on every change so `canUndo` / `canRedo` / `dirty` stay reactive (History is not reactive)
     const tick = ref(0);
@@ -61,6 +68,7 @@ export const useDocumentStore = defineStore("document", () => {
         set: (v) => (active.value.path = v),
     });
     const issues = computed(() => active.value.issues);
+    const isFresh = computed(() => active.value.fresh);
 
     const isDirty = (tab) => snapshotErd(tab.doc) !== tab.savedSnapshot;
     const dirty = computed(() => (tick.value, isDirty(active.value)));
@@ -77,6 +85,7 @@ export const useDocumentStore = defineStore("document", () => {
             path: t.path,
             name: t.doc.meta.name,
             dirty: isDirty(t),
+            fresh: t.fresh,
             active: t.id === activeId.value,
         }));
     });
@@ -139,7 +148,20 @@ export const useDocumentStore = defineStore("document", () => {
         return { id: tab.id, issues: result.issues };
     }
 
+    /** Leave the start page and work on the (empty) board of the current tab. */
+    function startBoard() {
+        if (!active.value.fresh) return;
+        active.value.fresh = false;
+        tick.value++;
+        loadId.value++;
+    }
+
     function newTab(name = "") {
+        // the start page is itself an empty tab: "new board" just turns it into one
+        if (active.value.fresh) {
+            startBoard();
+            return active.value.id;
+        }
         const tab = createTab(createDocument(name));
         tabs.value.push(tab);
         activeId.value = tab.id;
@@ -159,7 +181,8 @@ export const useDocumentStore = defineStore("document", () => {
         const i = tabs.value.findIndex((t) => t.id === id);
         if (i < 0) return;
         tabs.value.splice(i, 1);
-        if (!tabs.value.length) tabs.value.push(createTab());
+        if (!tabs.value.length)
+            tabs.value.push(createTab(createDocument(), null, [], true));
         if (id === activeId.value) {
             activeId.value = tabs.value[Math.min(i, tabs.value.length - 1)].id;
             shown();
@@ -440,6 +463,7 @@ export const useDocumentStore = defineStore("document", () => {
         doc,
         path,
         issues,
+        isFresh,
         loadId,
         dirty,
         canUndo,
@@ -449,6 +473,7 @@ export const useDocumentStore = defineStore("document", () => {
         newDocument,
         openText,
         newTab,
+        startBoard,
         activateTab,
         closeTab,
         serialize,

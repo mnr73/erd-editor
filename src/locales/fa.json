@@ -108,5 +108,33 @@
     "rename": "تغییر نام",
     "color": "رنگ هدر",
     "deleteTable": "حذف جدول"
+  },
+  "file": {
+    "save": "ذخیره",
+    "saveAs": "ذخیره به‌عنوان…",
+    "open": "باز کردن…",
+    "new": "بورد جدید",
+    "dontSave": "ذخیره نکن",
+    "saved": "{name} ذخیره شد",
+    "saveFailed": "ذخیره نشد: {reason}",
+    "openFailed": "{name} باز نشد: {reason}",
+    "openedWithWarnings": "{name} با {n} هشدار باز شد",
+    "unsavedTitle": "تغییرات «{name}» ذخیره شود؟",
+    "unsavedMessage": "اگر ذخیره نکنید تغییرات از بین می‌رود."
+  },
+  "tabs": {
+    "label": "بوردهای باز",
+    "close": "بستن {name}",
+    "new": "بورد جدید",
+    "unsaved": "تغییرات ذخیره‌نشده"
+  },
+  "start": {
+    "title": "ERD Editor",
+    "subtitle": "نمودار پایگاه‌داده را در یک فایل .erd.json بکشید.",
+    "new": "بورد جدید",
+    "newHint": "شروع با یک بوم خالی",
+    "open": "باز کردن فایل…",
+    "openHint": "انتخاب یک فایل .erd.json از دیسک",
+    "browserNote": "پنجره‌ی انتخاب فایل فقط در برنامه‌ی دسکتاپ هست."
   }
 }

@@ -315,3 +315,48 @@ describe("tabs", () => {
         expect(s.tabs).toHaveLength(before);
     });
 });
+
+describe("start page (fresh tab)", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        s = useDocumentStore();
+    });
+
+    it("the app starts on a fresh, untouched tab", () => {
+        expect(s.isFresh).toBe(true);
+        expect(s.tabs).toHaveLength(1);
+        expect(s.dirty).toBe(false);
+    });
+
+    it("newTab on the start page turns it into a board instead of adding a tab", () => {
+        s.newTab();
+        expect(s.isFresh).toBe(false);
+        expect(s.tabs).toHaveLength(1);
+        s.newTab();
+        expect(s.tabs).toHaveLength(2);
+    });
+
+    it("opening a file from the start page replaces it (no stray empty tab)", () => {
+        s.openText(shop, "/tmp/shop.erd.json");
+        expect(s.tabs).toHaveLength(1);
+        expect(s.isFresh).toBe(false);
+        expect(s.doc.tables).toHaveLength(2);
+    });
+
+    it("closing the last tab brings the start page back", () => {
+        s.openText(shop, "/tmp/shop.erd.json");
+        s.closeTab(s.activeId);
+        expect(s.isFresh).toBe(true);
+    });
+
+    it("markSaved clears dirty and sets the path of that tab only", () => {
+        s.openText(shop, "/tmp/a.erd.json");
+        const a = s.activeId;
+        s.newTab();
+        s.addDefaultTable();
+        s.markSaved("/tmp/b.erd.json");
+        expect(s.dirty).toBe(false);
+        s.activateTab(a);
+        expect(s.path).toBe("/tmp/a.erd.json");
+    });
+});

@@ -115,3 +115,10 @@ export { default as IconInsertColumn } from "~icons/hugeicons/add-circle";
 export { default as IconNullable } from "~icons/hugeicons/help-circle";
 /** Relation connector dot on a row (drawn in stage 6) */
 export { default as IconRelationHandle } from "~icons/hugeicons/link-04";
+
+/* ------------------------------------ files -------------------------------- */
+
+/** New board / new tab */
+export { default as IconNewFile } from "~icons/hugeicons/file-add";
+/** A diagram file (tab, start page) */
+export { default as IconFile } from "~icons/hugeicons/file-01";

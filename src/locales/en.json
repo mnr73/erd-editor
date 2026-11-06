@@ -108,5 +108,33 @@
     "rename": "Rename",
     "color": "Header color",
     "deleteTable": "Delete table"
+  },
+  "file": {
+    "save": "Save",
+    "saveAs": "Save as…",
+    "open": "Open…",
+    "new": "New board",
+    "dontSave": "Don't save",
+    "saved": "Saved {name}",
+    "saveFailed": "Could not save: {reason}",
+    "openFailed": "Could not open {name}: {reason}",
+    "openedWithWarnings": "{name} opened with {n} warning(s)",
+    "unsavedTitle": "Save changes to {name}?",
+    "unsavedMessage": "Your changes will be lost if you don't save them."
+  },
+  "tabs": {
+    "label": "Open boards",
+    "close": "Close {name}",
+    "new": "New board",
+    "unsaved": "unsaved changes"
+  },
+  "start": {
+    "title": "ERD Editor",
+    "subtitle": "Draw database diagrams in one .erd.json file.",
+    "new": "New board",
+    "newHint": "Start with an empty canvas",
+    "open": "Open file…",
+    "openHint": "Pick a .erd.json from disk",
+    "browserNote": "File dialogs are only available in the desktop app."
   }
 }

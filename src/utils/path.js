@@ -9,3 +9,10 @@ export function splitPath(path) {
 export function shortenHome(dir, home) {
     return home && dir.startsWith(home) ? `~${dir.slice(home.length)}` : dir;
 }
+
+/** Tab label: the file name without the `.erd.json` suffix. */
+export function baseName(path) {
+    return splitPath(path)
+        .name.replace(/\.erd\.json$/i, "")
+        .replace(/\.json$/i, "");
+}

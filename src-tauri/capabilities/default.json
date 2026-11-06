@@ -3,5 +3,5 @@
   "identifier": "default",
   "description": "Main window: own commands, events and the open/save file dialogs. Nothing else.",
   "windows": ["main"],
-  "permissions": ["core:default", "dialog:allow-open", "dialog:allow-save", "dialog:allow-message", "dialog:allow-ask"]
+  "permissions": ["core:default", "dialog:allow-open", "dialog:allow-save", "dialog:allow-message", "dialog:allow-ask", "core:window:allow-destroy", "core:window:allow-set-title"]
 }
