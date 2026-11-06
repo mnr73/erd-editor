@@ -106,3 +106,12 @@ export { default as IconPin } from "~icons/hugeicons/pin";
 
 /** Pan tool (H) */
 export { default as IconToolPan } from "~icons/hugeicons/hand-grab";
+
+/* ----------------------------- column row actions -------------------------- */
+
+/** Add a column above/below a row (the + on the row border) */
+export { default as IconInsertColumn } from "~icons/hugeicons/add-circle";
+/** Nullable marker in the column editor */
+export { default as IconNullable } from "~icons/hugeicons/help-circle";
+/** Relation connector dot on a row (drawn in stage 6) */
+export { default as IconRelationHandle } from "~icons/hugeicons/link-04";

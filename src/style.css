@@ -1,4 +1,11 @@
 @import "tailwindcss";
+
+/*
+ * Desktop app: a mouse is always the primary pointer. Tailwind 4 wraps hover: variants in
+ * `@media (hover: hover)`, which some webviews (and test browsers) report as false, hiding every
+ * hover-only control. Make the variant unconditional.
+ */
+@custom-variant hover (&:hover);
 @import "@fontsource/inter/latin-400.css";
 @import "@fontsource/inter/latin-500.css";
 @import "@fontsource/inter/latin-600.css";
@@ -74,6 +81,7 @@
     --c-accent-fg: #ffffff;
     --c-accent-text: #7fb0ff;
     --c-accent-soft: rgba(76, 141, 255, 0.16);
+    --c-row-active: rgba(76, 141, 255, 0.24);
     --c-warn: #e0a33a;
     --c-danger: #f07a7a;
     --c-success: #4cb86b;
@@ -121,6 +129,7 @@
     --c-accent: #2f6fe0;
     --c-accent-text: #2f6fe0;
     --c-accent-soft: rgba(47, 111, 224, 0.12);
+    --c-row-active: rgba(47, 111, 224, 0.2);
     --c-warn: #b26a00;
     --c-danger: #d64545;
     --c-success: #1f8f45;
@@ -158,6 +167,7 @@
     --color-accent-fg: var(--c-accent-fg);
     --color-accent-text: var(--c-accent-text);
     --color-accent-soft: var(--c-accent-soft);
+    --color-row-active: var(--c-row-active);
     --color-warn: var(--c-warn);
     --color-danger: var(--c-danger);
     --color-success: var(--c-success);

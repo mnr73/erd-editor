@@ -27,9 +27,18 @@ export class History {
         return this.index < this.states.length - 1;
     }
 
-    record(state, { key = null, now = Date.now() } = {}) {
+    /**
+     * `amend: true` folds this change into the current entry instead of adding a new one
+     * (e.g. naming a column that was just created = one undo step for "create + name").
+     */
+    record(state, { key = null, now = Date.now(), amend = false } = {}) {
         if (state === this.present) return false;
         this.states.length = this.index + 1;
+        if (amend && this.index > 0) {
+            this.states[this.index] = state;
+            this.lastKey = null;
+            return true;
+        }
         const coalesce =
             key !== null &&
             key === this.lastKey &&

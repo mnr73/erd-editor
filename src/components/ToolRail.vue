@@ -11,6 +11,7 @@ import {
   IconThemeLight,
   IconToolPan,
   IconToolSelect,
+  IconToolTable,
   IconZoomIn,
   IconZoomOut,
 } from "@/icons";
@@ -47,6 +48,17 @@ const { theme, toggleTheme } = useTheme();
       @click="editor.setTool('pan')"
     >
       <IconToolPan class="size-[18px]" />
+    </UiIconButton>
+
+    <UiIconButton
+      size="lg"
+      :label="t('tools.table')"
+      shortcut="T"
+      tooltip-side="inline-end"
+      :active="editor.tool === 'table'"
+      @click="editor.setTool('table')"
+    >
+      <IconToolTable class="size-[18px]" />
     </UiIconButton>
 
     <span class="flex-1" />

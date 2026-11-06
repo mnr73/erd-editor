@@ -5,6 +5,7 @@ import {
     VERSION,
 } from "./constants";
 import { ID_PREFIX, newId } from "./ids";
+import { nextName } from "./names";
 
 /** Factories always return the full in-memory shape (defaults filled in). */
 
@@ -135,4 +136,50 @@ export function fkColumnKeys(doc) {
             keys.add(`${ref.from.table}.${col}`);
     }
     return keys;
+}
+
+/** A new table the way a user expects it: one `id` primary key column, ready to be named. */
+export function createDefaultTable(doc, { x = 0, y = 0 } = {}) {
+    const names = doc.tables.map((t) => t.name);
+    return createTable({
+        name: nextName(names, "table"),
+        x,
+        y,
+        columns: [
+            createColumn({
+                name: "id",
+                type: "bigint",
+                pk: true,
+                increment: true,
+                notNull: true,
+            }),
+        ],
+    });
+}
+
+/** Deep copy of plain JSON data (also works on Vue reactive proxies, unlike structuredClone). */
+const plain = (v) => JSON.parse(JSON.stringify(v));
+
+const withoutId = ({ id: _id, ...rest }) => rest;
+
+/** Deep copy of a table with fresh ids (columns, indexes remapped); positioned by the caller. */
+export function cloneTable(table, name) {
+    const columnIds = new Map();
+    const columns = table.columns.map((c) => {
+        const copy = createColumn(withoutId(plain(c)));
+        columnIds.set(c.id, copy.id);
+        return copy;
+    });
+    const indexes = table.indexes.map((ix) =>
+        createIndex({
+            ...withoutId(plain(ix)),
+            columns: ix.columns.map((c) => columnIds.get(c) ?? c),
+        }),
+    );
+    return createTable({
+        ...withoutId(plain(table)),
+        name,
+        columns,
+        indexes,
+    });
 }

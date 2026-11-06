@@ -66,7 +66,8 @@
   "tools": {
     "label": "Tools",
     "select": "Select",
-    "pan": "Pan"
+    "pan": "Pan",
+    "table": "New table"
   },
   "canvas": {
     "columnsCount": "{n} columns",
@@ -78,5 +79,34 @@
     "zoomOut": "Zoom out",
     "zoomReset": "Reset zoom to 100%",
     "fit": "Fit to screen"
+  },
+  "column": {
+    "name": "Column name",
+    "type": "Type",
+    "flags": "Column flags",
+    "pk": "Primary key",
+    "unique": "Unique",
+    "notNull": "Not null (otherwise nullable)",
+    "increment": "Auto-increment",
+    "default": "Default",
+    "comment": "Comment",
+    "delete": "Delete column",
+    "nav": "next / previous column",
+    "more": "Edit column",
+    "insertAbove": "Add column above",
+    "insertBelow": "Add column below",
+    "dragHint": "Drag to reorder"
+  },
+  "table": {
+    "name": "Table name",
+    "newColumn": "New column",
+    "rename": "Rename table",
+    "color": "Header color"
+  },
+  "menu": {
+    "newTable": "New table here",
+    "rename": "Rename",
+    "color": "Header color",
+    "deleteTable": "Delete table"
   }
 }

@@ -3,13 +3,16 @@ import { computed, ref, shallowRef } from "vue";
 import { defineStore } from "pinia";
 
 import {
+    cloneTable,
     createColumn,
+    createDefaultTable,
     createDocument,
     createGroup,
     createRef,
     createTable,
 } from "@/model/document";
 import { History } from "@/model/history";
+import { nextName, uniqueName } from "@/model/names";
 import { serializeErd, snapshotErd } from "@/model/serialize";
 import { parseErd } from "@/model/validate";
 
@@ -35,7 +38,7 @@ export const useDocumentStore = defineStore("document", () => {
     const canUndo = computed(() => (tick.value, history.value.canUndo));
     const canRedo = computed(() => (tick.value, history.value.canRedo));
     const tableById = computed(
-        () => new Map(doc.value.tables.map((t) => [t.id, t])),
+        () => (tick.value, new Map(doc.value.tables.map((t) => [t.id, t]))),
     );
 
     /** Load parsed file text. Returns issues; `doc` stays untouched on a fatal issue. */
@@ -74,9 +77,9 @@ export const useDocumentStore = defineStore("document", () => {
     }
 
     /** Apply `fn(doc)` as one undo step. `key` coalesces rapid edits (drag, typing). */
-    function commit(fn, key = null) {
+    function commit(fn, key = null, { amend = false } = {}) {
         fn(doc.value);
-        history.value.record(snapshotErd(doc.value), { key });
+        history.value.record(snapshotErd(doc.value), { key, amend });
         tick.value++;
     }
 
@@ -103,6 +106,44 @@ export const useDocumentStore = defineStore("document", () => {
         return table.id;
     }
 
+    /** New table with a default `id` PK column at world position (x, y). Returns its id. */
+    function addDefaultTable(pos = {}) {
+        const table = createDefaultTable(doc.value, pos);
+        commit((d) => d.tables.push(table));
+        return table.id;
+    }
+
+    /** Copy tables (new ids, names `<name>_copy`), offset so they do not sit on the originals. */
+    function duplicateTables(ids, offset = { x: 32, y: 32 }) {
+        const created = [];
+        commit((d) => {
+            for (const id of ids) {
+                const src = d.tables.find((t) => t.id === id);
+                if (!src) continue;
+                const taken = d.tables.map((t) => t.name);
+                const copy = cloneTable(
+                    src,
+                    uniqueName(taken, `${src.name}_copy`),
+                );
+                copy.x += offset.x;
+                copy.y += offset.y;
+                d.tables.push(copy);
+                created.push(copy.id);
+            }
+        });
+        return created;
+    }
+
+    function removeTables(ids) {
+        const set = new Set(ids);
+        commit((d) => {
+            d.tables = d.tables.filter((t) => !set.has(t.id));
+            d.refs = d.refs.filter(
+                (r) => !set.has(r.from.table) && !set.has(r.to.table),
+            );
+        });
+    }
+
     function updateTable(id, patch, key = null) {
         commit(
             (d) => {
@@ -122,11 +163,25 @@ export const useDocumentStore = defineStore("document", () => {
         });
     }
 
-    function addColumn(tableId, partial = {}) {
+    /**
+     * Insert a column at `index` (default: end). With no name it gets `column_N`.
+     * Returns its id.
+     */
+    function addColumn(tableId, partial = {}, index = null) {
         const column = createColumn(partial);
-        commit((d) =>
-            d.tables.find((t) => t.id === tableId)?.columns.push(column),
-        );
+        commit((d) => {
+            const t = d.tables.find((x) => x.id === tableId);
+            if (!t) return;
+            if (!column.name) {
+                column.name = nextName(
+                    t.columns.map((c) => c.name),
+                    "column",
+                );
+            }
+            if (index === null || index >= t.columns.length)
+                t.columns.push(column);
+            else t.columns.splice(Math.max(0, index), 0, column);
+        });
         return column.id;
     }
 
@@ -242,6 +297,17 @@ export const useDocumentStore = defineStore("document", () => {
         );
     }
 
+    function setTableGroup(tableId, groupId) {
+        commit((d) => {
+            const t = d.tables.find((x) => x.id === tableId);
+            if (t)
+                t.groupId =
+                    groupId && d.groups.some((g) => g.id === groupId)
+                        ? groupId
+                        : null;
+        });
+    }
+
     function removeGroup(id) {
         commit((d) => {
             d.groups = d.groups.filter((g) => g.id !== id);
@@ -281,6 +347,10 @@ export const useDocumentStore = defineStore("document", () => {
         redo,
         setView,
         addTable,
+        addDefaultTable,
+        duplicateTables,
+        removeTables,
+        setTableGroup,
         updateTable,
         removeTable,
         addColumn,

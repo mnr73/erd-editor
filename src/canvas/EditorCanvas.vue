@@ -1,6 +1,7 @@
 <script setup>
 import {
   computed,
+  nextTick,
   onBeforeUnmount,
   onMounted,
   ref,
@@ -10,6 +11,17 @@ import {
 
 import { useI18n } from "vue-i18n";
 
+import UiColorPalette from "@/components/ui/UiColorPalette.vue";
+import UiContextMenu from "@/components/ui/UiContextMenu.vue";
+import UiPopover from "@/components/ui/UiPopover.vue";
+
+import {
+  IconCopy,
+  IconDelete,
+  IconEdit,
+  IconNote,
+  IconToolTable,
+} from "@/icons";
 import { fkColumnKeys } from "@/model/document";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
@@ -17,6 +29,7 @@ import { useEditorStore } from "@/stores/editor";
 import CanvasGroup from "./CanvasGroup.vue";
 import CanvasMinimap from "./CanvasMinimap.vue";
 import CanvasTable from "./CanvasTable.vue";
+import ColumnEditor from "./ColumnEditor.vue";
 import {
   groupRect,
   rectContains,
@@ -34,7 +47,7 @@ import { screenToWorld } from "./viewport";
  */
 const DRAG_THRESHOLD = 3;
 
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 const doc = useDocumentStore();
 const editor = useEditorStore();
 const camera = useCanvasCamera();
@@ -74,6 +87,19 @@ const drag = ref(null); // { startX, startY, dx, dy, moved }
 const marquee = ref(null); // { a, b } in screen px relative to the canvas
 const panning = ref(null); // { x, y }
 const spaceDown = ref(false);
+const ctx = useTemplateRef("ctx");
+const ctxTarget = ref(null); // what the open context menu was opened on
+const colorFor = ref(null); // table id whose header-color popover is open
+const colorAnchor = ref(null);
+const columnAnchor = ref(null);
+const columnOpen = computed({
+  get: () => !!editor.columnPopover,
+  set: (v) => !v && editor.closeColumnPopover(),
+});
+const colorOpen = computed({
+  get: () => !!colorFor.value,
+  set: (v) => !v && (colorFor.value = null),
+});
 
 const panMode = computed(() => editor.tool === "pan" || spaceDown.value);
 const cursor = computed(() =>
@@ -136,6 +162,11 @@ function onPointerDown(e) {
     return startPan(e);
   }
   if (e.button !== 0) return;
+  if (editor.tool === "table") {
+    const p = worldPoint(e);
+    placeTable(p);
+    return;
+  }
   // empty canvas (tables / group chips stop propagation themselves)
   if (!e.shiftKey) editor.clearSelection();
   marquee.value = {
@@ -196,6 +227,10 @@ function onItemDown(e, id) {
   if (e.button === 1 || (e.button === 0 && panMode.value)) return; // let the canvas pan
   if (e.button !== 0) return;
   e.stopPropagation();
+  if (isDoubleDown(e, id)) {
+    drag.value = null;
+    return onItemDoubleClick(e, id);
+  }
   if (e.shiftKey) editor.toggle(id);
   else if (!editor.isSelected(id)) editor.setSelection([id]);
   if (!editor.isSelected(id)) return; // shift-click deselected it: nothing to drag
@@ -211,6 +246,36 @@ function onItemDown(e, id) {
   root.value.setPointerCapture(e.pointerId);
 }
 
+// Two presses on the same item within 350ms and 6px = a double-click.
+let lastDown = { id: null, t: 0, x: 0, y: 0 };
+function isDoubleDown(e, id) {
+  const now = performance.now();
+  const dbl =
+    lastDown.id === id &&
+    now - lastDown.t < 350 &&
+    Math.hypot(e.clientX - lastDown.x, e.clientY - lastDown.y) < 6;
+  lastDown = dbl
+    ? { id: null, t: 0, x: 0, y: 0 }
+    : { id, t: now, x: e.clientX, y: e.clientY };
+  return dbl;
+}
+
+/** Double-click on a table: name in the header renames the table, a column row renames the column. */
+function onItemDoubleClick(e, id) {
+  const hit = document.elementFromPoint(e.clientX, e.clientY);
+  if (!hit || !doc.tableById.has(id)) return;
+  const row = hit.closest("[data-column-id]");
+  if (row) {
+    editor.startRenameSoon({
+      kind: "column",
+      tableId: id,
+      columnId: row.dataset.columnId,
+    });
+  } else if (hit.closest("header")) {
+    editor.startRenameSoon({ kind: "table", tableId: id });
+  }
+}
+
 function finishDrag() {
   const d = drag.value;
   drag.value = null;
@@ -222,8 +287,212 @@ function finishDrag() {
   }
 }
 
+const worldPoint = (e) => screenToWorld(view.value, localPoint(e));
+
+/** Create a table centred on world point `p`, select it and start renaming it. */
+function placeTable(p) {
+  const id = doc.addDefaultTable({
+    x: Math.round(p.x - 100),
+    y: Math.round(p.y - 15),
+  });
+  editor.setSelection([id]);
+  editor.setTool("select");
+  editor.startRenameSoon({ kind: "table", tableId: id });
+}
+
+/**
+ * Double-click on empty canvas creates a table. While an item is pressed the root holds pointer
+ * capture, which makes the browser report `dblclick` on the root, so `e.target` can't be trusted:
+ * ask what is really under the pointer instead. (Double-clicks on tables / columns are handled in
+ * CanvasTable through `onItemDown`, see `clicks` below.)
+ */
+function onDoubleClick(e) {
+  const hit = document.elementFromPoint(e.clientX, e.clientY);
+  if (
+    hit?.closest(
+      "[data-table-id], [data-group-id], [role=dialog], button, input",
+    )
+  )
+    return;
+  placeTable(worldPoint(e));
+}
+
+/* ------------------------------ context menus ------------------------------ */
+
+const canvasItems = () => [
+  {
+    id: "new-table",
+    label: t("menu.newTable"),
+    icon: IconToolTable,
+    shortcut: "T",
+  },
+];
+const tableItems = (many) => [
+  {
+    id: "rename",
+    label: t("menu.rename"),
+    icon: IconEdit,
+    shortcut: "F2",
+    disabled: many,
+  },
+  { id: "color", label: t("menu.color"), icon: IconNote, disabled: false },
+  {
+    id: "duplicate",
+    label: t("common.duplicate"),
+    icon: IconCopy,
+    shortcut: "Ctrl D",
+  },
+  { separator: true },
+  {
+    id: "delete",
+    label: t("menu.deleteTable"),
+    icon: IconDelete,
+    danger: true,
+    shortcut: "Del",
+  },
+];
+const columnItems = () => [
+  { id: "edit-column", label: t("column.more"), icon: IconEdit },
+  { id: "insert-above", label: t("column.insertAbove"), icon: IconToolTable },
+  { id: "insert-below", label: t("column.insertBelow"), icon: IconToolTable },
+  { separator: true },
+  {
+    id: "delete-column",
+    label: t("column.delete"),
+    icon: IconDelete,
+    danger: true,
+  },
+];
+
 function onContextMenu(e) {
-  e.preventDefault(); // real context menus arrive in stage 9
+  e.preventDefault();
+  if (
+    e.target === root.value ||
+    e.target.closest("[data-world]") === e.target
+  ) {
+    ctxTarget.value = { kind: "canvas", point: worldPoint(e) };
+    ctx.value.show(e, canvasItems());
+  }
+}
+function openTableMenu(e, table) {
+  if (!editor.isSelected(table.id)) editor.setSelection([table.id]);
+  ctxTarget.value = {
+    kind: "table",
+    tableId: table.id,
+    anchor: { x: e.clientX, y: e.clientY },
+  };
+  ctx.value.show(e, tableItems(editor.selected.size > 1));
+}
+function openColumnMenu(e, table, columnId) {
+  ctxTarget.value = {
+    kind: "column",
+    tableId: table.id,
+    columnId,
+    anchor: { x: e.clientX, y: e.clientY },
+  };
+  ctx.value.show(e, columnItems());
+}
+
+function onMenuSelect(item) {
+  const target = ctxTarget.value;
+  if (!target) return;
+  const ids = [...editor.selected].filter((id) => doc.tableById.has(id));
+  switch (item.id) {
+    case "new-table":
+      return placeTable(target.point);
+    case "rename":
+      return editor.startRename({ kind: "table", tableId: target.tableId });
+    case "color":
+      return openColor(target.tableId, target.anchor);
+    case "duplicate":
+      return duplicateSelected();
+    case "delete":
+      return deleteSelected(ids);
+    case "edit-column":
+      return editor.openColumnPopover(target.tableId, target.columnId);
+    case "insert-above":
+    case "insert-below": {
+      const t0 = doc.tableById.get(target.tableId);
+      const at =
+        t0.columns.findIndex((c) => c.id === target.columnId) +
+        (item.id === "insert-below" ? 1 : 0);
+      const id = doc.addColumn(target.tableId, {}, at);
+      return editor.startRename({
+        kind: "column",
+        tableId: target.tableId,
+        columnId: id,
+      });
+    }
+    case "delete-column":
+      return doc.removeColumn(target.tableId, target.columnId);
+  }
+}
+
+function openColor(tableId, anchor) {
+  // a DOMRect (header color dot) or a plain point (context menu)
+  colorAnchor.value =
+    anchor && "width" in anchor
+      ? anchor
+      : anchor
+        ? { x: anchor.x, y: anchor.y }
+        : null;
+  colorFor.value = tableId;
+}
+
+function duplicateSelected() {
+  const ids = [...editor.selected].filter((id) => doc.tableById.has(id));
+  if (ids.length) editor.setSelection(doc.duplicateTables(ids));
+}
+function deleteSelected(ids = [...editor.selected]) {
+  const tables = ids.filter((id) => doc.tableById.has(id));
+  const groups = ids.filter((id) => doc.doc.groups.some((g) => g.id === id));
+  if (tables.length) doc.removeTables(tables);
+  for (const g of groups) doc.removeGroup(g);
+  editor.clearSelection();
+}
+
+const colorTable = computed(() =>
+  colorFor.value ? doc.tableById.get(colorFor.value) : null,
+);
+function setTableColor(color) {
+  // a multi-selection gets the same color (the clicked table is part of it)
+  const ids = editor.isSelected(colorFor.value)
+    ? [...editor.selected].filter((id) => doc.tableById.has(id))
+    : [colorFor.value];
+  doc.commit((d) => {
+    for (const tb of d.tables) if (ids.includes(tb.id)) tb.color = color;
+  });
+}
+
+/** Screen rect of a column's "more" button (anchor for its popover). */
+watch(
+  () => editor.columnPopover,
+  async (v) => {
+    if (!v) return (columnAnchor.value = null);
+    await nextTick();
+    const tableEl = root.value.querySelector(`[data-table-id="${v.tableId}"]`);
+    const rowEl = tableEl?.querySelector(`[data-column-id="${v.columnId}"]`);
+    if (!tableEl || !rowEl) return (columnAnchor.value = null);
+    // horizontal extent of the whole card, vertical extent of the row: beside the table, level with the row
+    const t = tableEl.getBoundingClientRect();
+    const r = rowEl.getBoundingClientRect();
+    columnAnchor.value = {
+      left: t.left,
+      right: t.right,
+      width: t.width,
+      top: r.top,
+      bottom: r.bottom,
+      height: r.height,
+    };
+  },
+);
+function navigateColumn(dir) {
+  const v = editor.columnPopover;
+  const tb = v && doc.tableById.get(v.tableId);
+  if (!tb) return;
+  const i = tb.columns.findIndex((c) => c.id === v.columnId) + dir;
+  if (i >= 0 && i < tb.columns.length)
+    editor.openColumnPopover(v.tableId, tb.columns[i].id);
 }
 
 /* --------------------------------- keyboard ---------------------------------- */
@@ -265,12 +534,29 @@ function onKeyDown(e) {
     camera.fitAll();
   } else if (e.shiftKey && !mod && e.code === "Digit2") {
     camera.fitSelection(editor.selected);
+  } else if (mod && k === "d") {
+    e.preventDefault();
+    duplicateSelected();
+  } else if (k === "delete" || k === "backspace") {
+    if (editor.selected.size) {
+      e.preventDefault();
+      deleteSelected();
+    }
+  } else if (e.code === "F2") {
+    const only = editor.selected.size === 1 ? [...editor.selected][0] : null;
+    if (only && doc.tableById.has(only)) {
+      e.preventDefault();
+      editor.startRename({ kind: "table", tableId: only });
+    }
+  } else if (!mod && !e.shiftKey && k === "t") {
+    editor.setTool("table");
   } else if (!mod && !e.shiftKey && k === "v") {
     editor.setTool("select");
   } else if (!mod && !e.shiftKey && k === "h") {
     editor.setTool("pan");
   } else if (k === "escape") {
-    editor.clearSelection();
+    if (editor.tool !== "select") editor.setTool("select");
+    else editor.clearSelection();
   }
 }
 function onKeyUp(e) {
@@ -350,6 +636,7 @@ defineExpose({ camera });
     @pointerup="onPointerUp"
     @pointercancel="onPointerUp"
     @contextmenu="onContextMenu"
+    @dblclick="onDoubleClick"
   >
     <div
       class="absolute top-0 left-0 origin-top-left"
@@ -369,17 +656,21 @@ defineExpose({ camera });
         @pointerdown="onItemDown($event, g.id)"
       />
       <CanvasTable
-        v-for="t in doc.doc.tables"
-        :key="t.id"
-        :table="t"
-        :selected="editor.isSelected(t.id)"
-        :dragging="!!drag?.moved && dragIds.has(t.id)"
-        :dx="drag?.moved && dragIds.has(t.id) ? drag.dx : 0"
-        :dy="drag?.moved && dragIds.has(t.id) ? drag.dy : 0"
+        v-for="tb in doc.doc.tables"
+        :key="tb.id"
+        :table="tb"
+        :selected="editor.isSelected(tb.id)"
+        :dragging="!!drag?.moved && dragIds.has(tb.id)"
+        :dx="drag?.moved && dragIds.has(tb.id) ? drag.dx : 0"
+        :dy="drag?.moved && dragIds.has(tb.id) ? drag.dy : 0"
+        :zoom="view.zoom"
         :fk-keys="fkKeys"
         :index-keys="indexKeys"
-        @pointerdown="onItemDown($event, t.id)"
-        @toggle-collapse="doc.updateTable(t.id, { collapsed: !t.collapsed })"
+        @pointerdown="onItemDown($event, tb.id)"
+        @header-menu="openTableMenu($event, tb)"
+        @color="openColor(tb.id, $event)"
+        @column-menu="(ev, colId) => openColumnMenu(ev, tb, colId)"
+        @toggle-collapse="doc.updateTable(tb.id, { collapsed: !tb.collapsed })"
       />
     </div>
 
@@ -391,5 +682,40 @@ defineExpose({ camera });
 
     <slot />
     <CanvasMinimap />
+
+    <UiContextMenu ref="ctx" @select="onMenuSelect" />
+
+    <UiPopover
+      v-model:open="colorOpen"
+      :anchor="colorAnchor"
+      side="bottom"
+      align="start"
+      :offset="4"
+    >
+      <UiColorPalette
+        :model-value="colorTable?.color ?? null"
+        :custom="doc.doc.palette"
+        @update:model-value="setTableColor"
+        @add="doc.addPaletteColor"
+        @remove="doc.removePaletteColor"
+      />
+    </UiPopover>
+
+    <UiPopover
+      v-model:open="columnOpen"
+      :anchor="columnAnchor"
+      side="inline-end"
+      align="start"
+      :offset="8"
+    >
+      <ColumnEditor
+        v-if="editor.columnPopover"
+        :key="editor.columnPopover.columnId"
+        :table-id="editor.columnPopover.tableId"
+        :column-id="editor.columnPopover.columnId"
+        @close="editor.closeColumnPopover()"
+        @navigate="navigateColumn"
+      />
+    </UiPopover>
   </div>
 </template>

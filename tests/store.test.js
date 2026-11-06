@@ -125,3 +125,75 @@ describe("moveItems", () => {
         expect(s.dirty).toBe(false);
     });
 });
+
+describe("stage 5 actions", () => {
+    it("addDefaultTable creates a table with an id PK column and a free name", () => {
+        const id = s.addDefaultTable({ x: 10, y: 20 });
+        const t = s.tableById.get(id);
+        expect([t.x, t.y, t.name]).toEqual([10, 20, "table_1"]);
+        expect(t.columns).toHaveLength(1);
+        expect(t.columns[0]).toMatchObject({
+            name: "id",
+            pk: true,
+            increment: true,
+            notNull: true,
+        });
+        const second = s.addDefaultTable();
+        expect(s.tableById.get(second).name).toBe("table_2");
+    });
+
+    it("duplicateTables copies with fresh ids, unique names, offset and remapped indexes", () => {
+        const [copyId] = s.duplicateTables(["t_users"]);
+        const copy = s.tableById.get(copyId);
+        const orig = s.tableById.get("t_users");
+        expect(copy.name).toBe("users_copy");
+        expect([copy.x, copy.y]).toEqual([orig.x + 32, orig.y + 32]);
+        expect(copy.id).not.toBe(orig.id);
+        const ids = new Set(orig.columns.map((c) => c.id));
+        expect(copy.columns.every((c) => !ids.has(c.id))).toBe(true);
+        expect(copy.indexes[0].columns[0]).toBe(copy.columns[1].id);
+        const [again] = s.duplicateTables(["t_users"]);
+        expect(s.tableById.get(again).name).toBe("users_copy_2");
+        s.undo();
+        s.undo();
+        expect(s.doc.tables).toHaveLength(2);
+    });
+
+    it("removeTables deletes several tables and their refs in one step", () => {
+        s.removeTables(["t_users", "t_orders"]);
+        expect(s.doc.tables).toHaveLength(0);
+        expect(s.doc.refs).toHaveLength(0);
+        s.undo();
+        expect(s.doc.tables).toHaveLength(2);
+        expect(s.doc.refs).toHaveLength(1);
+    });
+
+    it("addColumn inserts at an index, names it column_N, and amend folds into one undo step", () => {
+        const id = s.addColumn("t_orders", {}, 1);
+        const cols = s.tableById.get("t_orders").columns;
+        expect(cols[1].id).toBe(id);
+        expect(cols[1].name).toBe("column_1");
+        s.addColumn("t_orders");
+        expect(s.tableById.get("t_orders").columns.at(-1).name).toBe(
+            "column_2",
+        );
+        s.undo();
+        s.undo();
+        expect(s.tableById.get("t_orders").columns).toHaveLength(3);
+    });
+
+    it("setTableGroup ignores unknown groups", () => {
+        s.setTableGroup("t_users", "g_missing");
+        expect(s.tableById.get("t_users").groupId).toBeNull();
+        s.setTableGroup("t_users", "g_sales");
+        expect(s.tableById.get("t_users").groupId).toBe("g_sales");
+    });
+
+    it("rapid edits of one field coalesce into one undo step", () => {
+        s.updateTable("t_users", { name: "u" }, "name");
+        s.updateTable("t_users", { name: "us" }, "name");
+        s.updateTable("t_users", { name: "use" }, "name");
+        s.undo();
+        expect(s.tableById.get("t_users").name).toBe("users");
+    });
+});
