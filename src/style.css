@@ -90,6 +90,8 @@
     --c-kbd: #1d222c;
     --c-kbd-fg: #9aa3b2;
     --c-grid-dot: rgba(140, 160, 200, 0.1);
+    --c-rel: #3a4352;
+    --c-line-hi: #6e9fef;
 
     --shadow-popover:
         0 12px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--c-line-strong);
@@ -138,6 +140,8 @@
     --c-kbd: #eef1f6;
     --c-kbd-fg: #5b6474;
     --c-grid-dot: rgba(60, 80, 120, 0.14);
+    --c-rel: #9aa5b8;
+    --c-line-hi: #2f6fe0;
     --mix-header: 12%;
 
     --shadow-popover:

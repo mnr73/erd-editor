@@ -4,6 +4,10 @@ import { defineStore } from "pinia";
 
 import { moveSelection } from "@/model/columns";
 import {
+    DEFAULT_FROM_CARDINALITY,
+    DEFAULT_TO_CARDINALITY,
+} from "@/model/constants";
+import {
     cloneTable,
     createColumn,
     createDefaultTable,
@@ -11,6 +15,7 @@ import {
     createGroup,
     createIndex,
     createRef,
+    createRefEnd,
     createTable,
 } from "@/model/document";
 import { movedWith } from "@/model/geometry";
@@ -393,10 +398,76 @@ export const useDocumentStore = defineStore("document", () => {
         return r.id;
     }
 
-    function updateRef(id, patch) {
+    /**
+     * Connect two columns with a many-to-one relation (the default for a dragged line).
+     * The FK holder is the `from` side: normally the column the drag started on, but dragging FROM a
+     * primary key TO a plain column means "the other table points at me", so the ends are swapped.
+     * Returns the new ref id, the id of an identical existing ref, or null when it makes no sense
+     * (unknown table/column, or a column connected to itself).
+     */
+    function connectColumns(fromTableId, fromColumnId, toTableId, toColumnId) {
+        const tables = doc.value.tables;
+        const ta = tables.find((t) => t.id === fromTableId);
+        const tb = tables.find((t) => t.id === toTableId);
+        const ca = ta?.columns.find((c) => c.id === fromColumnId);
+        const cb = tb?.columns.find((c) => c.id === toColumnId);
+        if (!ca || !cb) return null;
+        if (fromTableId === toTableId && fromColumnId === toColumnId)
+            return null;
+        const swap = ca.pk && !cb.pk;
+        const [child, childCol, parent, parentCol] = swap
+            ? [toTableId, toColumnId, fromTableId, fromColumnId]
+            : [fromTableId, fromColumnId, toTableId, toColumnId];
+        const same = doc.value.refs.find(
+            (r) =>
+                r.from.table === child &&
+                r.to.table === parent &&
+                r.from.columns.length === 1 &&
+                r.to.columns.length === 1 &&
+                r.from.columns[0] === childCol &&
+                r.to.columns[0] === parentCol,
+        );
+        if (same) return same.id;
+        const ref = createRef({
+            from: createRefEnd({
+                table: child,
+                columns: [childCol],
+                cardinality: DEFAULT_FROM_CARDINALITY,
+            }),
+            to: createRefEnd({
+                table: parent,
+                columns: [parentCol],
+                cardinality: DEFAULT_TO_CARDINALITY,
+            }),
+        });
+        commit((d) => d.refs.push(ref));
+        return ref.id;
+    }
+
+    function updateRef(id, patch, key = null) {
+        commit(
+            (d) => {
+                const r = d.refs.find((x) => x.id === id);
+                if (r) Object.assign(r, patch);
+            },
+            key && `${key}:${id}`,
+        );
+    }
+
+    /** Change one end of a ref (`side` is "from" or "to"): cardinality, columns, ... */
+    function updateRefEnd(id, side, patch) {
         commit((d) => {
             const r = d.refs.find((x) => x.id === id);
-            if (r) Object.assign(r, patch);
+            if (r && (side === "from" || side === "to"))
+                Object.assign(r[side], patch);
+        });
+    }
+
+    /** Swap which table holds the foreign key (the ends exchange places, cardinalities travel with them). */
+    function swapRef(id) {
+        commit((d) => {
+            const r = d.refs.find((x) => x.id === id);
+            if (r) [r.from, r.to] = [r.to, r.from];
         });
     }
 
@@ -550,7 +621,10 @@ export const useDocumentStore = defineStore("document", () => {
         updateIndex,
         removeIndex,
         addRef,
+        connectColumns,
         updateRef,
+        updateRefEnd,
+        swapRef,
         removeRef,
         addGroup,
         moveItems,

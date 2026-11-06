@@ -21,6 +21,7 @@ import {
   IconDelete,
   IconEdit,
   IconNote,
+  IconRelationSwap,
   IconToolTable,
 } from "@/icons";
 import { fkColumnKeys } from "@/model/document";
@@ -35,16 +36,25 @@ import {
   tableRect,
 } from "@/model/geometry";
 import { inTableOrder } from "@/model/indexes";
+import {
+  anchorY,
+  columnKeysOf,
+  focusedRefIds,
+  layoutRefs,
+  routeRef,
+} from "@/model/relations";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
 
 import CanvasGroup from "./CanvasGroup.vue";
 import CanvasMinimap from "./CanvasMinimap.vue";
+import CanvasRelations from "./CanvasRelations.vue";
 import CanvasTable from "./CanvasTable.vue";
 import ColumnEditor from "./ColumnEditor.vue";
 import IndexEditor from "./IndexEditor.vue";
+import RelationEditor from "./RelationEditor.vue";
 import { useCanvasCamera } from "./useCanvasCamera";
-import { screenToWorld } from "./viewport";
+import { screenToWorld, worldToScreen } from "./viewport";
 
 /**
  * The infinite canvas: dot grid, pan / zoom, selection (click, shift, marquee), dragging tables and
@@ -72,6 +82,33 @@ const indexKeys = computed(() => {
       for (const c of ix.columns) keys.add(`${t.id}.${c}`);
   return keys;
 });
+/* -------------------------------- relations ---------------------------------- */
+
+/** Document as the user sees it right now: tables shifted by the live drag offset. */
+const liveDoc = computed(() => {
+  if (!drag.value?.moved) return doc.doc;
+  const { dx, dy } = drag.value;
+  const moving = dragIds.value;
+  return {
+    ...doc.doc,
+    tables: doc.doc.tables.map((t) =>
+      moving.has(t.id) ? { ...t, x: t.x + dx, y: t.y + dy } : t,
+    ),
+  };
+});
+const refLayout = computed(() => layoutRefs(liveDoc.value));
+const focusRefs = computed(() =>
+  focusedRefIds(doc.doc, {
+    refId: editor.selectedRefId,
+    hoverRefId: editor.hoverRefId,
+    columnSel: editor.columnSelection,
+    tableIds: [...editor.selected].filter((id) => doc.tableById.has(id)),
+  }),
+);
+const litKeys = computed(() =>
+  columnKeysOf(doc.doc.refs.filter((r) => focusRefs.value.has(r.id))),
+);
+
 // Membership is derived: a table is in a section only when it lies completely inside it.
 const membership = computed(() => groupMembership(doc.doc));
 const memberCounts = computed(() => {
@@ -93,7 +130,8 @@ const drag = ref(null); // { startX, startY, dx, dy, moved }
 const marquee = ref(null); // { a, b } in screen px relative to the canvas
 const panning = ref(null); // { x, y }
 const spaceDown = ref(false);
-const resize = ref(null); // { id, handle, startX, startY, rect, live }
+const resize = ref(null);
+const link = ref(null); // { tableId, columnId, x, y (world), target: {tableId, columnId}|null } // { id, handle, startX, startY, rect, live }
 const ctx = useTemplateRef("ctx");
 const ctxTarget = ref(null); // what the open context menu was opened on
 const colorFor = ref(null); // table id whose header-color popover is open
@@ -175,7 +213,10 @@ function onPointerDown(e) {
     return;
   }
   // empty canvas (tables / group chips stop propagation themselves)
-  if (!e.shiftKey) editor.clearSelection();
+  if (!e.shiftKey) {
+    editor.clearSelection();
+    editor.selectRef(null);
+  }
   marquee.value = {
     a: localPoint(e),
     b: localPoint(e),
@@ -191,6 +232,8 @@ function onPointerMove(e) {
   } else if (marquee.value) {
     marquee.value = { ...marquee.value, b: localPoint(e) };
     selectInMarquee();
+  } else if (link.value) {
+    updateLink(e);
   } else if (resize.value) {
     const r = resize.value;
     const dx = (e.clientX - r.startX) / view.value.zoom;
@@ -217,9 +260,83 @@ function onPointerUp(e) {
     root.value.releasePointerCapture(e.pointerId);
   panning.value = null;
   marquee.value = null;
+  if (link.value) finishLink();
   if (resize.value) finishResize();
   if (drag.value) finishDrag();
 }
+
+/* --------------------------- drawing a relationship ------------------------- */
+
+/** Start a line from a column's connector dot (or any row while the relation tool is active). */
+function startLink(e, tableId, columnId) {
+  if (e.button !== 0) return;
+  e.stopPropagation();
+  const p = worldPoint(e);
+  link.value = { tableId, columnId, x: p.x, y: p.y, target: null };
+  root.value.setPointerCapture(e.pointerId);
+}
+
+function updateLink(e) {
+  const p = worldPoint(e);
+  const hit = document.elementFromPoint(e.clientX, e.clientY);
+  const row = hit?.closest("[data-column-id]");
+  const tb = row?.closest("[data-table-id]");
+  const target =
+    row && tb
+      ? { tableId: tb.dataset.tableId, columnId: row.dataset.columnId }
+      : null;
+  link.value = { ...link.value, x: p.x, y: p.y, target };
+}
+
+function finishLink() {
+  const l = link.value;
+  link.value = null;
+  if (!l?.target) return;
+  const id = doc.connectColumns(
+    l.tableId,
+    l.columnId,
+    l.target.tableId,
+    l.target.columnId,
+  );
+  if (id) editor.selectRef(id);
+  if (editor.tool === "relation") editor.setTool("select");
+}
+
+/** Preview line while dragging: from the source row to the pointer (snapped to the target row). */
+const linkPreview = computed(() => {
+  const l = link.value;
+  if (!l) return null;
+  const from = doc.tableById.get(l.tableId);
+  if (!from) return null;
+  const target = l.target && doc.tableById.get(l.target.tableId);
+  const fakeRef = {
+    from: { columns: [l.columnId] },
+    to: { columns: [l.target?.columnId ?? ""] },
+  };
+  if (target) {
+    const g = routeRef(fakeRef, from, target);
+    return {
+      d: g.d,
+      tx: g.q.x,
+      ty: g.q.y,
+      sx: g.p.x,
+      sy: g.p.y,
+      snapped: true,
+    };
+  }
+  const sx = from.x + (l.x >= from.x + 100 ? tableRect(from).w : 0);
+  const sy = anchorY(from, l.columnId);
+  const dir = l.x >= sx ? 1 : -1;
+  const mx = (sx + l.x) / 2;
+  return {
+    d: `M${sx} ${sy}H${sx + dir * 12}C${mx} ${sy} ${mx} ${l.y} ${l.x} ${l.y}`,
+    tx: l.x,
+    ty: l.y,
+    sx,
+    sy,
+    snapped: false,
+  };
+});
 
 function startResize(e, id, handle) {
   if (e.button !== 0) return;
@@ -467,6 +584,44 @@ function openColumnMenu(e, table, columnId) {
   ctx.value.show(e, columnItems(editor.columnSelection?.ids.size ?? 1));
 }
 
+let lastRefDown = { id: null, t: 0 };
+/** Click selects a line; a second click within 350ms opens its editor. */
+function onPickRef(id, e) {
+  editor.selectRef(id);
+  const now = performance.now();
+  if (lastRefDown.id === id && now - lastRefDown.t < 350) {
+    lastRefDown = { id: null, t: 0 };
+    editor.openRelationEditor(id, { x: e.clientX, y: e.clientY });
+  } else lastRefDown = { id, t: now };
+}
+
+const refItems = () => [
+  {
+    id: "ref-edit",
+    label: t("relation.edit"),
+    icon: IconEdit,
+    shortcut: "Enter",
+  },
+  { id: "ref-swap", label: t("relation.swap"), icon: IconRelationSwap },
+  { separator: true },
+  {
+    id: "ref-delete",
+    label: t("relation.delete"),
+    icon: IconDelete,
+    danger: true,
+    shortcut: "Del",
+  },
+];
+function openRefMenu(id, e) {
+  editor.selectRef(id);
+  ctxTarget.value = {
+    kind: "ref",
+    refId: id,
+    anchor: { x: e.clientX, y: e.clientY },
+  };
+  ctx.value.show(e, refItems());
+}
+
 function onMenuSelect(item) {
   const target = ctxTarget.value;
   if (!target) return;
@@ -501,6 +656,13 @@ function onMenuSelect(item) {
         columnId: id,
       });
     }
+    case "ref-edit":
+      return editor.openRelationEditor(target.refId, target.anchor);
+    case "ref-swap":
+      return doc.swapRef(target.refId);
+    case "ref-delete":
+      doc.removeRef(target.refId);
+      return editor.selectRef(null);
     case "delete-column":
       return doc.removeColumn(target.tableId, target.columnId);
   }
@@ -508,6 +670,41 @@ function onMenuSelect(item) {
 
 /* -------------------------------- indexes ---------------------------------- */
 
+/** Screen box around BOTH tables of the edited line: the popover opens beside it, clear of the line. */
+const relationAnchor = computed(() => {
+  const ed = editor.relationEditor;
+  if (!ed) return null;
+  const r = doc.doc.refs.find((x) => x.id === ed.refId);
+  if (!r) return ed.anchor;
+  const box = root.value?.getBoundingClientRect();
+  const rects = [r.from.table, r.to.table]
+    .map((id) => doc.tableById.get(id))
+    .filter(Boolean)
+    .map((tb) => {
+      const w = tableRect(tb);
+      const a = worldToScreen(view.value, { x: w.x, y: w.y });
+      const b = worldToScreen(view.value, { x: w.x + w.w, y: w.y + w.h });
+      return { l: a.x, t: a.y, r: b.x, b: b.y };
+    });
+  if (!rects.length || !box) return ed.anchor;
+  const left = Math.min(...rects.map((x) => x.l)) + box.left;
+  const right = Math.max(...rects.map((x) => x.r)) + box.left;
+  const top = Math.min(...rects.map((x) => x.t)) + box.top;
+  const bottom = Math.max(...rects.map((x) => x.b)) + box.top;
+  return {
+    left,
+    right,
+    top,
+    bottom,
+    width: right - left,
+    height: bottom - top,
+  };
+});
+
+const relationOpen = computed({
+  get: () => !!editor.relationEditor,
+  set: (v) => !v && editor.closeRelationEditor(),
+});
 const indexAnchor = ref(null);
 const indexOpen = computed({
   get: () => !!editor.indexEditor,
@@ -675,8 +872,22 @@ function onKeyDown(e) {
   } else if (mod && k === "d") {
     e.preventDefault();
     duplicateSelected();
+  } else if (k === "enter" && editor.selectedRefId) {
+    e.preventDefault();
+    const el = root.value.querySelector(
+      `[data-ref-id="${editor.selectedRefId}"] path`,
+    );
+    const r = el?.getBoundingClientRect();
+    editor.openRelationEditor(
+      editor.selectedRefId,
+      r ? { x: r.left + r.width / 2, y: r.top + r.height / 2 } : null,
+    );
   } else if (k === "delete" || k === "backspace") {
-    if (editor.selected.size) {
+    if (editor.selectedRefId) {
+      e.preventDefault();
+      doc.removeRef(editor.selectedRefId);
+      editor.selectRef(null);
+    } else if (editor.selected.size) {
       e.preventDefault();
       deleteSelected();
     }
@@ -688,12 +899,18 @@ function onKeyDown(e) {
     }
   } else if (!mod && !e.shiftKey && k === "t") {
     editor.setTool("table");
+  } else if (!mod && e.key === "?") {
+    editor.legendOpen = !editor.legendOpen;
+  } else if (!mod && !e.shiftKey && k === "r") {
+    editor.setTool("relation");
   } else if (!mod && !e.shiftKey && k === "v") {
     editor.setTool("select");
   } else if (!mod && !e.shiftKey && k === "h") {
     editor.setTool("pan");
   } else if (k === "escape") {
-    if (editor.tool !== "select") editor.setTool("select");
+    if (link.value) link.value = null;
+    else if (editor.tool !== "select") editor.setTool("select");
+    else if (editor.selectedRefId) editor.selectRef(null);
     else editor.clearSelection();
   }
 }
@@ -747,6 +964,19 @@ watch(
     maybeFit();
   },
 );
+// a selected / hovered line that was deleted or undone away
+watch(
+  () => doc.doc.refs,
+  (refs) => {
+    if (
+      editor.selectedRefId &&
+      !refs.some((r) => r.id === editor.selectedRefId)
+    )
+      editor.selectRef(null);
+    if (editor.hoverRefId && !refs.some((r) => r.id === editor.hoverRefId))
+      editor.hoverRefId = null;
+  },
+);
 // keep the selection free of ids that were deleted / undone away
 watch(
   () => [doc.doc.tables, doc.doc.groups],
@@ -797,6 +1027,16 @@ defineExpose({ camera });
         @pointerdown="onItemDown($event, g.id)"
         @resize-start="(ev, handle) => startResize(ev, g.id, handle)"
       />
+      <CanvasRelations
+        :refs="doc.doc.refs"
+        :layout="refLayout"
+        :focus="focusRefs"
+        :selected-id="editor.selectedRefId"
+        :hover-id="editor.hoverRefId"
+        @pick="onPickRef"
+        @hover="(id) => (editor.hoverRefId = id)"
+        @menu="openRefMenu"
+      />
       <CanvasTable
         v-for="tb in doc.doc.tables"
         :key="tb.id"
@@ -808,13 +1048,63 @@ defineExpose({ camera });
         :zoom="view.zoom"
         :fk-keys="fkKeys"
         :index-keys="indexKeys"
+        :lit-keys="litKeys"
+        :link-source="link && link.tableId === tb.id ? link.columnId : null"
+        :link-target="
+          link?.target?.tableId === tb.id ? link.target.columnId : null
+        "
+        :relation-tool="editor.tool === 'relation'"
         @pointerdown="onItemDown($event, tb.id)"
+        @link-start="(ev, colId) => startLink(ev, tb.id, colId)"
         @header-menu="openTableMenu($event, tb)"
         @color="openColor(tb.id, $event)"
         @column-menu="(ev, colId) => openColumnMenu(ev, tb, colId)"
         @toggle-collapse="doc.updateTable(tb.id, { collapsed: !tb.collapsed })"
       />
     </div>
+
+    <svg
+      v-if="linkPreview"
+      class="pointer-events-none absolute top-0 left-0 overflow-visible"
+      width="1"
+      height="1"
+      aria-hidden="true"
+      :style="worldStyle"
+      style="transform-origin: 0 0"
+    >
+      <path
+        :d="linkPreview.d"
+        fill="none"
+        stroke="var(--c-accent)"
+        stroke-width="1.8"
+        stroke-dasharray="5 4"
+        stroke-linecap="round"
+      />
+      <circle
+        :cx="linkPreview.sx"
+        :cy="linkPreview.sy"
+        r="5"
+        fill="var(--c-accent)"
+        stroke="var(--c-canvas)"
+        stroke-width="2"
+      />
+      <circle
+        v-if="linkPreview.snapped"
+        :cx="linkPreview.tx"
+        :cy="linkPreview.ty"
+        r="9"
+        fill="none"
+        stroke="var(--c-accent)"
+        stroke-width="1.5"
+        opacity="0.6"
+      />
+      <circle
+        :cx="linkPreview.tx"
+        :cy="linkPreview.ty"
+        r="4"
+        fill="var(--c-accent)"
+      />
+    </svg>
 
     <div
       v-if="marqueeStyle"
@@ -840,6 +1130,21 @@ defineExpose({ camera });
         @update:model-value="setTableColor"
         @add="doc.addPaletteColor"
         @remove="doc.removePaletteColor"
+      />
+    </UiPopover>
+
+    <UiPopover
+      v-model:open="relationOpen"
+      :anchor="relationAnchor"
+      side="inline-end"
+      align="start"
+      :offset="14"
+    >
+      <RelationEditor
+        v-if="editor.relationEditor"
+        :key="editor.relationEditor.refId"
+        :ref-id="editor.relationEditor.refId"
+        @close="editor.closeRelationEditor()"
       />
     </UiPopover>
 

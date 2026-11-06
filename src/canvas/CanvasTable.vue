@@ -46,9 +46,14 @@ const props = defineProps({
   zoom: { type: Number, default: 1 },
   fkKeys: { type: Set, required: true }, // `${tableId}.${columnId}` that are foreign keys
   indexKeys: { type: Set, required: true }, // `${tableId}.${columnId}` that are in some index
+  litKeys: { type: Set, default: () => new Set() }, // columns at the ends of highlighted relations
+  linkSource: { type: String, default: null }, // column a relation is being dragged from
+  linkTarget: { type: String, default: null }, // column under the pointer while dragging
+  relationTool: Boolean, // relation tool active: pressing a row starts a line
 });
 const emit = defineEmits([
   "pointerdown",
+  "link-start",
   "toggle-collapse",
   "header-menu",
   "column-menu",
@@ -106,6 +111,9 @@ const rows = computed(() =>
       def: c.default,
       note: c.note,
       indexed: props.indexKeys.has(key),
+      lit: props.litKeys.has(key),
+      linkSource: props.linkSource === c.id,
+      linkTarget: props.linkTarget === c.id,
       indexTitle: indexTitle(c.id),
       composite: props.table.indexes.some(
         (ix) => ix.columns.length > 1 && ix.columns.includes(c.id),
@@ -210,6 +218,7 @@ const isColumnSelected = (id) => !!selectedColumns.value?.has(id);
  */
 function onRowDown(e, id) {
   if (e.button !== 0) return;
+  if (props.relationTool) return emit("link-start", e, id);
   if (e.target.closest("button, input, span.cursor-grab")) return;
   e.stopPropagation();
   editor.selectColumn(props.table, id, {
@@ -384,7 +393,11 @@ function focusRow(id) {
           reorder?.from === i ? 'opacity-40' : '',
           editingColumn === r.id || isColumnSelected(r.id)
             ? 'bg-row-active'
-            : 'hover:bg-hover',
+            : r.lit || r.linkTarget || r.linkSource
+              ? 'bg-accent-soft'
+              : 'hover:bg-hover',
+          r.linkTarget || r.linkSource ? 'ring-1 ring-inset ring-accent' : '',
+          props.relationTool ? 'cursor-crosshair' : '',
           isColumnSelected(r.id) ? 'ring-1 ring-inset ring-accent/60' : '',
         ]"
         :style="{ height: `${ROW_H}px` }"
@@ -463,6 +476,19 @@ function focusRow(id) {
             <IconMore class="size-3" />
           </button>
         </template>
+
+        <!-- relation connector: drag from here onto a column of another table -->
+        <button
+          v-for="side in ['start', 'end']"
+          :key="side"
+          type="button"
+          :aria-label="t('relation.connect')"
+          :title="t('relation.connect')"
+          :data-link-handle="r.id"
+          class="absolute top-1/2 z-10 hidden size-[10px] -translate-y-1/2 cursor-crosshair rounded-full border-2 border-accent bg-card hover:bg-accent group-hover/row:block"
+          :class="side === 'start' ? '-start-[5px]' : '-end-[5px]'"
+          @pointerdown.stop.prevent="emit('link-start', $event, r.id)"
+        />
 
         <!-- insert above / below: + dots on the row border, only on hover -->
         <button

@@ -4,6 +4,7 @@ import { onBeforeUnmount, onMounted } from "vue";
 import AppAskDialog from "@/components/AppAskDialog.vue";
 import AppTabBar from "@/components/AppTabBar.vue";
 import AppTitleBar from "@/components/AppTitleBar.vue";
+import RelationLegend from "@/components/RelationLegend.vue";
 import StartPage from "@/components/StartPage.vue";
 import ToolRail from "@/components/ToolRail.vue";
 import UiToastHost from "@/components/ui/UiToastHost.vue";
@@ -19,6 +20,7 @@ import {
   saveActive,
 } from "@/services/files";
 import { useDocumentStore } from "@/stores/document";
+import { useEditorStore } from "@/stores/editor";
 import {
   listenOpenFile,
   onWindowCloseRequested,
@@ -26,6 +28,7 @@ import {
 } from "@/tauri";
 
 const doc = useDocumentStore();
+const editor = useEditorStore();
 const showGallery = new URLSearchParams(location.search).has("components");
 const cleanups = [];
 
@@ -88,7 +91,13 @@ onBeforeUnmount(() => cleanups.forEach((fn) => fn?.()));
     <StartPage v-if="doc.isFresh" />
     <div v-else class="flex min-h-0 flex-1">
       <ToolRail />
-      <main class="min-w-0 flex-1"><EditorCanvas /></main>
+      <main class="relative min-w-0 flex-1">
+        <EditorCanvas />
+        <RelationLegend
+          v-if="editor.legendOpen"
+          class="absolute bottom-4 inset-s-4 z-20"
+        />
+      </main>
     </div>
   </div>
   <AppAskDialog />

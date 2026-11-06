@@ -360,3 +360,85 @@ describe("start page (fresh tab)", () => {
         expect(s.path).toBe("/tmp/a.erd.json");
     });
 });
+
+describe("relations", () => {
+    const cols = (t) => s.tableById.get(t).columns;
+
+    it("connectColumns creates a many-to-one ref from the dragged column", () => {
+        const before = s.doc.refs.length;
+        const order = cols("t_orders");
+        const users = cols("t_users");
+        const fk = order.find((c) => c.name === "status").id;
+        const id = s.connectColumns("t_orders", fk, "t_users", users[0].id);
+        expect(s.doc.refs).toHaveLength(before + 1);
+        const r = s.doc.refs.find((x) => x.id === id);
+        expect(r.from.table).toBe("t_orders");
+        expect(r.from.cardinality).toBe("0..*");
+        expect(r.to.cardinality).toBe("1");
+    });
+
+    it("dragging from a primary key onto a plain column swaps the ends (the other table holds the FK)", () => {
+        const order = cols("t_orders");
+        const pk = cols("t_users").find((c) => c.pk).id;
+        const plain = order.find((c) => c.name === "status").id;
+        const id = s.connectColumns("t_users", pk, "t_orders", plain);
+        const r = s.doc.refs.find((x) => x.id === id);
+        expect(r.from.table).toBe("t_orders");
+        expect(r.to.table).toBe("t_users");
+    });
+
+    it("an identical connection returns the existing ref instead of duplicating it", () => {
+        const fk = cols("t_orders").find((c) => c.name === "status").id;
+        const target = cols("t_users")[0].id;
+        const a = s.connectColumns("t_orders", fk, "t_users", target);
+        const n = s.doc.refs.length;
+        expect(s.connectColumns("t_orders", fk, "t_users", target)).toBe(a);
+        expect(s.doc.refs).toHaveLength(n);
+    });
+
+    it("refuses unknown columns and a column connected to itself", () => {
+        const c = cols("t_orders")[0].id;
+        expect(s.connectColumns("t_orders", c, "t_orders", c)).toBeNull();
+        expect(s.connectColumns("t_orders", "nope", "t_users", c)).toBeNull();
+        expect(s.connectColumns("zzz", c, "t_users", c)).toBeNull();
+    });
+
+    it("self references between two different columns are allowed", () => {
+        const [a, b] = cols("t_orders");
+        const id = s.connectColumns("t_orders", b.id, "t_orders", a.id);
+        expect(id).toBeTruthy();
+    });
+
+    it("swapRef, updateRefEnd and removeRef are single undo steps", () => {
+        const fk = cols("t_orders").find((c) => !c.pk).id;
+        const id = s.connectColumns(
+            "t_orders",
+            fk,
+            "t_users",
+            cols("t_users")[0].id,
+        );
+        s.swapRef(id);
+        expect(s.doc.refs.find((r) => r.id === id).from.table).toBe("t_users");
+        expect(s.doc.refs.find((r) => r.id === id).from.cardinality).toBe("1");
+        s.undo();
+        expect(s.doc.refs.find((r) => r.id === id).from.table).toBe("t_orders");
+        s.updateRefEnd(id, "to", { cardinality: "0..1" });
+        expect(s.doc.refs.find((r) => r.id === id).to.cardinality).toBe("0..1");
+        s.removeRef(id);
+        expect(s.doc.refs.some((r) => r.id === id)).toBe(false);
+        s.undo();
+        expect(s.doc.refs.some((r) => r.id === id)).toBe(true);
+    });
+
+    it("deleting a table removes its refs", () => {
+        const fk = cols("t_orders").find((c) => !c.pk).id;
+        const id = s.connectColumns(
+            "t_orders",
+            fk,
+            "t_users",
+            cols("t_users")[0].id,
+        );
+        s.removeTables(["t_users"]);
+        expect(s.doc.refs.some((r) => r.id === id)).toBe(false);
+    });
+});

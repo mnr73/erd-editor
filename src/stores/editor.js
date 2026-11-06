@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 
 import { rangeIds } from "@/model/columns";
 
-export const TOOLS = ["select", "pan", "table"];
+export const TOOLS = ["select", "pan", "table", "relation"];
 
 /**
  * Transient editor state (not saved in the file): active tool, selection, viewport size.
@@ -25,13 +25,31 @@ export const useEditorStore = defineStore("editor", () => {
     // Selected columns of ONE table: { tableId, ids: Set, anchor } (anchor = last plain-clicked id,
     // the start of Shift ranges). Replaced, never mutated.
     const columnSelection = shallowRef(null);
+    // Selected relationship (one at a time) and the line under the pointer. Not saved, not undoable.
+    const selectedRefId = ref(null);
+    const hoverRefId = ref(null);
+    // Relation editor popover: { refId, anchor: {x,y} }
+    const legendOpen = ref(false);
+    const relationEditor = ref(null);
+    const openRelationEditor = (refId, anchor) =>
+        (relationEditor.value = { refId, anchor });
+    const closeRelationEditor = () => (relationEditor.value = null);
 
     function setTool(next) {
         if (TOOLS.includes(next)) tool.value = next;
     }
 
+    function selectRef(id) {
+        selectedRefId.value = id;
+        if (id) {
+            selected.value = new Set();
+            columnSelection.value = null;
+        }
+    }
+
     function setSelection(ids) {
         selected.value = new Set(ids);
+        if (selected.value.size) selectedRefId.value = null;
         if (
             columnSelection.value &&
             !selected.value.has(columnSelection.value.tableId)
@@ -72,7 +90,10 @@ export const useEditorStore = defineStore("editor", () => {
         columnSelection.value = ids.size
             ? { tableId: table.id, ids, anchor }
             : null;
-        if (columnSelection.value) selected.value = new Set([table.id]);
+        if (columnSelection.value) {
+            selected.value = new Set([table.id]);
+            selectedRefId.value = null;
+        }
     }
     const clearColumnSelection = () => (columnSelection.value = null);
 
@@ -118,6 +139,13 @@ export const useEditorStore = defineStore("editor", () => {
         openIndexEditor,
         closeIndexEditor,
         columnSelection,
+        selectedRefId,
+        hoverRefId,
+        legendOpen,
+        relationEditor,
+        openRelationEditor,
+        closeRelationEditor,
+        selectRef,
         selectColumn,
         clearColumnSelection,
         startRename,

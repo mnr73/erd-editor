@@ -122,3 +122,11 @@ export { default as IconRelationHandle } from "~icons/hugeicons/link-04";
 export { default as IconNewFile } from "~icons/hugeicons/file-add";
 /** A diagram file (tab, start page) */
 export { default as IconFile } from "~icons/hugeicons/file-01";
+
+/* --------------------------------- relations ------------------------------- */
+
+/** Swap the two ends of a relationship (which table holds the foreign key) */
+export { default as IconRelationSwap } from "~icons/hugeicons/arrow-left-right";
+
+/** Notation legend toggle (the "?" in the tool rail) */
+export { default as IconLegend } from "~icons/hugeicons/help-circle";

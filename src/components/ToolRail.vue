@@ -7,9 +7,11 @@ import { useCanvasCamera } from "@/canvas/useCanvasCamera";
 import { useTheme } from "@/composables/useTheme";
 import {
   IconFit,
+  IconLegend,
   IconThemeDark,
   IconThemeLight,
   IconToolPan,
+  IconToolRelation,
   IconToolSelect,
   IconToolTable,
   IconZoomIn,
@@ -60,8 +62,29 @@ const { theme, toggleTheme } = useTheme();
     >
       <IconToolTable class="size-[18px]" />
     </UiIconButton>
+    <UiIconButton
+      size="lg"
+      :label="t('tools.relation')"
+      shortcut="R"
+      tooltip-side="inline-end"
+      :active="editor.tool === 'relation'"
+      @click="editor.setTool('relation')"
+    >
+      <IconToolRelation class="size-[18px]" />
+    </UiIconButton>
 
     <span class="flex-1" />
+
+    <UiIconButton
+      size="lg"
+      :label="t('tools.legend')"
+      shortcut="?"
+      tooltip-side="inline-end"
+      :active="editor.legendOpen"
+      @click="editor.legendOpen = !editor.legendOpen"
+    >
+      <IconLegend class="size-[18px]" />
+    </UiIconButton>
 
     <div
       class="flex w-9 flex-col items-center rounded-[9px] border border-line bg-app py-0.5"

@@ -67,7 +67,9 @@
     "label": "Tools",
     "select": "Select",
     "pan": "Pan",
-    "table": "New table"
+    "table": "New table",
+    "relation": "Relationship",
+    "legend": "Notation legend"
   },
   "canvas": {
     "columnsCount": "{n} columns",
@@ -162,5 +164,29 @@
     "column": "Column {name}",
     "badge": "Index: {names}",
     "position": "Position {n}"
+  },
+  "relation": {
+    "swap": "Swap ends (who holds the FK)",
+    "delete": "Delete relationship",
+    "connect": "Drag to another column to connect",
+    "tool": "Relationship",
+    "title": "Relationship",
+    "from": "FK side",
+    "to": "Parent",
+    "cardinality": "Cardinality",
+    "none": "(none)",
+    "swapShort": "Swap",
+    "label": "Label",
+    "labelPlaceholder": "e.g. places",
+    "edit": "Edit relationship"
+  },
+  "legend": {
+    "title": "Relationship notation",
+    "one": "Exactly one",
+    "zeroOne": "Zero or one",
+    "oneMany": "One or many",
+    "zeroMany": "Zero or many",
+    "read": "Each end says how many rows of THAT table can match one row on the other end. N:1 means many orders belong to one user.",
+    "how": "Drag from the dot on a column row to a column of another table to connect them. Double-click a line to edit it."
   }
 }
