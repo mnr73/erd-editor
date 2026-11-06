@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="fa"><head>
+<meta charset="utf-8">
+<title>ویرایشگر ERD · بوم</title>
+<script src="39b9c4c4-5058-4a10-959c-f919e20f07e7"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7SUc.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7SUc.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7SUc.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7SUc.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7SUc.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7SUc.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("c756fa49-46e1-4e3f-b2f6-cb7fc43ede82") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7SUc.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7SUc.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7SUc.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7SUc.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7SUc.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7SUc.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("c756fa49-46e1-4e3f-b2f6-cb7fc43ede82") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7SUc.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7SUc.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7SUc.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7SUc.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7SUc.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7SUc.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("c756fa49-46e1-4e3f-b2f6-cb7fc43ede82") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7SUc.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7SUc.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7SUc.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7SUc.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7SUc.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7SUc.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("c756fa49-46e1-4e3f-b2f6-cb7fc43ede82") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx3cwhsk.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxTcwhsk.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwhsk.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwhsk.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwhsk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("6129dae9-eac4-4452-8abb-546e5c47dc37") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx3cwhsk.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxTcwhsk.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwhsk.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwhsk.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwhsk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("6129dae9-eac4-4452-8abb-546e5c47dc37") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx3cwhsk.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxTcwhsk.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwhsk.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwhsk.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwhsk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("6129dae9-eac4-4452-8abb-546e5c47dc37") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* arabic */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("cf40ff85-51a3-4d47-a3eb-e763c44f1517") format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/vazirmatn/v16/Dxxo8j6PP2D_kU2muijlE8WWMmk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("a18e0282-cbde-4627-ba30-815d8039f5e8") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* arabic */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("cf40ff85-51a3-4d47-a3eb-e763c44f1517") format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/vazirmatn/v16/Dxxo8j6PP2D_kU2muijlE8WWMmk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("a18e0282-cbde-4627-ba30-815d8039f5e8") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* arabic */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("cf40ff85-51a3-4d47-a3eb-e763c44f1517") format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/vazirmatn/v16/Dxxo8j6PP2D_kU2muijlE8WWMmk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("a18e0282-cbde-4627-ba30-815d8039f5e8") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* arabic */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("cf40ff85-51a3-4d47-a3eb-e763c44f1517") format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/vazirmatn/v16/Dxxo8j6PP2D_kU2muijlE8WWMmk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("a18e0282-cbde-4627-ba30-815d8039f5e8") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div dir="{{dir}}" lang="{{locale}}" style="width: 100%; height: 900px; display: flex; flex-direction: column; position: relative; overflow: hidden; background: {{k.app}}; color: {{k.text}}; font-family: {{font}}; font-size: 13px">
+
+<header style="height: 40px; flex: none; display: flex; align-items: center; gap: 12px; padding: 0 12px; background: {{k.app}}; border-bottom: 1px solid {{k.border}}; box-sizing: border-box">
+<div style="display: flex; align-items: center; gap: 8px; min-width: 320px">
+<span style="width: 20px; height: 20px; border-radius: 6px; background: {{k.acc}}; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" sc-camel-view-box="0 0 12 12" fill="none" stroke="#0B0D11" stroke-width="1.6" aria-hidden="true"><rect x="1.5" y="2" width="4" height="3" rx="0.8"></rect><rect x="6.5" y="7" width="4" height="3" rx="0.8"></rect><path d="M5.5 3.5h1.5v5h-0.5"></path></svg></span>
+<span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: {{k.faint}}">~/projects/shop/<span style="color: {{k.text}}">shop-erp.erd.json</span></span>
+<span style="width: 7px; height: 7px; border-radius: 50%; background: {{k.q}}"></span>
+<span style="font-size: 11.5px; color: {{k.muted}}">{{s.unsaved}}</span>
+</div>
+<div style="flex: 1; display: flex; justify-content: center">
+<label style="width: 380px; height: 28px; border-radius: 8px; background: {{k.field}}; border: 1px solid {{k.fieldBd}}; display: flex; align-items: center; gap: 8px; padding: 0 10px; box-sizing: border-box; color: {{k.faint}}">
+<svg width="14" height="14" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5"></circle><path d="M13 13l4 4"></path></svg>
+<input aria-label="{{s.search}}" placeholder="{{s.search}}" style="flex: 1; min-width: 0; border: 0; background: transparent; color: {{k.text}}; font-family: inherit; font-size: 12px; outline: none">
+<kbd dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 1px 6px; border-radius: 4px; background: {{k.kbd}}; color: {{k.muted}}">Ctrl K</kbd>
+</label>
+</div>
+<div style="display: flex; align-items: center; gap: 8px; min-width: 320px; justify-content: flex-end">
+<div role="group" aria-label="Language" style="display: flex; padding: 2px; border-radius: 7px; background: {{k.field}}; border: 1px solid {{k.fieldBd}}">
+<button sc-camel-on-click="{{toFa}}" aria-pressed="{{fa}}" style="height: 22px; min-width: 30px; border: 0; border-radius: 5px; background: {{seg.faBg}}; color: {{seg.faTx}}; font-family: 'Vazirmatn', sans-serif; font-size: 11.5px; cursor: pointer">فا</button>
+<button sc-camel-on-click="{{toEn}}" aria-pressed="{{en}}" style="height: 22px; min-width: 30px; border: 0; border-radius: 5px; background: {{seg.enBg}}; color: {{seg.enTx}}; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer">EN</button>
+</div>
+<button sc-camel-on-click="{{toggleExport}}" aria-expanded="{{exportOpen}}" style="height: 28px; border-radius: 7px; border: 1px solid {{k.fieldBd}}; background: {{k.field}}; color: {{k.text}}; padding: 0 10px; font-family: inherit; font-size: 12px; display: flex; align-items: center; gap: 6px; cursor: pointer">{{s.export}}
+<svg width="12" height="12" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 8l5 5 5-5"></path></svg></button>
+<div style="display: flex">
+<button aria-label="Minimize" style="width: 30px; height: 28px; border: 0; background: transparent; color: {{k.faint}}"><svg width="12" height="12" sc-camel-view-box="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M2 6h8"></path></svg></button>
+<button aria-label="Maximize" style="width: 30px; height: 28px; border: 0; background: transparent; color: {{k.faint}}"><svg width="12" height="12" sc-camel-view-box="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="2" y="2" width="8" height="8" rx="1"></rect></svg></button>
+<button aria-label="Close" style="width: 30px; height: 28px; border: 0; background: transparent; color: {{k.faint}}"><svg width="12" height="12" sc-camel-view-box="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M2 2l8 8M10 2 2 10"></path></svg></button>
+</div>
+</div>
+</header>
+
+<div style="flex: 1; min-height: 0; display: flex">
+
+<nav aria-label="{{s.tools}}" style="width: 48px; flex: none; background: {{k.panel}}; border-inline-end: 1px solid {{k.border}}; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 0; box-sizing: border-box">
+<sc-for list="{{tools}}" as="tl" hint-placeholder-count="6">
+<button aria-label="{{tl.label}}" title="{{tl.label}}" style="width: 34px; height: 34px; border: 0; border-radius: 8px; background: {{tl.bg}}; color: {{tl.fg}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="17" height="17" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{tl.d}}"></path></svg></button>
+</sc-for>
+<span style="flex: 1"></span>
+<button sc-camel-on-click="{{toggleLegend}}" aria-pressed="{{legend}}" aria-label="{{s.legend}}" title="{{s.legend}}" style="width: 34px; height: 34px; border: 0; border-radius: 8px; background: {{legendBtn.bg}}; color: {{legendBtn.fg}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="17" height="17" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0-14 0M8 8a2 2 0 1 1 3 1.7c-.6.4-1 .8-1 1.5M10 14h.01"></path></svg></button>
+<div style="width: 36px; display: flex; flex-direction: column; align-items: center; border-radius: 9px; border: 1px solid {{k.border}}; background: {{k.app}}; padding: 2px 0">
+<button aria-label="{{s.zin}}" title="{{s.zin}}" style="width: 32px; height: 26px; border: 0; background: transparent; color: {{k.muted}}; font-size: 15px; cursor: pointer">+</button>
+<span style="font-size: 10.5px; color: {{k.text}}; padding: 2px 0">{{s.zoom}}</span>
+<button aria-label="{{s.zout}}" title="{{s.zout}}" style="width: 32px; height: 26px; border: 0; background: transparent; color: {{k.muted}}; font-size: 15px; cursor: pointer">−</button>
+</div>
+<button aria-label="{{s.fit}}" title="{{s.fit}}" style="width: 34px; height: 34px; border: 0; border-radius: 8px; background: transparent; color: {{k.muted}}; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"></path></svg></button>
+<button sc-camel-on-click="{{toggleTheme}}" aria-label="{{s.theme}}" title="{{s.theme}}" style="width: 34px; height: 34px; border: 0; border-radius: 8px; background: transparent; color: {{k.muted}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="16" height="16" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="{{themeIcon}}"></path></svg></button>
+</nav>
+
+<main style="flex: 1; min-width: 0; position: relative; overflow: hidden; background-color: {{k.canvas}}; background-image: radial-gradient(circle, {{k.dot}} 1px, transparent 1.2px); background-size: 16px 16px">
+<button sc-camel-on-click="{{deselect}}" aria-label="{{s.canvasL}}" style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0; padding: 0; background: transparent; cursor: default"></button>
+
+<div dir="ltr" style="position: absolute; top: 0; left: {{off}}px; width: 1080px; height: 100%; pointer-events: none">
+
+<div style="position: absolute; left: 520px; top: 30px; width: 550px; height: 470px; border-radius: 10px; background: {{k.g1Bg}}; border: 1px solid {{k.g1Bd}}; box-sizing: border-box"></div>
+<div style="position: absolute; left: 520px; top: 19px; width: 550px; display: flex; justify-content: {{gJust}}; padding: 0 16px; box-sizing: border-box">
+<span dir="{{dir}}" style="height: 22px; padding: 0 10px; border-radius: 6px; background: {{k.g1ChipBg}}; border: 1px solid {{k.g1ChipBd}}; display: flex; align-items: center; gap: 6px; font-family: {{font}}; font-size: 11.5px; font-weight: 600; color: {{k.g1Tx}}">{{s.g1}}<span style="font-weight: 400; opacity: 0.75">{{n4}}</span></span>
+</div>
+
+<div style="position: absolute; left: 20px; top: 60px; width: 460px; height: 600px; border-radius: 10px; background: {{g2.bg}}; border: {{g2.bd}}; box-sizing: border-box; box-shadow: {{g2.sh}}"></div>
+<div style="position: absolute; left: 20px; top: 49px; width: 460px; display: flex; justify-content: {{gJust}}; padding: 0 16px; box-sizing: border-box">
+<span dir="{{dir}}" style="height: 22px; padding: 0 10px; border-radius: 6px; background: {{k.g2ChipBg}}; border: 1px solid {{k.g2ChipBd}}; display: flex; align-items: center; gap: 6px; font-family: {{font}}; font-size: 11.5px; font-weight: 600; color: {{k.g2Tx}}">{{s.g2}}<span style="font-weight: 400; opacity: 0.75">{{n4}}</span><svg width="12" height="12" sc-camel-view-box="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" role="img" aria-label="{{s.note}}"><path d="M2 2.5h8v5.5H6.2L4 10V8H2z"></path></svg></span>
+</div>
+
+<div dir="{{dir}}" style="position: absolute; left: 270px; top: 572px; width: 185px; padding: 8px 10px; box-sizing: border-box; border-radius: 3px 10px 10px 10px; background: {{k.noteBg}}; border: 1px solid {{k.noteBd}}; color: {{k.noteTx}}; font-family: {{font}}; font-size: 11.5px; line-height: 1.7">{{g2Note}}</div>
+
+<sc-if value="{{grouping}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; left: 20px; top: 670px; width: 460px; display: flex; justify-content: center">
+<span dir="{{dir}}" style="height: 26px; padding: 0 12px; border-radius: 8px; background: {{k.acc}}; color: #FFFFFF; display: flex; align-items: center; gap: 6px; font-family: {{font}}; font-size: 12px; font-weight: 500">{{s.groupDrop}}</span>
+</div>
+</sc-if>
+
+<sc-for list="{{rels}}" as="r" hint-placeholder-count="9">
+<svg width="1" height="1" style="position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none" aria-hidden="true">
+<path d="{{r.d}}" fill="none" stroke="{{r.stroke}}" stroke-width="{{r.sw}}" opacity="{{r.op}}" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="{{r.m}}" fill="none" stroke="{{r.stroke}}" stroke-width="{{r.sw}}" opacity="{{r.op}}" stroke-linecap="round"></path>
+<path d="{{r.c}}" fill="{{k.canvas}}" stroke="{{r.stroke}}" stroke-width="{{r.sw}}" opacity="{{r.op}}"></path>
+<path d="{{r.d}}" fill="none" stroke="transparent" stroke-width="12" pointer-events="stroke" sc-camel-on-click="{{r.pick}}" style="cursor: pointer"></path>
+</svg>
+</sc-for>
+
+<sc-for list="{{labels}}" as="lb" hint-placeholder-count="2">
+<div style="position: absolute; left: {{lb.x}}px; top: {{lb.y}}px; transform: translate(-50%, -50%); padding: 0 6px; height: 17px; display: flex; align-items: center; border-radius: 5px; background: {{lb.bg}}; color: {{lb.fg}}; border: 1px solid {{lb.bd}}; font-family: 'JetBrains Mono', monospace; font-size: 10px; opacity: {{lb.op}}">{{lb.t}}</div>
+</sc-for>
+
+<sc-if value="{{linking}}" hint-placeholder-val="{{false}}">
+<svg width="1" height="1" style="position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none" aria-hidden="true">
+<path d="{{lk.d}}" fill="none" stroke="{{k.acc}}" stroke-width="1.8" stroke-dasharray="5 4" stroke-linecap="round"></path>
+<circle cx="{{lk.sx}}" cy="{{lk.sy}}" r="5" fill="{{k.acc}}" stroke="{{k.canvas}}" stroke-width="2"></circle>
+<circle cx="{{lk.tx}}" cy="{{lk.ty}}" r="9" fill="none" stroke="{{k.acc}}" stroke-width="1.5" opacity="0.6"></circle>
+<circle cx="{{lk.tx}}" cy="{{lk.ty}}" r="4" fill="{{k.acc}}"></circle>
+<path d="{{lk.cur}}" fill="#FFFFFF" stroke="#0B0D11" stroke-width="1.2" stroke-linejoin="round"></path>
+</svg>
+</sc-if>
+
+<sc-for list="{{tables}}" as="t" hint-placeholder-count="8">
+<div style="position: absolute; left: {{t.x}}px; top: {{t.y}}px; width: {{t.w}}px; background: {{k.card}}; border: 1px solid {{t.bd}}; border-radius: 8px; overflow: hidden; box-shadow: {{t.ring}}; opacity: {{t.op}}; pointer-events: auto; font-family: 'JetBrains Mono', monospace">
+<button sc-camel-on-click="{{t.pickHead}}" style="width: 100%; height: 30px; display: flex; align-items: center; gap: 7px; padding: 0 8px; border: 0; border-bottom: 1px solid {{k.headBd}}; background: {{t.hb}}; color: {{k.text}}; font: inherit; cursor: pointer; text-align: left">
+<span style="width: 8px; height: 8px; border-radius: 2px; background: {{t.c}}"></span>
+<span style="font-weight: 600; font-size: 12px; flex: 1">{{t.name}}</span>
+<sc-if value="{{t.note}}" hint-placeholder-val="{{false}}"><svg width="12" height="12" sc-camel-view-box="0 0 12 12" fill="none" stroke="{{k.muted}}" stroke-width="1.2" stroke-linejoin="round" role="img" aria-label="{{s.note}}"><path d="M2 2.5h8v5.5H6.2L4 10V8H2z"></path></svg></sc-if>
+<svg width="12" height="12" sc-camel-view-box="0 0 20 20" fill="{{k.faint}}" aria-hidden="true"><circle cx="4.5" cy="10" r="1.6"></circle><circle cx="10" cy="10" r="1.6"></circle><circle cx="15.5" cy="10" r="1.6"></circle></svg>
+</button>
+<div style="padding: 3px 0">
+<sc-for list="{{t.rows}}" as="c" hint-placeholder-count="5">
+<button sc-camel-on-click="{{c.pick}}" style="width: 100%; height: 22px; display: flex; align-items: center; gap: 5px; padding: 0 8px; border: 0; background: {{c.bg}}; box-shadow: {{c.sh}}; color: {{k.text2}}; font: inherit; cursor: pointer; text-align: left">
+<span style="width: 18px; font-size: 9.5px; font-weight: 600; color: {{c.kc}}">{{c.key}}</span>
+<span style="font-size: 11.5px; color: {{c.nc}}; font-weight: {{c.fw}}">{{c.n}}</span>
+<span style="flex: 1; display: flex; gap: 3px; color: {{k.icon}}; padding-left: 2px">
+<sc-if value="{{c.u}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" sc-camel-view-box="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" role="img" aria-label="Unique"><path d="M6 1.8 10.2 6 6 10.2 1.8 6z"></path></svg></sc-if>
+<sc-if value="{{c.ai}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" sc-camel-view-box="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Auto increment"><path d="M3 6.5 6 3.5l3 3M3 9.5l3-3 3 3"></path></svg></sc-if>
+<sc-if value="{{c.def}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" sc-camel-view-box="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" role="img" aria-label="Default"><path d="M3 4.5h6M3 7.5h6"></path></svg></sc-if>
+<sc-if value="{{c.ix}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" sc-camel-view-box="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" role="img" aria-label="Index"><path d="M6.8 1.5 3 6.8h3l-.8 3.7L9 5.2H6z"></path></svg></sc-if>
+<sc-if value="{{c.cmt}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" sc-camel-view-box="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" role="img" aria-label="Comment"><path d="M2 2.5h8v5.5H6.2L4 10V8H2z"></path></svg></sc-if>
+</span>
+<span style="font-size: 10.5px; color: {{k.faint}}">{{c.t}}<span style="color: {{k.q}}">{{c.q}}</span></span>
+<sc-if value="{{c.more}}" hint-placeholder-val="{{false}}"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{k.acc}}; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" sc-camel-view-box="0 0 20 20" fill="#FFFFFF" aria-hidden="true"><circle cx="4.5" cy="10" r="2"></circle><circle cx="10" cy="10" r="2"></circle><circle cx="15.5" cy="10" r="2"></circle></svg></span></sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+
+<sc-if value="{{linking}}" hint-placeholder-val="{{false}}">
+<div dir="{{dir}}" style="position: absolute; left: {{lk.tipX}}px; top: {{lk.tipY}}px; width: 230px; padding: 8px 10px; border-radius: 8px; background: {{k.pop}}; border: 1px solid {{k.acc}}; box-shadow: {{k.shadow}}; display: flex; flex-direction: column; gap: 4px; font-family: {{font}}">
+<span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: {{k.text}}">orders.warehouse_id → warehouses.id</span>
+<span style="font-size: 11.5px; color: {{k.accTx}}">{{s.drop}} · N:1</span>
+</div>
+</sc-if>
+
+<sc-if value="{{hover}}" hint-placeholder-val="{{false}}">
+<div dir="{{dir}}" style="position: absolute; left: {{hv.x}}px; top: {{hv.y}}px; width: 236px; padding: 10px 12px; border-radius: 10px; background: {{k.pop}}; border: 1px solid {{k.popBd}}; box-shadow: {{k.shadow}}; display: flex; flex-direction: column; gap: 6px; font-family: {{font}}; font-size: 12px">
+<span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: {{k.text}}">{{hv.path}}</span>
+<div style="display: flex; justify-content: space-between; color: {{k.muted}}"><span>{{s.kind}}</span><span style="color: {{k.text}}">{{hv.kind}}</span></div>
+<div style="display: flex; justify-content: space-between; color: {{k.muted}}"><span dir="ltr">On Delete</span><span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: {{k.danger}}">{{hv.del}}</span></div>
+<div style="display: flex; justify-content: space-between; color: {{k.muted}}"><span dir="ltr">On Update</span><span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: {{k.okTx}}">{{hv.upd}}</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{colorOpen}}" hint-placeholder-val="{{false}}">
+<section dir="{{dir}}" aria-label="{{s.headerColor}}" style="position: absolute; left: 560px; top: 116px; width: 252px; padding: 12px; box-sizing: border-box; border-radius: 12px; background: {{k.pop}}; border: 1px solid {{k.popBd}}; box-shadow: {{k.shadow}}; display: flex; flex-direction: column; gap: 10px; pointer-events: auto; font-family: {{font}}">
+<div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 12.5px; font-weight: 600">{{s.headerColor}}</span><span style="flex: 1"></span><span style="font-size: 11px; color: {{k.accTx}}; padding: 1px 8px; border-radius: 6px; background: {{k.accBg}}">{{s.selN}}</span></div>
+<span style="font-size: 11px; color: {{k.muted}}">{{s.palette}}</span>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; justify-items: center">
+<sc-for list="{{pal}}" as="p" hint-placeholder-count="10">
+<button sc-camel-on-click="{{p.pick}}" aria-label="{{p.c}}" style="width: 28px; height: 28px; border-radius: 8px; border: 0; background: {{p.c}}; box-shadow: {{p.ring}}; cursor: pointer"></button>
+</sc-for>
+</div>
+<span style="font-size: 11px; color: {{k.muted}}">{{s.mine}}</span>
+<div style="display: flex; gap: 8px; align-items: center">
+<sc-for list="{{mine}}" as="p" hint-placeholder-count="3">
+<span style="position: relative; display: flex"><button sc-camel-on-click="{{p.pick}}" aria-label="{{p.c}}" style="width: 28px; height: 28px; border-radius: 8px; border: 0; background: {{p.c}}; box-shadow: {{p.ring}}; cursor: pointer"></button><span aria-hidden="true" style="position: absolute; top: -5px; left: -5px; width: 14px; height: 14px; border-radius: 50%; background: {{k.pop}}; border: 1px solid {{k.popBd}}; color: {{k.muted}}; font-size: 10px; line-height: 12px; text-align: center">×</span></span>
+</sc-for>
+<button aria-label="{{s.add}}" style="width: 28px; height: 28px; border-radius: 8px; border: 1px dashed {{k.fieldBd}}; background: transparent; color: {{k.muted}}; font-size: 15px; cursor: pointer">+</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 10px; background: {{k.field}}; border: 1px solid {{k.fieldBd}}">
+<div aria-hidden="true" style="height: 92px; border-radius: 6px; position: relative; background: linear-gradient(to top, #000000, rgba(0,0,0,0)), linear-gradient(to right, #FFFFFF, #5B8DEF)"><span style="position: absolute; left: 70%; top: 22%; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #FFFFFF; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); transform: translate(-50%, -50%)"></span></div>
+<div aria-hidden="true" style="height: 10px; border-radius: 5px; background: linear-gradient(to right, #FF4D4D, #FFD84D, #4DFF88, #4DD8FF, #5B6CFF, #FF4DD8, #FF4D4D)"></div>
+<div style="display: flex; gap: 6px; align-items: center">
+<span style="width: 22px; height: 22px; border-radius: 6px; background: #5B8DEF"></span>
+<label for="hex-in" style="position: absolute; width: 1px; height: 1px; overflow: hidden">HEX</label>
+<input id="hex-in" dir="ltr" value="#5B8DEF" style="flex: 1; min-width: 0; height: 26px; border-radius: 6px; border: 1px solid {{k.fieldBd}}; background: {{k.panel}}; color: {{k.text}}; padding: 0 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px">
+<button style="height: 26px; border: 0; border-radius: 6px; background: {{k.acc}}; color: #FFFFFF; font-family: inherit; font-size: 11.5px; padding: 0 10px">{{s.save}}</button>
+</div>
+</div>
+<button sc-camel-on-click="{{noColor}}" style="height: 28px; display: flex; align-items: center; gap: 8px; border: 0; border-radius: 7px; background: transparent; color: {{k.muted}}; font-family: inherit; font-size: 12px; padding: 0 4px; cursor: pointer"><span style="width: 16px; height: 16px; border-radius: 5px; border: 1px solid {{k.fieldBd}}; background: linear-gradient(135deg, transparent 45%, {{k.danger}} 45%, {{k.danger}} 55%, transparent 55%)"></span>{{s.none}}</button>
+</section>
+</sc-if>
+
+<sc-if value="{{contextOpen}}" hint-placeholder-val="{{false}}">
+<div dir="{{dir}}" role="menu" style="position: absolute; left: 700px; top: 100px; width: 224px; padding: 5px; box-sizing: border-box; border-radius: 10px; background: {{k.pop}}; border: 1px solid {{k.popBd}}; box-shadow: {{k.shadow}}; pointer-events: auto; font-family: {{font}}">
+<sc-for list="{{ctx}}" as="m" hint-placeholder-count="8">
+<sc-if value="{{m.sep}}" hint-placeholder-val="{{false}}"><div style="height: 1px; background: {{k.border}}; margin: 4px 6px"></div></sc-if>
+<button role="menuitem" style="width: 100%; height: 30px; display: flex; align-items: center; gap: 10px; padding: 0 8px; border: 0; border-radius: 6px; background: {{m.bg}}; color: {{m.fg}}; font-family: inherit; font-size: 12.5px; cursor: pointer; text-align: start">
+<svg width="15" height="15" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg>
+<span style="flex: 1">{{m.l}}</span>
+<kbd dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: {{k.faint}}">{{m.k}}</kbd>
+</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{notes}}" hint-placeholder-val="{{false}}">
+<div dir="{{dir}}" style="position: absolute; left: 860px; top: 104px; width: 232px; padding: 10px 12px; box-sizing: border-box; border-radius: 10px; background: {{k.pop}}; border: 1px solid {{k.popBd}}; box-shadow: {{k.shadow}}; font-family: {{font}}; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: {{k.muted}}"><svg width="12" height="12" sc-camel-view-box="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><path d="M2 2.5h8v5.5H6.2L4 10V8H2z"></path></svg><span dir="ltr" style="font-family: 'JetBrains Mono', monospace">customers</span><span style="flex: 1"></span><span>{{s.clickEdit}}</span></div>
+<span style="font-size: 12px; line-height: 1.75; color: {{k.text}}">{{custNote}}</span>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{legend}}" hint-placeholder-val="{{false}}">
+<section aria-label="{{s.legend}}" style="position: absolute; {{p.start}}: 12px; bottom: 12px; width: 230px; padding: 10px 12px; box-sizing: border-box; border-radius: 10px; background: {{k.pop}}; border: 1px solid {{k.popBd}}; box-shadow: {{k.shadow}}; display: flex; flex-direction: column; gap: 7px">
+<div style="display: flex; align-items: center; font-size: 12px; font-weight: 600">{{s.legendT}}<span style="flex: 1"></span><button sc-camel-on-click="{{toggleLegend}}" aria-label="{{s.close}}" style="width: 22px; height: 22px; border: 0; background: transparent; color: {{k.muted}}; cursor: pointer">×</button></div>
+<sc-for list="{{leg}}" as="lg" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; gap: 10px; font-size: 12px; color: {{k.text2}}"><svg width="56" height="16" sc-camel-view-box="0 0 56 16" fill="none" stroke="{{k.lineHi}}" stroke-width="1.4" stroke-linecap="round" aria-hidden="true" style="flex: none"><path d="{{lg.d}}"></path><path d="{{lg.c}}" fill="{{k.pop}}"></path><rect x="48" y="1" width="7" height="14" rx="1.5" fill="{{k.cardBd}}" stroke="none"></rect></svg>{{lg.l}}</div>
+</sc-for>
+</section>
+</sc-if>
+
+<div style="position: absolute; {{p.end}}: 16px; bottom: 16px; width: 180px; height: 110px; border-radius: 8px; background: {{k.mini}}; border: 1px solid {{k.border}}; overflow: hidden">
+<sc-for list="{{minis}}" as="m" hint-placeholder-count="8">
+<div style="position: absolute; left: {{m.x}}px; top: {{m.y}}px; width: {{m.w}}px; height: {{m.h}}px; border-radius: 1.5px; background: {{m.c}}; opacity: 0.8"></div>
+</sc-for>
+<div style="position: absolute; left: 8px; top: 6px; width: 164px; height: 98px; border: 1.5px solid {{k.accTx}}; border-radius: 3px"></div>
+</div>
+
+<sc-if value="{{feedback}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="position: absolute; left: 50%; top: 12px; transform: translateX(-50%); width: 640px; min-height: 40px; display: flex; align-items: center; gap: 10px; padding: 6px 8px 6px 12px; box-sizing: border-box; border-radius: 10px; background: {{k.warnBg}}; border: 1px solid {{k.warnBd}}; color: {{k.warnTx}}; font-size: 12.5px">
+<svg width="16" height="16" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M10 3 2.5 16h15zM10 8v4M10 14h.01"></path></svg>
+<span style="flex: 1">{{s.bannerA}} <span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px">payments.invoice_id → invoices.id</span></span>
+<button style="height: 26px; border: 0; border-radius: 6px; background: transparent; color: {{k.warnTx}}; font-family: inherit; font-size: 12px; padding: 0 8px; text-decoration: underline">{{s.show}}</button>
+<button style="height: 26px; border: 1px solid {{k.warnBd}}; border-radius: 6px; background: transparent; color: {{k.warnTx}}; font-family: inherit; font-size: 12px; padding: 0 10px">{{s.fix}}</button>
+<button aria-label="{{s.close}}" style="width: 26px; height: 26px; border: 0; background: transparent; color: {{k.warnTx}}">×</button>
+</div>
+<div role="status" style="position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); height: 38px; border-radius: 10px; background: {{k.pop}}; border: 1px solid {{k.popBd}}; box-shadow: {{k.shadow}}; display: flex; align-items: center; gap: 12px; padding: 0 6px 0 14px; padding-inline-start: 14px; padding-inline-end: 6px; font-size: 12.5px; white-space: nowrap">
+<svg width="15" height="15" sc-camel-view-box="0 0 20 20" fill="none" stroke="{{k.accTx}}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h12M8 6V4h4v2M6 6l1 10h6l1-10"></path></svg>
+<span>{{s.undoA}} <span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px">products.discount</span> {{s.undoB}}</span>
+<button style="height: 26px; border: 0; border-radius: 6px; background: {{k.accBg}}; color: {{k.accTx}}; font-family: inherit; font-size: 12px; padding: 0 10px; display: flex; gap: 6px; align-items: center">{{s.undo}} <kbd dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: {{k.muted}}">Ctrl Z</kbd></button>
+</div>
+</sc-if>
+
+<sc-if value="{{search}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: {{k.backdrop}}"></div>
+<div role="dialog" aria-label="{{s.search}}" style="position: absolute; left: 50%; top: 56px; transform: translateX(-50%); width: 540px; border-radius: 14px; background: {{k.pop}}; border: 1px solid {{k.popBd}}; box-shadow: {{k.shadow}}; overflow: hidden">
+<div style="height: 48px; display: flex; align-items: center; gap: 10px; padding: 0 14px; border-bottom: 1px solid {{k.border}}">
+<svg width="16" height="16" sc-camel-view-box="0 0 20 20" fill="none" stroke="{{k.muted}}" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5"></circle><path d="M13 13l4 4"></path></svg>
+<input aria-label="{{s.search}}" dir="ltr" value="ord" style="flex: 1; border: 0; background: transparent; color: {{k.text}}; font-family: 'JetBrains Mono', monospace; font-size: 14px; outline: none; text-align: {{p.start}}">
+<kbd style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 1px 6px; border-radius: 4px; background: {{k.kbd}}; color: {{k.muted}}">Esc</kbd>
+</div>
+<div style="padding: 6px">
+<sc-for list="{{results}}" as="rs" hint-placeholder-count="7">
+<sc-if value="{{rs.head}}" hint-placeholder-val="{{false}}"><div style="font-size: 11px; color: {{k.muted}}; padding: 8px 10px 4px">{{rs.l}}</div></sc-if>
+<sc-if value="{{rs.item}}" hint-placeholder-val="{{true}}">
+<div style="height: 34px; display: flex; align-items: center; gap: 10px; padding: 0 10px; border-radius: 8px; background: {{rs.bg}}">
+<span style="width: 8px; height: 8px; border-radius: 2px; background: {{rs.c}}"></span>
+<span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: {{k.text}}">{{rs.pre}}<span style="color: {{k.accTx}}; font-weight: 600">{{rs.mid}}</span>{{rs.post}}</span>
+<span style="flex: 1"></span>
+<span style="font-size: 11px; color: {{k.muted}}">{{rs.meta}}</span>
+</div>
+</sc-if>
+</sc-for>
+</div>
+<div style="height: 32px; display: flex; align-items: center; padding: 0 14px; border-top: 1px solid {{k.border}}; font-size: 11px; color: {{k.muted}}">{{s.palHint}}</div>
+</div>
+</sc-if>
+</main>
+
+<sc-if value="{{panelOpen}}" hint-placeholder-val="{{false}}">
+<aside aria-label="Inspector" style="width: 320px; flex: none; background: {{k.panel}}; border-inline-start: 1px solid {{k.border}}; display: flex; flex-direction: column; overflow: hidden">
+
+<sc-if value="{{pTableMode}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; align-items: center; gap: 8px; padding: 12px 14px 10px">
+<span style="width: 10px; height: 10px; border-radius: 3px; background: {{it.c}}"></span>
+<span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600">{{it.name}}</span>
+<span style="font-size: 11px; color: {{k.muted}}">· {{it.group}}</span>
+<span style="flex: 1"></span>
+<button sc-camel-on-click="{{deselect}}" aria-label="{{s.close}}" title="{{s.close}}" style="width: 24px; height: 24px; border: 0; border-radius: 6px; background: transparent; color: {{k.faint}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="13" height="13" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15"></path></svg></button>
+</div>
+<div role="tablist" style="display: flex; gap: 2px; padding: 0 10px; border-bottom: 1px solid {{k.border}}">
+<sc-for list="{{tabs}}" as="tb" hint-placeholder-count="4">
+<button role="tab" sc-camel-on-click="{{tb.pick}}" aria-selected="{{tb.on}}" style="height: 34px; border: 0; border-bottom: 2px solid {{tb.bc}}; background: transparent; color: {{tb.fc}}; font-family: inherit; font-size: 12px; padding: 0 10px; cursor: pointer">{{tb.l}}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{pTable}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 16px; padding: 14px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="it-n" style="font-size: 11px; color: {{k.muted}}">{{s.tableName}}</label><input id="it-n" dir="ltr" value="{{it.name}}" style="height: 30px; border-radius: 7px; border: 1px solid {{k.fieldBd}}; background: {{k.field}}; color: {{k.text}}; padding: 0 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none"></div>
+<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 11px; color: {{k.muted}}">{{s.headerColor}}</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<sc-for list="{{pal}}" as="p" hint-placeholder-count="10"><button sc-camel-on-click="{{p.pick}}" aria-label="{{p.c}}" style="width: 22px; height: 22px; border-radius: 6px; border: 0; background: {{p.c}}; box-shadow: {{p.ring}}; cursor: pointer"></button></sc-for>
+<button aria-label="{{s.add}}" style="width: 22px; height: 22px; border-radius: 6px; border: 1px dashed {{k.fieldBd}}; background: transparent; color: {{k.muted}}; padding: 0; font-size: 13px">+</button>
+</div></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="it-g" style="font-size: 11px; color: {{k.muted}}">{{s.sectionL}}</label><sc-raw-select id="it-g" style="height: 30px; border-radius: 7px; border: 1px solid {{k.fieldBd}}; background: {{k.field}}; color: {{k.text}}; padding: 0 8px; font-family: inherit; font-size: 12px"><option>{{it.group}}</option><option>{{s.noGroup}}</option></sc-raw-select></div>
+<div style="display: flex; align-items: center; gap: 10px; font-size: 12px"><span style="flex: 1">{{s.collapsed}}</span><button role="switch" aria-checked="false" aria-label="{{s.collapsed}}" style="width: 30px; height: 18px; border-radius: 99px; border: 0; background: {{k.sw}}; position: relative; padding: 0"><span style="position: absolute; top: 3px; {{p.start}}: 3px; width: 12px; height: 12px; border-radius: 50%; background: #FFFFFF"></span></button></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<div style="padding: 10px; border-radius: 8px; background: {{k.field}}; border: 1px solid {{k.border}}"><div style="font-size: 18px; font-weight: 600">{{it.nCols}}</div><div style="font-size: 11px; color: {{k.muted}}">{{s.tCols}}</div></div>
+<div style="padding: 10px; border-radius: 8px; background: {{k.field}}; border: 1px solid {{k.border}}"><div style="font-size: 18px; font-weight: 600">{{it.nRels}}</div><div style="font-size: 11px; color: {{k.muted}}">{{s.tRels}}</div></div>
+</div>
+<div style="display: flex; gap: 8px">
+<button style="flex: 1; height: 30px; border-radius: 7px; border: 1px solid {{k.fieldBd}}; background: transparent; color: {{k.text}}; font-family: inherit; font-size: 12px">{{s.duplicate}} <kbd dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: {{k.faint}}">Ctrl D</kbd></button>
+<button style="flex: 1; height: 30px; border-radius: 7px; border: 1px solid {{k.fieldBd}}; background: transparent; color: {{k.danger}}; font-family: inherit; font-size: 12px">{{s.delTable}}</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{pCols}}" hint-placeholder-val="{{false}}">
+<div dir="ltr" style="display: flex; flex-direction: column; padding: 6px 0; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; overflow: auto">
+<sc-for list="{{colList}}" as="c" hint-placeholder-count="6">
+<sc-if value="{{c.closed}}" hint-placeholder-val="{{true}}">
+<button sc-camel-on-click="{{c.pick}}" style="display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px 0 6px; border: 0; background: transparent; color: {{k.text}}; font: inherit; cursor: pointer; text-align: left">
+<svg width="10" height="14" sc-camel-view-box="0 0 10 14" fill="{{k.icon}}" aria-hidden="true"><circle cx="3" cy="3" r="1.1"></circle><circle cx="7" cy="3" r="1.1"></circle><circle cx="3" cy="7" r="1.1"></circle><circle cx="7" cy="7" r="1.1"></circle><circle cx="3" cy="11" r="1.1"></circle><circle cx="7" cy="11" r="1.1"></circle></svg>
+<span style="color: {{c.kc}}; width: 16px; font-size: 9.5px; font-weight: 600">{{c.key}}</span><span style="flex: 1">{{c.n}}</span><span style="color: {{k.faint}}">{{c.t}}<span style="color: {{k.q}}">{{c.q}}</span></span>
+</button>
+</sc-if>
+<sc-if value="{{c.on}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 10px; margin: 2px 8px; padding: 10px; border-radius: 10px; background: {{k.accBg2}}; border: 1px solid {{k.acc}}">
+<div style="display: flex; gap: 6px">
+<input aria-label="{{s.colName}}" value="{{c.n}}" style="flex: 1; min-width: 0; height: 28px; border-radius: 6px; border: 1px solid {{k.fieldBd}}; background: {{k.field}}; color: {{k.text}}; padding: 0 8px; font-family: inherit; font-size: 11.5px">
+<input aria-label="{{s.colType}}" value="{{c.t}}" style="width: 116px; height: 28px; border-radius: 6px; border: 1px solid {{k.fieldBd}}; background: {{k.field}}; color: {{k.muted}}; padding: 0 8px; font-family: inherit; font-size: 11.5px">
+</div>
+<div style="display: flex; gap: 4px; flex-wrap: wrap">
+<sc-for list="{{c.tg}}" as="g" hint-placeholder-count="5"><button aria-pressed="{{g.on}}" style="height: 24px; border-radius: 6px; border: 1px solid {{g.bd}}; background: {{g.bg}}; color: {{g.fg}}; font-family: inherit; font-size: 10.5px; padding: 0 8px">{{g.l}}</button></sc-for>
+</div>
+<div dir="{{dir}}" style="display: flex; align-items: center; gap: 8px"><span style="color: {{k.muted}}; font-size: 11px; width: 70px; font-family: {{font}}">{{s.def}}</span><input aria-label="{{s.def}}" dir="ltr" value="{{c.dv}}" style="flex: 1; min-width: 0; height: 26px; border-radius: 6px; border: 1px solid {{k.fieldBd}}; background: {{k.field}}; color: {{k.text}}; padding: 0 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px"></div>
+<div dir="{{dir}}" style="display: flex; align-items: flex-start; gap: 8px"><span style="color: {{k.muted}}; font-size: 11px; width: 70px; font-family: {{font}}; padding-top: 5px">{{s.cmt}}</span><textarea aria-label="{{s.cmt}}" rows="2" style="flex: 1; min-width: 0; border-radius: 6px; border: 1px solid {{k.fieldBd}}; background: {{k.field}}; color: {{k.text}}; padding: 5px 8px; font-family: {{font}}; font-size: 11.5px; line-height: 1.6; resize: none">{{c.cv}}</textarea></div>
+<div dir="{{dir}}" style="display: flex; align-items: center; gap: 8px; font-family: {{font}}">
+<button style="height: 26px; border: 0; border-radius: 6px; background: transparent; color: {{k.danger}}; font-family: inherit; font-size: 11.5px; padding: 0 4px">{{s.delCol}}</button>
+<span style="flex: 1"></span>
+<span style="font-size: 10.5px; color: {{k.faint}}"><kbd dir="ltr" style="font-family: 'JetBrains Mono', monospace">↑↓</kbd> {{s.nav}}</span>
+</div>
+</div>
+</sc-if>
+</sc-for>
+<button dir="{{dir}}" style="display: flex; align-items: center; gap: 8px; height: 32px; margin: 6px 8px 0; padding: 0 8px; border: 1px dashed {{k.fieldBd}}; border-radius: 8px; background: transparent; color: {{k.muted}}; font-family: {{font}}; font-size: 12px">+ {{s.addCol}}<span style="flex: 1"></span><kbd style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: {{k.faint}}">Enter</kbd></button>
+</div>
+</sc-if>
+
+<sc-if value="{{pRels}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; padding: 8px">
+<sc-for list="{{relList}}" as="rl" hint-placeholder-count="3">
+<button sc-camel-on-click="{{rl.pick}}" style="display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 4px 8px; border: 0; border-radius: 8px; background: transparent; color: {{k.text}}; font-family: inherit; cursor: pointer; text-align: start">
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; text-align: {{p.start}}">{{rl.other}}</span><span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: {{k.faint}}; text-align: {{p.start}}">{{rl.mine}}</span></span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 1px 6px; border-radius: 5px; background: {{k.accBg}}; color: {{k.accTx}}">{{rl.kind}}</span>
+</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{pNote}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 14px">
+<label for="it-note" style="font-size: 11px; color: {{k.muted}}">{{s.noteL}}</label>
+<textarea id="it-note" rows="7" style="border-radius: 8px; border: 1px solid {{k.acc}}; box-shadow: 0 0 0 3px {{k.accBg}}; background: {{k.field}}; color: {{k.text}}; padding: 10px; font-family: inherit; font-size: 12.5px; line-height: 1.8; resize: vertical; outline: none">{{it.note}}</textarea>
+<span style="font-size: 11px; color: {{k.faint}}">{{s.noteHint}}</span>
+<div style="display: flex; align-items: center; gap: 10px; font-size: 12px"><span style="flex: 1">{{s.pin}}</span><button role="switch" aria-checked="true" aria-label="{{s.pin}}" style="width: 30px; height: 18px; border-radius: 99px; border: 0; background: {{k.swOn}}; position: relative; padding: 0"><span style="position: absolute; top: 3px; {{p.end}}: 3px; width: 12px; height: 12px; border-radius: 50%; background: #FFFFFF"></span></button></div>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{pRel}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-bottom: 1px solid {{k.border}}">
+<svg width="16" height="16" sc-camel-view-box="0 0 20 20" fill="none" stroke="{{k.accTx}}" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 5a2 2 0 1 0 4 0a2 2 0 1 0-4 0M13 15a2 2 0 1 0 4 0a2 2 0 1 0-4 0M7 5h2.5A2.5 2.5 0 0 1 12 7.5v5a2.5 2.5 0 0 0 1 2"></path></svg>
+<span style="font-size: 13px; font-weight: 600">{{s.relTitle}}</span>
+<span style="flex: 1"></span>
+<button sc-camel-on-click="{{deselect}}" aria-label="{{s.close}}" style="width: 24px; height: 24px; border: 0; border-radius: 6px; background: transparent; color: {{k.faint}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="13" height="13" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15"></path></svg></button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px; padding: 14px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 8px; background: {{k.field}}; border: 1px solid {{k.border}}">
+<div style="display: flex; gap: 8px; align-items: center"><span style="font-size: 11px; color: {{k.muted}}; width: 22px">{{s.from}}</span><span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 12px">{{ir.from}}</span></div>
+<div style="display: flex; gap: 8px; align-items: center"><span style="font-size: 11px; color: {{k.muted}}; width: 22px">{{s.to}}</span><span dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 12px">{{ir.to}}</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 11px; color: {{k.muted}}">{{s.kind}}</span>
+<div dir="ltr" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; padding: 2px; border-radius: 8px; background: {{k.field}}; border: 1px solid {{k.fieldBd}}">
+<sc-for list="{{ir.kinds}}" as="kd" hint-placeholder-count="4"><button aria-pressed="{{kd.on}}" style="height: 26px; border: 0; border-radius: 6px; background: {{kd.bg}}; color: {{kd.fg}}; font-family: 'JetBrains Mono', monospace; font-size: 11.5px">{{kd.l}}</button></sc-for>
+</div></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ir-d" dir="ltr" style="font-size: 11px; color: {{k.muted}}; text-align: {{p.start}}">On Delete</label><sc-raw-select id="ir-d" dir="ltr" style="height: 30px; border-radius: 7px; border: 1px solid {{k.fieldBd}}; background: {{k.field}}; color: {{k.text}}; padding: 0 6px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px"><option>{{ir.del}}</option><option>CASCADE</option><option>SET NULL</option><option>NO ACTION</option></sc-raw-select></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ir-u" dir="ltr" style="font-size: 11px; color: {{k.muted}}; text-align: {{p.start}}">On Update</label><sc-raw-select id="ir-u" dir="ltr" style="height: 30px; border-radius: 7px; border: 1px solid {{k.fieldBd}}; background: {{k.field}}; color: {{k.text}}; padding: 0 6px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px"><option>{{ir.upd}}</option><option>RESTRICT</option><option>SET NULL</option></sc-raw-select></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ir-l" style="font-size: 11px; color: {{k.muted}}">{{s.label}}</label><input id="ir-l" dir="ltr" value="{{ir.label}}" placeholder="{{s.noLabel}}" style="height: 30px; border-radius: 7px; border: 1px solid {{k.fieldBd}}; background: {{k.field}}; color: {{k.text}}; padding: 0 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px"></div>
+<div style="display: flex; gap: 8px">
+<button style="flex: 1; height: 30px; border-radius: 7px; border: 1px solid {{k.fieldBd}}; background: transparent; color: {{k.text}}; font-family: inherit; font-size: 12px">{{s.swap}}</button>
+<button style="flex: 1; height: 30px; border-radius: 7px; border: 1px solid {{k.fieldBd}}; background: transparent; color: {{k.danger}}; font-family: inherit; font-size: 12px">{{s.delRel}}</button>
+</div>
+</div>
+</sc-if>
+</aside>
+</sc-if>
+</div>
+
+<sc-if value="{{exportOpen}}" hint-placeholder-val="{{false}}">
+<div role="menu" style="position: absolute; top: 40px; {{p.end}}: 104px; width: 236px; padding: 5px; box-sizing: border-box; border-radius: 10px; background: {{k.pop}}; border: 1px solid {{k.popBd}}; box-shadow: {{k.shadow}}">
+<sc-for list="{{exp}}" as="m" hint-placeholder-count="7">
+<sc-if value="{{m.sep}}" hint-placeholder-val="{{false}}"><div style="height: 1px; background: {{k.border}}; margin: 4px 6px"></div></sc-if>
+<button role="menuitem" style="width: 100%; height: 32px; display: flex; align-items: center; gap: 10px; padding: 0 8px; border: 0; border-radius: 6px; background: {{m.bg}}; color: {{k.text}}; font-family: inherit; font-size: 12.5px; text-align: start">
+<span style="width: 34px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 600; color: {{k.accTx}}">{{m.tag}}</span>
+<span style="flex: 1">{{m.l}}</span>
+<kbd dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: {{k.faint}}">{{m.k}}</kbd>
+</button>
+</sc-for>
+</div>
+</sc-if>
+
+<footer style="height: 26px; flex: none; background: {{k.app}}; border-top: 1px solid {{k.border}}; display: flex; align-items: center; gap: 16px; padding: 0 12px; font-size: 11px; color: {{k.faint}}">
+<span>{{ft.tables}}</span><span>{{ft.rels}}</span><span>{{ft.groups}}</span>
+<span style="color: {{k.muted}}">{{s.selL}} <span dir="ltr" style="font-family: 'JetBrains Mono', monospace">{{ft.sel}}</span></span>
+<span style="flex: 1"></span>
+<span dir="ltr" style="font-family: 'JetBrains Mono', monospace">PostgreSQL</span>
+<span>{{s.autosave}}</span>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;scene&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;canvas&quot;,&quot;table&quot;,&quot;column&quot;,&quot;relation&quot;,&quot;hover&quot;,&quot;color&quot;,&quot;linking&quot;,&quot;grouping&quot;,&quot;search&quot;,&quot;context&quot;,&quot;exportm&quot;,&quot;notes&quot;,&quot;feedback&quot;],&quot;default&quot;:&quot;canvas&quot;},&quot;locale&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;fa&quot;,&quot;en&quot;],&quot;default&quot;:&quot;fa&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;},&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  renderVals() {
+    const S = this.state || {};
+    const SC = {
+      canvas: {},
+      table: { panel: 'table', selT: 'products' },
+      column: { panel: 'columns', selT: 'products', selC: 'price' },
+      relation: { panel: 'rel', selR: 3, legend: true },
+      hover: { hovR: 0 },
+      color: { multi: ['orders', 'order_items'], ov: 'color' },
+      linking: { ov: 'linking' },
+      grouping: { ov: 'grouping' },
+      search: { ov: 'search', selT: 'orders' },
+      context: { ov: 'context', selT: 'orders' },
+      exportm: { ov: 'export' },
+      notes: { panel: 'note', selT: 'orders', ov: 'notes' },
+      feedback: { ov: 'feedback' }
+    };
+    const sc = SC[this.props.scene] || SC.canvas;
+    const g = (key, d) => (S[key] !== undefined ? S[key] : (sc[key] !== undefined ? sc[key] : d));
+    const locale = g('locale', this.props.locale || 'fa');
+    const theme = g('theme', this.props.theme || 'dark');
+    const panel = g('panel', 'none'), selT = g('selT', null), selC = g('selC', null), selR = g('selR', null), hovR = g('hovR', null);
+    const ov = g('ov', null), legend = g('legend', false), multi = g('multi', []), colors = g('colors', {});
+    const fa = locale === 'fa', dark = theme === 'dark';
+    const set = (o) => this.setState(o);
+    const num = (n) => (fa ? String(n).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]) : String(n));
+
+    const K = dark ? {
+      app: '#0B0D11', panel: '#0F1217', border: '#1C2129', canvas: '#0D1015', dot: 'rgba(140,160,200,0.10)',
+      card: '#151920', cardBd: '#232A35', headBd: '#222833', text: '#E6EAF2', text2: '#DCE1EA', muted: '#8A93A3', faint: '#7D8696', icon: '#687286',
+      line: '#3A4352', lineHi: '#6E9FEF', acc: '#4C8DFF', accTx: '#7FB0FF', accBg: 'rgba(76,141,255,0.16)', accBg2: 'rgba(76,141,255,0.08)',
+      field: '#0D1015', fieldBd: '#2A3446', pop: '#1A1F28', popBd: '#2A3240', kbd: '#1D222C', pk: '#E8B54A', fk: '#7FB0FF', q: '#E0A33A',
+      danger: '#F07A7A', okTx: '#8FD4A0', warnBg: '#2A2214', warnBd: '#5A4520', warnTx: '#F2CF8A', shadow: '0 12px 32px rgba(0,0,0,0.5)', backdrop: 'rgba(5,7,10,0.55)',
+      noteBg: '#2A2414', noteBd: '#4F4220', noteTx: '#F0DDA6', sw: '#3A4352', swOn: '#4C8DFF',
+      g1Bg: 'rgba(139,124,246,0.06)', g1Bd: 'rgba(139,124,246,0.30)', g1ChipBg: '#241F45', g1ChipBd: 'rgba(139,124,246,0.45)', g1Tx: '#C7BFFB',
+      g2Bg: 'rgba(240,138,75,0.05)', g2Bd: 'rgba(240,138,75,0.30)', g2ChipBg: '#3A2416', g2ChipBd: 'rgba(240,138,75,0.45)', g2Tx: '#F5B48C',
+      tint: 0.14, mini: 'rgba(15,18,23,0.92)', segOn: '#2A3446', base: '0 4px 14px rgba(0,0,0,0.35)'
+    } : {
+      app: '#F3F4F7', panel: '#FFFFFF', border: '#E2E5EB', canvas: '#F6F7F9', dot: 'rgba(30,40,70,0.16)',
+      card: '#FFFFFF', cardBd: '#DDE1E8', headBd: '#E6E9EE', text: '#161A22', text2: '#222731', muted: '#5B6474', faint: '#646D7D', icon: '#8A93A3',
+      line: '#A3ABBA', lineHi: '#2F6FE0', acc: '#2F6FE0', accTx: '#1F5BC7', accBg: 'rgba(47,111,224,0.12)', accBg2: 'rgba(47,111,224,0.05)',
+      field: '#F7F8FA', fieldBd: '#D5DAE2', pop: '#FFFFFF', popBd: '#DDE1E8', kbd: '#EEF0F4', pk: '#A86A00', fk: '#2563C9', q: '#B26A00',
+      danger: '#C8303C', okTx: '#1E7A3C', warnBg: '#FFF6E0', warnBd: '#F0D59A', warnTx: '#6E4A00', shadow: '0 12px 32px rgba(20,24,40,0.14)', backdrop: 'rgba(20,24,40,0.22)',
+      noteBg: '#FFF6D6', noteBd: '#EED98B', noteTx: '#5C4A0E', sw: '#D5DAE2', swOn: '#2F6FE0',
+      g1Bg: 'rgba(124,108,240,0.06)', g1Bd: 'rgba(124,108,240,0.32)', g1ChipBg: '#EEEBFE', g1ChipBd: 'rgba(124,108,240,0.40)', g1Tx: '#4B3FC0',
+      g2Bg: 'rgba(224,112,58,0.06)', g2Bd: 'rgba(224,112,58,0.32)', g2ChipBg: '#FDEDE3', g2ChipBd: 'rgba(224,112,58,0.40)', g2Tx: '#A44A1C',
+      tint: 0.12, mini: 'rgba(255,255,255,0.95)', segOn: '#FFFFFF', base: '0 1px 2px rgba(20,24,40,0.06), 0 4px 12px rgba(20,24,40,0.06)'
+    };
+
+    const STR = {
+      fa: {
+        unsaved: 'ذخیره‌نشده', search: 'جستجوی جدول، ستون یا دستور…', export: 'خروجی', tools: 'ابزارها', canvasL: 'بوم',
+        select: 'انتخاب · V', pan: 'جابجایی · H', newTable: 'جدول جدید · T', section: 'گروه · S', relation: 'رابطه · R', note: 'یادداشت · N',
+        legend: 'راهنمای نمادها · ?', legendT: 'راهنمای نمادها', zin: 'بزرگ‌نمایی · Ctrl +', zout: 'کوچک‌نمایی · Ctrl −', fit: 'نمایش همه · Shift 1', theme: 'تغییر تم', zoom: '۱۰۰٪',
+        g1: 'فروش و سفارش', g2: 'کاتالوگ و انبار', close: 'بستن پنل · Esc',
+        tTable: 'جدول', tCols: 'ستون‌ها', tRels: 'رابطه‌ها', tNote: 'یادداشت',
+        tableName: 'نام جدول', headerColor: 'رنگ هدر', sectionL: 'گروه', noGroup: 'بدون گروه', collapsed: 'نمایش جمع‌شده', duplicate: 'تکثیر', delTable: 'حذف جدول',
+        colName: 'نام', colType: 'نوع', def: 'پیش‌فرض', cmt: 'توضیح', delCol: 'حذف ستون', addCol: 'ستون جدید', nav: 'ستون بعدی/قبلی',
+        relTitle: 'رابطه', from: 'از', to: 'به', kind: 'نوع رابطه', label: 'برچسب', swap: 'جابجایی دو سر', delRel: 'حذف رابطه', noLabel: 'بدون برچسب',
+        noteL: 'یادداشت جدول', pin: 'نمایش دائم روی بوم', noteHint: 'متن ساده و چندخطی · Ctrl+Enter برای بستن', clickEdit: 'کلیک برای ویرایش',
+        palette: 'پالت', mine: 'رنگ‌های من', add: 'افزودن رنگ', none: 'بدون رنگ', selN: '۲ جدول', save: 'ذخیره',
+        drop: 'رها کن تا رابطه ساخته شود', groupDrop: 'رها کن تا به «کاتالوگ و انبار» اضافه شود',
+        rTables: 'جدول‌ها', rCols: 'ستون‌ها', rCmds: 'دستورها', palHint: 'Enter برای رفتن به نتیجه · ↑↓ برای حرکت',
+        bannerA: 'یک رابطه به ستونی اشاره می‌کند که دیگر وجود ندارد:', show: 'نمایش', fix: 'حذف رابطه', undoA: 'ستون', undoB: 'حذف شد', undo: 'برگرداندن',
+        selL: 'انتخاب:', autosave: 'آخرین ذخیره: ۲ دقیقه پیش'
+      },
+      en: {
+        unsaved: 'Unsaved', search: 'Search tables, columns, commands…', export: 'Export', tools: 'Tools', canvasL: 'Canvas',
+        select: 'Select · V', pan: 'Pan · H', newTable: 'New table · T', section: 'Section · S', relation: 'Relationship · R', note: 'Note · N',
+        legend: 'Notation guide · ?', legendT: 'Notation guide', zin: 'Zoom in · Ctrl +', zout: 'Zoom out · Ctrl −', fit: 'Fit to screen · Shift 1', theme: 'Toggle theme', zoom: '100%',
+        g1: 'Sales & Orders', g2: 'Catalog & Stock', close: 'Close panel · Esc',
+        tTable: 'Table', tCols: 'Columns', tRels: 'Relations', tNote: 'Note',
+        tableName: 'Table name', headerColor: 'Header color', sectionL: 'Section', noGroup: 'No section', collapsed: 'Show collapsed', duplicate: 'Duplicate', delTable: 'Delete table',
+        colName: 'Name', colType: 'Type', def: 'Default', cmt: 'Comment', delCol: 'Delete column', addCol: 'New column', nav: 'next/prev column',
+        relTitle: 'Relationship', from: 'From', to: 'To', kind: 'Cardinality', label: 'Label', swap: 'Swap ends', delRel: 'Delete', noLabel: 'No label',
+        noteL: 'Table note', pin: 'Pin on canvas', noteHint: 'Plain multi-line text · Ctrl+Enter to close', clickEdit: 'Click to edit',
+        palette: 'Palette', mine: 'My colors', add: 'Add color', none: 'No color', selN: '2 tables', save: 'Save',
+        drop: 'Release to create relationship', groupDrop: 'Release to add to “Catalog & Stock”',
+        rTables: 'Tables', rCols: 'Columns', rCmds: 'Commands', palHint: 'Enter to jump · ↑↓ to move',
+        bannerA: 'A relationship points to a column that no longer exists:', show: 'Show', fix: 'Remove', undoA: 'Column', undoB: 'deleted', undo: 'Undo',
+        selL: 'Selected:', autosave: 'Last saved 2 min ago'
+      }
+    };
+    const s = STR[locale];
+    const NOTES = {
+      orders: ['وضعیت سفارش فقط از طریق سرویس پرداخت تغییر می‌کند.\nهیچ‌وقت مستقیم آپدیت نشود.', 'Order status is only changed by the payment service.\nNever update it directly.'],
+      customers: ['هر مشتری می‌تواند چند آدرس داشته باشد؛ جدول آدرس‌ها در فاز بعد اضافه می‌شود.', 'A customer can have many addresses; the addresses table lands in phase 2.']
+    };
+    const li = fa ? 0 : 1;
+    const g2Note = ['موجودی هر محصول برای هر انبار جداگانه نگهداری می‌شود.', 'Stock is tracked per product, per warehouse.'][li];
+
+    const HH = 30, RH = 22, PAD = 3;
+    const PAL = ['#4C8DFF', '#8B7CF6', '#E86BB0', '#EF6461', '#F08A4B', '#E0A33A', '#4CB86B', '#2BB3A8', '#38B6D9', '#8792A6'];
+    const MINE = ['#5B6CFF', '#C2410C', '#0EA5A4'];
+    const C = { violet: '#8B7CF6', blue: '#4C8DFF', teal: '#2BB3A8', green: '#4CB86B', orange: '#F08A4B', amber: '#E0A33A' };
+    const L = {
+      customers: { x: 860, y: 70, w: 190, c: C.blue, note: true, grp: 1 },
+      orders: { x: 560, y: 80, w: 200, c: C.violet, note: true, grp: 1 },
+      payments: { x: 860, y: 290, w: 190, c: C.green, grp: 1 },
+      order_items: { x: 560, y: 320, w: 200, c: C.violet, grp: 1 },
+      categories: { x: 50, y: 110, w: 180, c: C.amber, grp: 2 },
+      products: { x: 270, y: 220, w: 185, c: C.orange, grp: 2 },
+      inventory: { x: 50, y: 420, w: 180, c: C.teal, grp: 2 },
+      warehouses: { x: 270, y: 450, w: 185, c: C.teal, grp: 2 }
+    };
+    if (ov === 'grouping') { L.warehouses = Object.assign({}, L.warehouses, { x: 300, y: 606, drag: true }); }
+    const COLS = {
+      customers: [['id','uuid','pk def'],['full_name','varchar(120)','nn'],['email','varchar(255)','u nn cmt'],['phone','varchar(20)',''],['created_at','timestamptz','def nn']],
+      orders: [['id','bigint','pk ai'],['customer_id','uuid','fk nn idx'],['status','order_status','def cmt nn'],['total','numeric(12,2)','nn'],['placed_at','timestamptz','def nn'],['note','text',''],['warehouse_id','int','fk']],
+      order_items: [['id','bigint','pk ai'],['order_id','bigint','fk nn idx'],['product_id','bigint','fk nn'],['qty','int','nn def'],['unit_price','numeric(12,2)','nn']],
+      payments: [['id','bigint','pk ai'],['order_id','bigint','fk u nn'],['amount','numeric(12,2)','nn'],['method','pay_method','nn'],['paid_at','timestamptz','']],
+      products: [['id','bigint','pk ai'],['sku','varchar(32)','u nn'],['name','varchar(160)','nn'],['category_id','int','fk idx'],['price','numeric(12,2)','nn def cmt'],['is_active','boolean','def nn']],
+      categories: [['id','int','pk ai'],['parent_id','int','fk'],['title','varchar(80)','nn']],
+      inventory: [['product_id','bigint','pk fk'],['warehouse_id','int','pk fk'],['quantity','int','nn def'],['updated_at','timestamptz','']],
+      warehouses: [['id','int','pk ai'],['name','varchar(80)','nn'],['city','varchar(60)','']]
+    };
+    const META = {
+      'customers.id': ['gen_random_uuid()'], 'customers.created_at': ['now()'], 'orders.placed_at': ['now()'],
+      'orders.status': ["'pending'", 'چرخه: pending → paid → shipped', 'Lifecycle: pending → paid → shipped'],
+      'order_items.qty': ['1'], 'products.price': ['0.00', 'قیمت به ریال، بدون مالیات', 'Price in IRR, excluding tax'],
+      'products.is_active': ['true'], 'inventory.quantity': ['0'], 'customers.email': ['', 'برای ورود هم استفاده می‌شود', 'Also used for sign-in']
+    };
+    const RELS = [
+      { a: 'orders', ac: 'customer_id', ka: 'zeroMany', b: 'customers', bc: 'id', kb: 'onlyOne', mo: 0, del: 'RESTRICT', upd: 'CASCADE', label: 'places' },
+      { a: 'orders', ac: 'id', ka: 'onlyOne', b: 'order_items', bc: 'order_id', kb: 'oneMany', mo: 0, del: 'CASCADE', upd: 'CASCADE', label: '' },
+      { a: 'orders', ac: 'id', ka: 'onlyOne', b: 'payments', bc: 'order_id', kb: 'zeroOne', mo: 9, del: 'RESTRICT', upd: 'CASCADE', label: '' },
+      { a: 'products', ac: 'id', ka: 'onlyOne', b: 'order_items', bc: 'product_id', kb: 'zeroMany', mo: 8, del: 'RESTRICT', upd: 'CASCADE', label: 'sold_as' },
+      { a: 'categories', ac: 'id', ka: 'onlyOne', b: 'products', bc: 'category_id', kb: 'zeroMany', mo: -5, del: 'SET NULL', upd: 'CASCADE', label: '' },
+      { a: 'categories', ac: 'parent_id', ka: 'zeroMany', b: 'categories', bc: 'id', kb: 'zeroOne', mo: 0, del: 'SET NULL', upd: 'CASCADE', label: '' },
+      { a: 'inventory', ac: 'product_id', ka: 'zeroMany', b: 'products', bc: 'id', kb: 'onlyOne', mo: 5, del: 'CASCADE', upd: 'CASCADE', label: '' },
+      { a: 'inventory', ac: 'warehouse_id', ka: 'zeroMany', b: 'warehouses', bc: 'id', kb: 'onlyOne', mo: 0, del: 'CASCADE', upd: 'CASCADE', label: '' },
+      { a: 'orders', ac: 'warehouse_id', ka: 'zeroMany', b: 'warehouses', bc: 'id', kb: 'zeroOne', mo: -8, del: 'SET NULL', upd: 'CASCADE', label: '' }
+    ];
+    const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; };
+    const T = {};
+    Object.keys(L).forEach((k) => { T[k] = Object.assign({ name: k, cols: COLS[k] }, L[k]); if (colors[k]) T[k].c = colors[k]; });
+    const idx = (t, n) => t.cols.findIndex((c) => c[0] === n);
+    const anchor = (t, i, sd) => ({ x: sd > 0 ? t.x + t.w : t.x, y: t.y + HH + PAD + i * RH + RH / 2, o: sd });
+    const kindOf = (r) => { const am = /Many/.test(r.ka), bm = /Many/.test(r.kb); return am && bm ? 'N:N' : am ? 'N:1' : bm ? '1:N' : '1:1'; };
+    const marker = (pt, kd) => {
+      const x = pt.x, y = pt.y, o = pt.o;
+      const bar = (d) => 'M' + (x + o * d) + ' ' + (y - 5) + 'V' + (y + 5);
+      const circ = (d) => { const cx = x + o * d; return 'M' + (cx - 3.5) + ' ' + y + 'a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0 -7 0'; };
+      const foot = 'M' + (x + o * 11) + ' ' + y + 'L' + x + ' ' + (y - 5) + 'M' + (x + o * 11) + ' ' + y + 'L' + x + ' ' + (y + 5);
+      if (kd === 'onlyOne') return { m: bar(7) + bar(11), c: '' };
+      if (kd === 'zeroOne') return { m: bar(7), c: circ(15) };
+      if (kd === 'oneMany') return { m: foot + bar(14), c: '' };
+      if (kd === 'zeroMany') return { m: foot, c: circ(15) };
+      return { m: bar(9), c: '' };
+    };
+    const route = (p, q, sa, sb, mo, self) => {
+      const sx = 12;
+      if (sa === sb) {
+        const ex = Math.max(p.x, q.x) + (self ? 34 : 40);
+        return { d: 'M' + p.x + ' ' + p.y + 'H' + (p.x + sx) + 'C' + ex + ' ' + p.y + ' ' + ex + ' ' + q.y + ' ' + (q.x + sx) + ' ' + q.y + 'H' + q.x, lx: ex - 8, ly: (p.y + q.y) / 2 };
+      }
+      const mx = (p.x + q.x) / 2 + mo;
+      const dy = q.y - p.y, sy = dy >= 0 ? 1 : -1, rr = Math.min(6, Math.abs(dy) / 2);
+      return { d: 'M' + p.x + ' ' + p.y + 'H' + (mx - sa * rr) + 'Q' + mx + ' ' + p.y + ' ' + mx + ' ' + (p.y + sy * rr) + 'V' + (q.y - sy * rr) + 'Q' + mx + ' ' + q.y + ' ' + (mx - sb * rr) + ' ' + q.y + 'H' + q.x, lx: mx, ly: (p.y + q.y) / 2 };
+    };
+    const geo = RELS.map((r) => {
+      const a = T[r.a], b = T[r.b];
+      const ca = a.x + a.w / 2, cb = b.x + b.w / 2;
+      let sa, sb;
+      if (r.a === r.b || Math.abs(ca - cb) < 60) { sa = 1; sb = 1; } else if (ca < cb) { sa = 1; sb = -1; } else { sa = -1; sb = 1; }
+      const p = anchor(a, idx(a, r.ac), sa), q = anchor(b, idx(b, r.bc), sb);
+      return Object.assign({ p: p, q: q }, route(p, q, sa, sb, r.mo, r.a === r.b));
+    });
+
+    const focusR = selR !== null ? selR : hovR;
+    let hlR = [];
+    if (focusR !== null) hlR = [focusR];
+    else if (selT && selC) hlR = RELS.map((r, i) => (((r.a === selT && r.ac === selC) || (r.b === selT && r.bc === selC)) ? i : -1)).filter((i) => i >= 0);
+    else if (selT) hlR = RELS.map((r, i) => ((r.a === selT || r.b === selT) ? i : -1)).filter((i) => i >= 0);
+    const focus = focusR !== null || (!!selT && !!selC && hlR.length > 0);
+    const hlCols = new Set();
+    if (focus) hlR.forEach((i) => { const r = RELS[i]; hlCols.add(r.a + '.' + r.ac); hlCols.add(r.b + '.' + r.bc); });
+    const clear = { selC: null, selR: null, hovR: null, ov: null, multi: [] };
+
+    const rels = RELS.map((r, i) => {
+      const gm = geo[i], on = hlR.indexOf(i) >= 0;
+      const hidden = ov === 'linking' && i === 8;
+      const ma = marker(gm.p, r.ka), mb = marker(gm.q, r.kb);
+      return {
+        d: hidden ? '' : gm.d, m: hidden ? '' : ma.m + mb.m, c: hidden ? '' : ma.c + mb.c,
+        stroke: on ? K.lineHi : K.line, sw: on ? 1.7 : 1.3, op: focus && !on ? 0.22 : 1,
+        pick: () => set(Object.assign({}, clear, { panel: 'rel', selR: i, selT: null }))
+      };
+    });
+    const labels = RELS.map((r, i) => ({ r: r, i: i })).filter((o) => o.r.label && !(ov === 'linking' && o.i === 8)).map((o) => {
+      const on = hlR.indexOf(o.i) >= 0;
+      return { x: geo[o.i].lx, y: geo[o.i].ly, t: o.r.label, bg: on ? K.acc : K.card, fg: on ? '#FFFFFF' : K.muted, bd: on ? K.acc : K.cardBd, op: focus && !on ? 0.3 : 1 };
+    });
+
+    const inSel = (k) => k === selT || multi.indexOf(k) >= 0 || (ov === 'linking' && k === 'warehouses');
+    const tables = Object.keys(T).map((k) => {
+      const t = T[k];
+      const inv = t.cols.some((c) => hlCols.has(k + '.' + c[0]));
+      const rows = t.cols.map((c) => {
+        const f = c[2], pk = f.indexOf('pk') >= 0, fk = f.indexOf('fk') >= 0;
+        const key = k + '.' + c[0];
+        const isSel = selT === k && selC === c[0];
+        const isTarget = ov === 'linking' && key === 'warehouses.id';
+        const isSrc = ov === 'linking' && key === 'orders.warehouse_id';
+        const lit = hlCols.has(key) || isTarget || isSrc;
+        return {
+          n: c[0], t: c[1], key: pk ? 'PK' : (fk ? 'FK' : ''), kc: pk ? K.pk : K.fk,
+          u: /\bu\b/.test(f), ai: f.indexOf('ai') >= 0, def: f.indexOf('def') >= 0, cmt: f.indexOf('cmt') >= 0, ix: f.indexOf('idx') >= 0,
+          q: (f.indexOf('nn') < 0 && !pk) ? '?' : '', more: isSel,
+          bg: isSel ? K.accBg : (lit ? K.accBg2 : 'transparent'),
+          sh: isSel || isTarget ? 'inset 0 0 0 1px ' + K.acc : 'none',
+          nc: lit || isSel ? K.text : K.text2, fw: lit || isSel ? 600 : 400,
+          pick: () => set(Object.assign({}, clear, { panel: 'columns', selT: k, selC: c[0] }))
+        };
+      });
+      const sel = inSel(k);
+      return {
+        name: k, x: t.x, y: t.y, w: t.w, c: t.c, hb: rgba(t.c, K.tint), note: !!t.note, rows: rows,
+        bd: sel || t.drag ? K.acc : K.cardBd,
+        ring: t.drag ? '0 0 0 2px ' + K.acc + ', 0 22px 44px rgba(0,0,0,0.45)' : (sel ? '0 0 0 2px ' + K.acc + ', 0 8px 24px rgba(0,0,0,0.3)' : K.base),
+        op: focus && !inv && k !== selT ? 0.45 : 1,
+        pickHead: () => set(Object.assign({}, clear, { panel: 'table', selT: k }))
+      };
+    });
+
+    const lk = (() => {
+      const o = T.orders, w = T.warehouses;
+      const sp = anchor(o, idx(o, 'warehouse_id'), -1), tp = anchor(w, 0, 1);
+      const cx = tp.x + 14, cy = tp.y + 4;
+      const mx = (sp.x + cx) / 2 - 8;
+      return {
+        d: 'M' + sp.x + ' ' + sp.y + 'H' + mx + 'V' + cy + 'H' + cx, sx: sp.x, sy: sp.y, tx: tp.x, ty: tp.y,
+        cur: 'M' + cx + ' ' + cy + 'l0 15 4-4 3 6 2.5-1.2-3-5.8 5.5 0z', tipX: cx + 20, tipY: cy + 14
+      };
+    })();
+    const hvI = focusR !== null ? focusR : 0;
+    const hr = RELS[hvI];
+    const hv = { x: geo[hvI].lx + 14, y: geo[hvI].ly + 14, path: hr.a + '.' + hr.ac + ' → ' + hr.b + '.' + hr.bc, kind: kindOf(hr), del: hr.del, upd: hr.upd };
+
+    const tsel = selT ? T[selT] : null;
+    const it = tsel ? {
+      name: selT, c: tsel.c, group: tsel.grp === 1 ? s.g1 : s.g2,
+      nCols: num(tsel.cols.length), nRels: num(RELS.filter((r) => r.a === selT || r.b === selT).length),
+      note: NOTES[selT] ? NOTES[selT][li] : ''
+    } : { name: '', c: K.line, group: '', nCols: '', nRels: '', note: '' };
+    const curColor = tsel ? tsel.c : (multi.length ? T[multi[0]].c : '');
+    const pickColor = (c) => () => {
+      const nc = Object.assign({}, colors);
+      const targets = multi.length ? multi : (selT ? [selT] : []);
+      targets.forEach((k) => { nc[k] = c; });
+      set({ colors: nc });
+    };
+    const ringFor = (c) => (c.toLowerCase() === String(curColor).toLowerCase() ? '0 0 0 2px ' + (dark ? '#1A1F28' : '#FFFFFF') + ', 0 0 0 3.5px ' + c : 'none');
+    const pal = PAL.map((c) => ({ c: c, ring: ringFor(c), pick: pickColor(c) }));
+    const mine = MINE.map((c) => ({ c: c, ring: ringFor(c), pick: pickColor(c) }));
+
+    const tabDefs = [['table', s.tTable], ['columns', s.tCols + ' ' + (tsel ? num(tsel.cols.length) : '')], ['rels', s.tRels], ['note', s.tNote]];
+    const tabs = tabDefs.map((d) => ({ l: d[1], on: panel === d[0], bc: panel === d[0] ? K.acc : 'transparent', fc: panel === d[0] ? K.text : K.muted, pick: () => set({ panel: d[0] }) }));
+    const colList = tsel ? tsel.cols.map((c) => {
+      const f = c[2], pk = f.indexOf('pk') >= 0, fk = f.indexOf('fk') >= 0, on = c[0] === selC;
+      const m = META[selT + '.' + c[0]] || [];
+      const tg = [['PK', pk], ['UNIQUE', /\bu\b/.test(f)], ['NOT NULL', f.indexOf('nn') >= 0 || pk], ['AUTO INC', f.indexOf('ai') >= 0], ['INDEX', f.indexOf('idx') >= 0]].map((x) => ({
+        l: x[0], on: x[1], bd: x[1] ? K.acc : K.fieldBd, bg: x[1] ? K.accBg : 'transparent', fg: x[1] ? K.accTx : K.faint
+      }));
+      return {
+        n: c[0], t: c[1], key: pk ? 'PK' : (fk ? 'FK' : ''), kc: pk ? K.pk : K.fk, q: (f.indexOf('nn') < 0 && !pk) ? '?' : '',
+        on: on, closed: !on, tg: tg, dv: m[0] || '', cv: m[1 + li] || '',
+        pick: () => set({ selC: c[0], selR: null })
+      };
+    }) : [];
+    const relList = selT ? RELS.map((r, i) => ({ r: r, i: i })).filter((o) => o.r.a === selT || o.r.b === selT).map((o) => {
+      const mineSide = o.r.a === selT;
+      return {
+        other: mineSide ? o.r.b + '.' + o.r.bc : o.r.a + '.' + o.r.ac, mine: selT + '.' + (mineSide ? o.r.ac : o.r.bc), kind: kindOf(o.r),
+        pick: () => set(Object.assign({}, clear, { panel: 'rel', selR: o.i, selT: null }))
+      };
+    }) : [];
+    const rs = selR !== null ? RELS[selR] : RELS[0];
+    const ir = {
+      from: rs.a + '.' + rs.ac, to: rs.b + '.' + rs.bc, del: rs.del, upd: rs.upd, label: rs.label,
+      kinds: ['1:1', '1:N', 'N:1', 'N:N'].map((x) => { const on = x === kindOf(rs); return { l: x, on: on, bg: on ? K.acc : 'transparent', fg: on ? '#FFFFFF' : K.muted }; })
+    };
+
+    const panelOpen = (panel === 'rel' && selR !== null) || (panel !== 'none' && panel !== 'rel' && !!selT);
+    const off = panelOpen ? -4 : 156;
+
+    const TOOLS = [
+      ['M5 3l11 5-5 1.6L9.4 15z', s.select, true],
+      ['M10 3v14M3 10h14M8 5l2-2 2 2M8 15l2 2 2-2M5 8l-2 2 2 2M15 8l2 2-2 2', s.pan, false],
+      ['M5 4h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM3 8h14M3 12h14', s.newTable, false],
+      ['M6 3v14M14 3v14M3 6h14M3 14h14', s.section, false],
+      ['M3 5a2 2 0 1 0 4 0a2 2 0 1 0-4 0M13 15a2 2 0 1 0 4 0a2 2 0 1 0-4 0M7 5h2.5A2.5 2.5 0 0 1 12 7.5v5a2.5 2.5 0 0 0 1 2', s.relation, ov === 'linking'],
+      ['M4 4h12v8l-4 4H4zM12 16v-4h4', s.note, false]
+    ];
+    const tools = TOOLS.map((x, i) => { const on = ov === 'linking' ? i === 4 : x[2]; return { d: x[0], label: x[1], bg: on ? K.accBg : 'transparent', fg: on ? K.accTx : K.muted }; });
+
+    const LEG = [
+      ['M0 8H48M41 3V13M37 3V13', '', fa ? 'یک و فقط یک' : 'Exactly one'],
+      ['M0 8H48M41 3V13', 'M29.5 8a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0-7 0', fa ? 'صفر یا یک' : 'Zero or one'],
+      ['M0 8H48M37 8 48 3M37 8 48 13M34 3V13', '', fa ? 'یک یا چند' : 'One or many'],
+      ['M0 8H48M37 8 48 3M37 8 48 13', 'M26.5 8a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0-7 0', fa ? 'صفر یا چند' : 'Zero or many'],
+      ['M0 8H48M39 3V13', '', fa ? 'یک (کلی)' : 'One (generic)']
+    ];
+    const leg = LEG.map((x) => ({ d: x[0], c: x[1], l: x[2] }));
+
+    const CTX = fa
+      ? [['افزودن ستون', 'Enter', 'M10 4v12M4 10h12'], ['تغییر رنگ', 'C', 'M10 3a7 7 0 1 0 0 14c1 0 1.5-.8 1-1.6-.6-1 .1-2.4 1.4-2.4H15a3 3 0 0 0 2-3A7 7 0 0 0 10 3z'], ['افزودن یادداشت', 'N', 'M4 4h12v8l-4 4H4zM12 16v-4h4'], ['گروه‌بندی انتخاب', 'Ctrl G', 'M6 3v14M14 3v14M3 6h14M3 14h14'], ['جمع‌کردن', 'Space', 'M6 8l4-4 4 4M6 12l4 4 4-4'], ['کپی', 'Ctrl C', 'M7 7h9v9H7zM4 13V4h9'], ['تکثیر', 'Ctrl D', 'M5 5h8v8H5zM9 9h8v8H9z'], ['حذف جدول', 'Del', 'M4 6h12M8 6V4h4v2M6 6l1 10h6l1-10']]
+      : [['Add column', 'Enter', 'M10 4v12M4 10h12'], ['Change color', 'C', 'M10 3a7 7 0 1 0 0 14c1 0 1.5-.8 1-1.6-.6-1 .1-2.4 1.4-2.4H15a3 3 0 0 0 2-3A7 7 0 0 0 10 3z'], ['Add note', 'N', 'M4 4h12v8l-4 4H4zM12 16v-4h4'], ['Group selection', 'Ctrl G', 'M6 3v14M14 3v14M3 6h14M3 14h14'], ['Collapse', 'Space', 'M6 8l4-4 4 4M6 12l4 4 4-4'], ['Copy', 'Ctrl C', 'M7 7h9v9H7zM4 13V4h9'], ['Duplicate', 'Ctrl D', 'M5 5h8v8H5zM9 9h8v8H9z'], ['Delete table', 'Del', 'M4 6h12M8 6V4h4v2M6 6l1 10h6l1-10']];
+    const ctx = CTX.map((x, i) => ({ l: x[0], k: x[1], d: x[2], sep: i === 5 || i === 7, bg: i === 1 ? K.accBg : 'transparent', fg: i === 7 ? K.danger : K.text }));
+    const EXP = fa
+      ? [['DBML', 'فایل DBML', 'Ctrl E', false], ['SQL', 'SQL · PostgreSQL', '', false], ['SQL', 'SQL · MySQL', '', false], ['PNG', 'تصویر PNG', 'Ctrl Shift E', true], ['SVG', 'تصویر برداری SVG', '', false], ['COPY', 'کپی DBML در کلیپ‌بورد', 'Ctrl Shift C', true]]
+      : [['DBML', 'DBML file', 'Ctrl E', false], ['SQL', 'SQL · PostgreSQL', '', false], ['SQL', 'SQL · MySQL', '', false], ['PNG', 'PNG image', 'Ctrl Shift E', true], ['SVG', 'SVG vector', '', false], ['COPY', 'Copy DBML to clipboard', 'Ctrl Shift C', true]];
+    const exp = EXP.map((x, i) => ({ tag: x[0], l: x[1], k: x[2], sep: x[3], bg: i === 1 ? K.accBg : 'transparent' }));
+    const results = [
+      { head: true, item: false, l: s.rTables },
+      { head: false, item: true, pre: '', mid: 'ord', post: 'ers', meta: s.g1, c: C.violet, bg: K.accBg },
+      { head: false, item: true, pre: '', mid: 'ord', post: 'er_items', meta: s.g1, c: C.violet, bg: 'transparent' },
+      { head: true, item: false, l: s.rCols },
+      { head: false, item: true, pre: 'payments.', mid: 'ord', post: 'er_id', meta: 'bigint', c: C.green, bg: 'transparent' },
+      { head: false, item: true, pre: 'order_items.', mid: 'ord', post: 'er_id', meta: 'bigint', c: C.violet, bg: 'transparent' },
+      { head: true, item: false, l: s.rCmds },
+      { head: false, item: true, pre: fa ? '' : 'Export → SQL (', mid: fa ? '' : '', post: fa ? 'خروجی ← SQL' : 'PostgreSQL)', meta: 'Ctrl E', c: K.line, bg: 'transparent' }
+    ];
+
+    const k2 = 0.15;
+    const minis = Object.keys(T).map((n) => {
+      const t = T[n];
+      return { x: Math.round(8 + (t.x - 20) * k2), y: Math.round(6 + (t.y - 30) * k2), w: Math.round(t.w * k2), h: Math.round((HH + PAD * 2 + t.cols.length * RH) * k2), c: t.c };
+    });
+    const grouping = ov === 'grouping';
+    const g2 = grouping
+      ? { bg: rgba(K.acc, dark ? 0.10 : 0.07), bd: '2px solid ' + K.acc, sh: '0 0 0 4px ' + rgba(K.acc, 0.15) }
+      : { bg: K.g2Bg, bd: '1px solid ' + K.g2Bd, sh: 'none' };
+    const ftSel = selR !== null ? RELS[selR].a + ' → ' + RELS[selR].b : (multi.length ? multi.join(', ') : (selT ? (selC ? selT + '.' + selC : selT) : '—'));
+
+    return {
+      dir: fa ? 'rtl' : 'ltr', locale: locale, fa: fa, en: !fa, k: K, s: s,
+      font: fa ? "'Vazirmatn', 'Inter', system-ui, sans-serif" : "'Inter', 'Vazirmatn', system-ui, sans-serif",
+      p: { start: fa ? 'right' : 'left', end: fa ? 'left' : 'right' }, gJust: fa ? 'flex-end' : 'flex-start',
+      seg: { faBg: fa ? K.segOn : 'transparent', faTx: fa ? K.text : K.muted, enBg: fa ? 'transparent' : K.segOn, enTx: fa ? K.muted : K.text },
+      toFa: () => set({ locale: 'fa' }), toEn: () => set({ locale: 'en' }),
+      toggleTheme: () => set({ theme: dark ? 'light' : 'dark' }), themeIcon: dark ? 'M15.5 12.5A6 6 0 0 1 7.5 4.5a6 6 0 1 0 8 8z' : 'M7 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0M10 2.5v1.5M10 16v1.5M2.5 10h1.5M16 10h1.5M4.7 4.7l1 1M14.3 14.3l1 1M4.7 15.3l1-1M14.3 5.7l1-1',
+      toggleLegend: () => set({ legend: !legend }), legend: legend, legendBtn: { bg: legend ? K.accBg : 'transparent', fg: legend ? K.accTx : K.muted },
+      exportOpen: ov === 'export', toggleExport: () => set({ ov: ov === 'export' ? null : 'export' }),
+      deselect: () => set({ panel: 'none', selT: null, selC: null, selR: null, hovR: null, ov: null, multi: [] }),
+      noColor: pickColor(K.line),
+      tools: tools, leg: leg, ctx: ctx, exp: exp, results: results,
+      off: off, n4: num(4), g2: g2, g2Note: g2Note, custNote: NOTES.customers[li],
+      rels: rels, labels: labels, tables: tables, minis: minis,
+      linking: ov === 'linking', lk: lk, grouping: grouping, hover: hovR !== null && selR === null, hv: hv,
+      colorOpen: ov === 'color', contextOpen: ov === 'context', notes: ov === 'notes', feedback: ov === 'feedback', search: ov === 'search',
+      pal: pal, mine: mine,
+      panelOpen: panelOpen, pTableMode: panel !== 'rel', pRel: panel === 'rel' && selR !== null,
+      pTable: panel === 'table', pCols: panel === 'columns', pRels: panel === 'rels', pNote: panel === 'note',
+      it: it, tabs: tabs, colList: colList, relList: relList, ir: ir,
+      ft: { tables: num(8) + ' ' + (fa ? 'جدول' : 'tables'), rels: num(9) + ' ' + (fa ? 'رابطه' : 'relationships'), groups: num(2) + ' ' + (fa ? 'گروه' : 'sections'), sel: ftSel }
+    };
+  }
+}
+</script>
+
+
+</body></html>

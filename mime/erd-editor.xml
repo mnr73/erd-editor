@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/vnd.shiva.erd+json">
+    <comment>ERD diagram</comment>
+    <comment xml:lang="fa">نمودار ERD</comment>
+    <sub-class-of type="application/json"/>
+    <glob pattern="*.erd.json" weight="80"/>
+  </mime-type>
+</mime-info>

@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="fa"><head>
+<meta charset="utf-8">
+<title>جزئیات hover جدول و ستون</title>
+<script src="c94b8843-f42c-43b9-a9ea-d0bf8bef69be"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdAD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdJD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdBD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdOD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdCD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdDD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("df60dc1e-9b1c-4c46-b69e-770b4f0f8259") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdAD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdJD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdBD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdOD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdCD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdDD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("df60dc1e-9b1c-4c46-b69e-770b4f0f8259") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdAD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdJD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdBD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdOD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdCD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdDD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("df60dc1e-9b1c-4c46-b69e-770b4f0f8259") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdAD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdJD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdBD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdOD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdCD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=UcCB3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfU5NJeWUdIOjBeTGiXZdDD2M&skey=c491285d6722e4fa&v=v20) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("df60dc1e-9b1c-4c46-b69e-770b4f0f8259") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPx3cwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPxTcwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPxPcwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPx_cwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPx7cwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("8ef7a745-e9ac-4e2c-b82c-c5b5c215645d") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPx3cwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPxTcwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPxPcwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPx_cwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPx7cwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("8ef7a745-e9ac-4e2c-b82c-c5b5c215645d") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPx3cwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPxTcwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPxPcwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPx_cwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYUjKPx7cwg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("8ef7a745-e9ac-4e2c-b82c-c5b5c215645d") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* arabic */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("6775b591-5a1a-46df-b9f8-fed4da0c5665") format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=DxxG8j6PP2D_kU2muijPEe1n2vVbfJRklWgzWxy7H7hZXgBvzLTFRw20Ohw&skey=34e4817af6f837c1&v=v16) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("551f9ba3-e655-4cc2-85f7-3925511bfd39") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* arabic */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("6775b591-5a1a-46df-b9f8-fed4da0c5665") format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=DxxG8j6PP2D_kU2muijPEe1n2vVbfJRklWgzWxy7H7hZXgBvzLTFRw20Ohw&skey=34e4817af6f837c1&v=v16) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("551f9ba3-e655-4cc2-85f7-3925511bfd39") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* arabic */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("6775b591-5a1a-46df-b9f8-fed4da0c5665") format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=DxxG8j6PP2D_kU2muijPEe1n2vVbfJRklWgzWxy7H7hZXgBvzLTFRw20Ohw&skey=34e4817af6f837c1&v=v16) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("551f9ba3-e655-4cc2-85f7-3925511bfd39") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* arabic */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("6775b591-5a1a-46df-b9f8-fed4da0c5665") format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/l/font?kit=DxxG8j6PP2D_kU2muijPEe1n2vVbfJRklWgzWxy7H7hZXgBvzLTFRw20Ohw&skey=34e4817af6f837c1&v=v16) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("551f9ba3-e655-4cc2-85f7-3925511bfd39") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div dir="rtl" lang="fa" style="width: 1440px; height: 900px; position: relative; overflow: hidden; background-color: #0D1015; background-image: radial-gradient(circle, rgba(140,160,200,0.10) 1px, transparent 1.2px); background-size: 16px 16px; color: #E6EAF2; font-family: 'Vazirmatn', 'Inter', system-ui, sans-serif; font-size: 13px">
+
+<header style="position: absolute; top: 0; left: 0; right: 0; height: 96px; display: flex; align-items: center; gap: 24px; padding: 0 40px; box-sizing: border-box; background: #0B0D11; border-bottom: 1px solid #1C2129">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 22px; font-weight: 700">جزئیات hover روی جدول و ستون</h1>
+<span style="font-size: 12.5px; color: #8A93A3">این بوم تعاملی است: روی ستون‌ها و جدول‌ها بروید، دستگیره‌ها را بکشید و + را بزنید.</span>
+</div>
+<span style="flex: 1"></span>
+<div style="display: flex; gap: 8px; flex-wrap: wrap; max-width: 700px; justify-content: flex-end">
+<span style="height: 30px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 8px; background: #151920; border: 1px solid #232A35; font-size: 12px"><span style="width: 18px; height: 18px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-size: 11px; display: flex; align-items: center; justify-content: center">۱</span>جابجایی ستون</span>
+<span style="height: 30px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 8px; background: #151920; border: 1px solid #232A35; font-size: 12px"><span style="width: 18px; height: 18px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-size: 11px; display: flex; align-items: center; justify-content: center">۲</span>افزودن بالا / پایین</span>
+<span style="height: 30px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 8px; background: #151920; border: 1px solid #232A35; font-size: 12px"><span style="width: 18px; height: 18px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-size: 11px; display: flex; align-items: center; justify-content: center">۳</span>کشیدن رابطه</span>
+<span style="height: 30px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 8px; background: #151920; border: 1px solid #232A35; font-size: 12px"><span style="width: 18px; height: 18px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-size: 11px; display: flex; align-items: center; justify-content: center">۴</span>درخشش رابطه‌های جدول</span>
+<button sc-camel-on-click="{{reset}}" style="height: 30px; border-radius: 8px; border: 1px solid #2A3446; background: transparent; color: #7FB0FF; font-family: inherit; font-size: 12px; padding: 0 12px; cursor: pointer">بازنشانی</button>
+</div>
+</header>
+
+<aside aria-label="آناتومی سطر در حالت hover" style="position: absolute; top: 120px; right: 40px; width: 400px; bottom: 24px; display: flex; flex-direction: column; gap: 18px">
+<div style="font-size: 14px; font-weight: 600">آناتومی سطر در حالت hover</div>
+<div dir="ltr" style="position: relative; height: 250px; border-radius: 14px; background: #0F1217; border: 1px solid #1C2129; font-family: 'JetBrains Mono', monospace">
+<div style="position: absolute; left: 70px; top: 46px; width: 260px; background: #151920; border: 1px solid #3A4659; border-radius: 9px; box-shadow: 0 6px 18px rgba(0,0,0,0.4)">
+<div style="height: 36px; display: flex; align-items: center; gap: 8px; padding: 0 10px; background: rgba(139,124,246,0.14); border-bottom: 1px solid #222833; border-radius: 9px 9px 0 0"><span style="width: 9px; height: 9px; border-radius: 2px; background: #8B7CF6"></span><span style="font-size: 13px; font-weight: 600">orders</span></div>
+<div style="padding: 4px 0">
+<div style="height: 32px; display: flex; align-items: center; gap: 6px; padding: 0 10px 0 22px; font-size: 12.5px"><span style="width: 20px; font-size: 10px; font-weight: 600; color: #E8B54A">PK</span><span style="flex: 1">id</span><span style="font-size: 11.5px; color: #7D8696">bigint</span></div>
+<div style="position: relative; height: 32px; display: flex; align-items: center; gap: 6px; padding: 0 10px 0 22px; font-size: 12.5px; background: rgba(76,141,255,0.10)">
+<svg width="10" height="16" sc-camel-view-box="0 0 10 16" fill="#9AA3B2" aria-hidden="true" style="position: absolute; left: 7px; top: 8px"><circle cx="3" cy="3" r="1.3"></circle><circle cx="7" cy="3" r="1.3"></circle><circle cx="3" cy="8" r="1.3"></circle><circle cx="7" cy="8" r="1.3"></circle><circle cx="3" cy="13" r="1.3"></circle><circle cx="7" cy="13" r="1.3"></circle></svg>
+<span style="width: 20px; font-size: 10px; font-weight: 600; color: #7FB0FF">FK</span><span style="flex: 1; font-weight: 600">customer_id</span><span style="font-size: 11.5px; color: #7D8696">uuid</span>
+<span style="width: 18px; height: 18px; border-radius: 5px; background: #2A3446; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" sc-camel-view-box="0 0 20 20" fill="#C9D2E0" aria-hidden="true"><circle cx="4.5" cy="10" r="2"></circle><circle cx="10" cy="10" r="2"></circle><circle cx="15.5" cy="10" r="2"></circle></svg></span>
+<span style="position: absolute; left: 50%; top: -9px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-size: 13px; line-height: 17px; text-align: center; box-shadow: 0 0 0 2px #151920">+</span>
+<span style="position: absolute; left: 50%; bottom: -9px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-size: 13px; line-height: 17px; text-align: center; box-shadow: 0 0 0 2px #151920">+</span>
+<span style="position: absolute; right: -11px; top: 8px; width: 16px; height: 16px; border-radius: 50%; background: #0D1015; border: 2px solid #4C8DFF; box-sizing: border-box; display: flex; align-items: center; justify-content: center"><svg width="8" height="8" sc-camel-view-box="0 0 8 8" fill="none" stroke="#7FB0FF" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M1 4h6M4.5 1.5 7 4 4.5 6.5"></path></svg></span>
+<span style="position: absolute; left: -11px; top: 8px; width: 16px; height: 16px; border-radius: 50%; background: #0D1015; border: 2px solid #4C8DFF; box-sizing: border-box; display: flex; align-items: center; justify-content: center"><svg width="8" height="8" sc-camel-view-box="0 0 8 8" fill="none" stroke="#7FB0FF" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M7 4H1M3.5 1.5 1 4l2.5 2.5"></path></svg></span>
+</div>
+<div style="height: 32px; display: flex; align-items: center; gap: 6px; padding: 0 10px 0 22px; font-size: 12.5px"><span style="width: 20px"></span><span style="flex: 1">status</span><span style="font-size: 11.5px; color: #7D8696">order_status</span></div>
+</div>
+</div>
+<span style="position: absolute; left: 8px; top: 132px; width: 22px; height: 22px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-family: 'Vazirmatn', sans-serif; font-size: 12px; display: flex; align-items: center; justify-content: center">۱</span>
+<span style="position: absolute; left: 32px; top: 142px; width: 42px; height: 1px; background: #4C8DFF"></span>
+<span style="position: absolute; left: 189px; top: 14px; width: 22px; height: 22px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-family: 'Vazirmatn', sans-serif; font-size: 12px; display: flex; align-items: center; justify-content: center">۲</span>
+<span style="position: absolute; left: 200px; top: 36px; width: 1px; height: 75px; background: rgba(76,141,255,0.6)"></span>
+<span style="position: absolute; left: 189px; top: 214px; width: 22px; height: 22px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-family: 'Vazirmatn', sans-serif; font-size: 12px; display: flex; align-items: center; justify-content: center">۲</span>
+<span style="position: absolute; left: 200px; top: 168px; width: 1px; height: 46px; background: rgba(76,141,255,0.6)"></span>
+<span style="position: absolute; left: 368px; top: 132px; width: 22px; height: 22px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-family: 'Vazirmatn', sans-serif; font-size: 12px; display: flex; align-items: center; justify-content: center">۳</span>
+<span style="position: absolute; left: 342px; top: 142px; width: 26px; height: 1px; background: #4C8DFF"></span>
+</div>
+
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; font-size: 12.5px; line-height: 1.8; color: #C9D0DC">
+<li style="display: flex; gap: 10px"><span style="flex: none; width: 20px; height: 20px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-size: 11px; display: flex; align-items: center; justify-content: center; margin-top: 3px">۱</span><span><b style="color: #E6EAF2">دستگیره‌ی شش‌نقطه</b> ابتدای سطر. بگیرید و بالا/پایین ببرید؛ یک خط آبی جای رهاشدن را نشان می‌دهد و خط‌های رابطه بلافاصله دنبال ستون می‌آیند. با کیبورد: <kbd dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 0 5px; border-radius: 4px; background: #1D222C">Alt ↑↓</kbd></span></li>
+<li style="display: flex; gap: 10px"><span style="flex: none; width: 20px; height: 20px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-size: 11px; display: flex; align-items: center; justify-content: center; margin-top: 3px">۲</span><span><b style="color: #E6EAF2">دو دکمه‌ی + روی مرز بالا و پایین</b> سطر. با hover روی هر کدام، خط درج پیش‌نمایش داده می‌شود؛ کلیک یک ستون خالی در حالت ویرایش می‌سازد. Enter پشت‌سرهم ستون بعدی را اضافه می‌کند.</span></li>
+<li style="display: flex; gap: 10px"><span style="flex: none; width: 20px; height: 20px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-size: 11px; display: flex; align-items: center; justify-content: center; margin-top: 3px">۳</span><span><b style="color: #E6EAF2">دستگیره‌ی رابطه</b> دو طرف سطر. بکشید و روی ستون جدول دیگر رها کنید؛ ستون مقصد قاب آبی می‌گیرد و خط به آن می‌چسبد. پیش‌فرض: چند‌به‌یک.</span></li>
+<li style="display: flex; gap: 10px"><span style="flex: none; width: 20px; height: 20px; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-size: 11px; display: flex; align-items: center; justify-content: center; margin-top: 3px">۴</span><span><b style="color: #E6EAF2">hover روی جدول</b>: همه‌ی رابطه‌های آن آبی و درخشان می‌شوند، ستون‌های دو سر کم‌رنگ هایلایت می‌شوند و بقیه‌ی خط‌ها کمی محو.</span></li>
+</ol>
+</aside>
+
+<div dir="ltr" sc-camel-on-mouse-move="{{onMove}}" sc-camel-on-mouse-up="{{onUp}}" sc-camel-on-mouse-leave="{{onUp}}" style="position: absolute; left: 40px; top: 120px; width: 940px; height: 756px; border-radius: 14px; border: 1px dashed #1F2733; cursor: {{cursor}}; user-select: none">
+
+<sc-for list="{{rels}}" as="r" hint-placeholder-count="4">
+<svg width="1" height="1" style="position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none" aria-hidden="true">
+<path d="{{r.d}}" fill="none" stroke="#4C8DFF" stroke-width="7" opacity="{{r.glow}}" stroke-linecap="round" stroke-linejoin="round" style="filter: blur(3px)"></path>
+<path d="{{r.d}}" fill="none" stroke="{{r.stroke}}" stroke-width="{{r.sw}}" opacity="{{r.op}}" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="{{r.m}}" fill="none" stroke="{{r.stroke}}" stroke-width="{{r.sw}}" opacity="{{r.op}}" stroke-linecap="round"></path>
+<path d="{{r.c}}" fill="#0D1015" stroke="{{r.stroke}}" stroke-width="{{r.sw}}" opacity="{{r.op}}"></path>
+</svg>
+</sc-for>
+
+<sc-for list="{{tables}}" as="t" hint-placeholder-count="5">
+<div sc-camel-on-mouse-enter="{{t.enter}}" sc-camel-on-mouse-leave="{{t.leave}}" style="position: absolute; left: {{t.x}}px; top: {{t.y}}px; width: {{t.w}}px; background: #151920; border: 1px solid {{t.bd}}; border-radius: 9px; box-shadow: {{t.sh}}; font-family: 'JetBrains Mono', monospace">
+<div style="height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 10px; background: {{t.hb}}; border-bottom: 1px solid #222833; border-radius: 9px 9px 0 0">
+<span style="width: 9px; height: 9px; border-radius: 2px; background: {{t.c}}"></span>
+<span style="font-weight: 600; font-size: 12.5px; flex: 1">{{t.name}}</span>
+<sc-if value="{{t.hot}}" hint-placeholder-val="{{false}}"><span style="font-family: 'Vazirmatn', sans-serif; font-size: 10.5px; color: #7FB0FF">{{t.relCount}}</span></sc-if>
+<svg width="13" height="13" sc-camel-view-box="0 0 20 20" fill="#7D8696" aria-hidden="true"><circle cx="4.5" cy="10" r="1.6"></circle><circle cx="10" cy="10" r="1.6"></circle><circle cx="15.5" cy="10" r="1.6"></circle></svg>
+</div>
+<div style="padding: 4px 0">
+<sc-for list="{{t.rows}}" as="c" hint-placeholder-count="5">
+<div sc-camel-on-mouse-enter="{{c.enter}}" style="position: relative; z-index: {{c.z}}; height: 28px; display: flex; align-items: center; gap: 6px; padding: 0 10px 0 22px; background: {{c.bg}}; box-shadow: {{c.sh}}; opacity: {{c.op}}">
+<sc-if value="{{c.lineTop}}" hint-placeholder-val="{{false}}"><span style="position: absolute; left: 4px; right: 4px; top: -1px; height: 2px; border-radius: 1px; background: #4C8DFF"></span></sc-if>
+<sc-if value="{{c.lineBot}}" hint-placeholder-val="{{false}}"><span style="position: absolute; left: 4px; right: 4px; bottom: -1px; height: 2px; border-radius: 1px; background: #4C8DFF"></span></sc-if>
+<sc-if value="{{c.hov}}" hint-placeholder-val="{{false}}">
+<button sc-camel-on-mouse-down="{{c.grab}}" aria-label="جابجایی ستون" title="بکشید برای جابجایی · Alt ↑↓" style="position: absolute; left: 3px; top: 4px; width: 16px; height: 20px; border: 0; border-radius: 4px; background: transparent; padding: 0; cursor: grab; display: flex; align-items: center; justify-content: center"><svg width="10" height="16" sc-camel-view-box="0 0 10 16" fill="#9AA3B2" aria-hidden="true"><circle cx="3" cy="3" r="1.3"></circle><circle cx="7" cy="3" r="1.3"></circle><circle cx="3" cy="8" r="1.3"></circle><circle cx="7" cy="8" r="1.3"></circle><circle cx="3" cy="13" r="1.3"></circle><circle cx="7" cy="13" r="1.3"></circle></svg></button>
+</sc-if>
+<span style="width: 20px; font-size: 10px; font-weight: 600; color: {{c.kc}}">{{c.key}}</span>
+<sc-if value="{{c.editing}}" hint-placeholder-val="{{false}}">
+<input aria-label="نام ستون جدید" sc-camel-default-value="new_column" sc-camel-auto-focus="{{true}}" sc-camel-on-key-down="{{c.key2}}" sc-camel-on-blur="{{c.commit}}" style="flex: 1; min-width: 0; height: 22px; border-radius: 5px; border: 1px solid #4C8DFF; background: #0D1015; color: #E6EAF2; padding: 0 6px; font-family: inherit; font-size: 12px; outline: none">
+</sc-if>
+<sc-if value="{{c.plain}}" hint-placeholder-val="{{true}}">
+<span style="flex: 1; font-size: 12.5px; color: {{c.nc}}; font-weight: {{c.fw}}">{{c.n}}</span>
+</sc-if>
+<span style="font-size: 11.5px; color: #7D8696">{{c.t}}<span style="color: #E0A33A">{{c.q}}</span></span>
+<sc-if value="{{c.hov}}" hint-placeholder-val="{{false}}">
+<span title="ویرایش ستون" style="width: 18px; height: 18px; border-radius: 5px; background: #2A3446; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" sc-camel-view-box="0 0 20 20" fill="#C9D2E0" aria-hidden="true"><circle cx="4.5" cy="10" r="2"></circle><circle cx="10" cy="10" r="2"></circle><circle cx="15.5" cy="10" r="2"></circle></svg></span>
+<button sc-camel-on-click="{{c.addAbove}}" sc-camel-on-mouse-enter="{{c.plusTopIn}}" sc-camel-on-mouse-leave="{{c.plusOut}}" aria-label="افزودن ستون بالا" title="افزودن ستون بالا" style="position: absolute; left: 50%; top: -9px; width: 18px; height: 18px; margin-left: -9px; border: 0; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-size: 13px; line-height: 18px; padding: 0; box-shadow: 0 0 0 2px #151920; cursor: pointer">+</button>
+<button sc-camel-on-click="{{c.addBelow}}" sc-camel-on-mouse-enter="{{c.plusBotIn}}" sc-camel-on-mouse-leave="{{c.plusOut}}" aria-label="افزودن ستون پایین" title="افزودن ستون پایین" style="position: absolute; left: 50%; bottom: -9px; width: 18px; height: 18px; margin-left: -9px; border: 0; border-radius: 50%; background: #4C8DFF; color: #FFFFFF; font-size: 13px; line-height: 18px; padding: 0; box-shadow: 0 0 0 2px #151920; cursor: pointer">+</button>
+<button sc-camel-on-mouse-down="{{c.linkR}}" aria-label="کشیدن رابطه از راست" title="بکشید روی ستون دیگر برای ساخت رابطه" style="position: absolute; right: -10px; top: 6px; width: 16px; height: 16px; border-radius: 50%; background: #0D1015; border: 2px solid #4C8DFF; box-sizing: border-box; padding: 0; cursor: crosshair; display: flex; align-items: center; justify-content: center"><svg width="8" height="8" sc-camel-view-box="0 0 8 8" fill="none" stroke="#7FB0FF" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M1 4h6M4.5 1.5 7 4 4.5 6.5"></path></svg></button>
+<button sc-camel-on-mouse-down="{{c.linkL}}" aria-label="کشیدن رابطه از چپ" title="بکشید روی ستون دیگر برای ساخت رابطه" style="position: absolute; left: -10px; top: 6px; width: 16px; height: 16px; border-radius: 50%; background: #0D1015; border: 2px solid #4C8DFF; box-sizing: border-box; padding: 0; cursor: crosshair; display: flex; align-items: center; justify-content: center"><svg width="8" height="8" sc-camel-view-box="0 0 8 8" fill="none" stroke="#7FB0FF" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M7 4H1M3.5 1.5 1 4l2.5 2.5"></path></svg></button>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+
+<sc-if value="{{dragging}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; left: {{ghost.x}}px; top: {{ghost.y}}px; width: {{ghost.w}}px; height: 28px; display: flex; align-items: center; gap: 6px; padding: 0 10px 0 22px; box-sizing: border-box; border-radius: 6px; background: #1E2633; border: 1px solid #4C8DFF; box-shadow: 0 14px 30px rgba(0,0,0,0.55); font-family: 'JetBrains Mono', monospace; font-size: 12.5px; pointer-events: none; transform: rotate(-1deg)">
+<span style="width: 20px; font-size: 10px; font-weight: 600; color: {{ghost.kc}}">{{ghost.key}}</span><span style="flex: 1">{{ghost.n}}</span><span style="font-size: 11.5px; color: #7D8696">{{ghost.t}}</span>
+</div>
+</sc-if>
+
+<sc-if value="{{linking}}" hint-placeholder-val="{{false}}">
+<svg width="1" height="1" style="position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none" aria-hidden="true">
+<path d="{{lk.d}}" fill="none" stroke="#4C8DFF" stroke-width="7" opacity="0.25" stroke-linecap="round" style="filter: blur(3px)"></path>
+<path d="{{lk.d}}" fill="none" stroke="#4C8DFF" stroke-width="1.8" stroke-dasharray="5 4" stroke-linecap="round"></path>
+<circle cx="{{lk.sx}}" cy="{{lk.sy}}" r="5" fill="#4C8DFF" stroke="#0D1015" stroke-width="2"></circle>
+<circle cx="{{lk.ex}}" cy="{{lk.ey}}" r="{{lk.er}}" fill="{{lk.ef}}" stroke="#4C8DFF" stroke-width="1.5"></circle>
+</svg>
+<div style="position: absolute; left: {{lk.tx}}px; top: {{lk.ty}}px; padding: 5px 9px; border-radius: 7px; background: #1A1F28; border: 1px solid {{lk.tb}}; box-shadow: 0 10px 24px rgba(0,0,0,0.5); font-size: 11px; white-space: nowrap; pointer-events: none; display: flex; flex-direction: column; gap: 2px">
+<span style="font-family: 'JetBrains Mono', monospace; color: #E6EAF2">{{lk.label}}</span>
+<span dir="rtl" style="font-family: 'Vazirmatn', sans-serif; color: {{lk.hc}}">{{lk.hint}}</span>
+</div>
+</sc-if>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{false}}">
+<div role="status" style="position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); height: 36px; display: flex; align-items: center; gap: 10px; padding: 0 14px; border-radius: 10px; background: #1A1F28; border: 1px solid #2A3240; box-shadow: 0 10px 28px rgba(0,0,0,0.5); font-size: 12.5px; white-space: nowrap; pointer-events: none">
+<svg width="14" height="14" sc-camel-view-box="0 0 20 20" fill="none" stroke="#8FD4A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5 8 14.5 16 6"></path></svg>
+<span dir="rtl" style="font-family: 'Vazirmatn', sans-serif">{{toast}}</span>
+</div>
+</sc-if>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  renderVals() {
+    const HH = 34, RH = 28, PAD = 4;
+    const BASE_COLS = {
+      products: [['id','bigint','pk ai'],['sku','varchar(32)','u nn'],['name','varchar(160)','nn'],['price','numeric(12,2)','nn def'],['is_active','boolean','def nn']],
+      orders: [['id','bigint','pk ai'],['customer_id','uuid','fk nn'],['status','order_status','def nn'],['total','numeric(12,2)','nn'],['placed_at','timestamptz','def nn'],['note','text','']],
+      order_items: [['id','bigint','pk ai'],['order_id','bigint','fk nn'],['product_id','bigint','fk nn'],['qty','int','nn def'],['unit_price','numeric(12,2)','nn']],
+      customers: [['id','uuid','pk def'],['full_name','varchar(120)','nn'],['email','varchar(255)','u nn'],['phone','varchar(20)',''],['created_at','timestamptz','def nn']],
+      payments: [['id','bigint','pk ai'],['order_id','bigint','fk u nn'],['amount','numeric(12,2)','nn'],['method','pay_method','nn'],['paid_at','timestamptz','']]
+    };
+    const LAY = {
+      products: { x: 20, y: 240, w: 230, c: '#F08A4B' },
+      orders: { x: 330, y: 40, w: 240, c: '#8B7CF6' },
+      order_items: { x: 330, y: 380, w: 240, c: '#8B7CF6' },
+      customers: { x: 670, y: 20, w: 240, c: '#4C8DFF' },
+      payments: { x: 670, y: 350, w: 240, c: '#4CB86B' }
+    };
+    const BASE_RELS = [
+      { a: 'orders', ac: 'customer_id', ka: 'zeroMany', b: 'customers', bc: 'id', kb: 'onlyOne', mo: 0 },
+      { a: 'orders', ac: 'id', ka: 'onlyOne', b: 'order_items', bc: 'order_id', kb: 'oneMany', mo: 0 },
+      { a: 'orders', ac: 'id', ka: 'onlyOne', b: 'payments', bc: 'order_id', kb: 'zeroOne', mo: 14 },
+      { a: 'products', ac: 'id', ka: 'onlyOne', b: 'order_items', bc: 'product_id', kb: 'zeroMany', mo: 0 }
+    ];
+    const S = this.state || {};
+    const cols = S.cols || BASE_COLS;
+    const relsD = S.rels || BASE_RELS;
+    const hovT = S.hovT !== undefined ? S.hovT : 'orders';
+    const hovRow = S.hovRow !== undefined ? S.hovRow : { t: 'orders', i: 1 };
+    const plus = S.plus || null;
+    const drag = S.drag || null;
+    const link = S.link || null;
+    const edit = S.edit || null;
+    const set = (o) => this.setState(o);
+    const st = () => this.state || {};
+    const fa = (n) => String(n).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; };
+
+    const rowY = (t, i) => LAY[t].y + HH + PAD + i * RH + RH / 2;
+    const anchor = (t, i, sd) => ({ x: sd > 0 ? LAY[t].x + LAY[t].w : LAY[t].x, y: rowY(t, i), o: sd });
+    const idx = (t, n) => (cols[t] || []).findIndex((c) => c[0] === n);
+    const marker = (pt, kd) => {
+      const x = pt.x, y = pt.y, o = pt.o;
+      const bar = (d) => 'M' + (x + o * d) + ' ' + (y - 6) + 'V' + (y + 6);
+      const circ = (d) => { const cx = x + o * d; return 'M' + (cx - 4) + ' ' + y + 'a4 4 0 1 0 8 0a4 4 0 1 0 -8 0'; };
+      const foot = 'M' + (x + o * 12) + ' ' + y + 'L' + x + ' ' + (y - 6) + 'M' + (x + o * 12) + ' ' + y + 'L' + x + ' ' + (y + 6);
+      if (kd === 'onlyOne') return { m: bar(8) + bar(12), c: '' };
+      if (kd === 'zeroOne') return { m: bar(8), c: circ(17) };
+      if (kd === 'oneMany') return { m: foot + bar(15), c: '' };
+      if (kd === 'zeroMany') return { m: foot, c: circ(17) };
+      return { m: bar(10), c: '' };
+    };
+    const sides = (a, b) => {
+      const ca = LAY[a].x + LAY[a].w / 2, cb = LAY[b].x + LAY[b].w / 2;
+      if (a === b || Math.abs(ca - cb) < 60) return [1, 1];
+      return ca < cb ? [1, -1] : [-1, 1];
+    };
+    const route = (p, q, sa, sb, mo) => {
+      if (sa === sb) {
+        const ex = Math.max(p.x, q.x) + 44;
+        return 'M' + p.x + ' ' + p.y + 'H' + (p.x + 14) + 'C' + ex + ' ' + p.y + ' ' + ex + ' ' + q.y + ' ' + (q.x + 14) + ' ' + q.y + 'H' + q.x;
+      }
+      const mx = (p.x + q.x) / 2 + mo;
+      const dy = q.y - p.y, sy = dy >= 0 ? 1 : -1, rr = Math.min(7, Math.abs(dy) / 2);
+      return 'M' + p.x + ' ' + p.y + 'H' + (mx - sa * rr) + 'Q' + mx + ' ' + p.y + ' ' + mx + ' ' + (p.y + sy * rr) + 'V' + (q.y - sy * rr) + 'Q' + mx + ' ' + q.y + ' ' + (mx - sb * rr) + ' ' + q.y + 'H' + q.x;
+    };
+
+    const hotCols = new Set();
+    const rels = relsD.map((r) => {
+      const ia = idx(r.a, r.ac), ib = idx(r.b, r.bc);
+      if (ia < 0 || ib < 0) return null;
+      const sd = sides(r.a, r.b);
+      const p = anchor(r.a, ia, sd[0]), q = anchor(r.b, ib, sd[1]);
+      const on = !!hovT && (r.a === hovT || r.b === hovT);
+      if (on) { hotCols.add(r.a + '.' + r.ac); hotCols.add(r.b + '.' + r.bc); }
+      const ma = marker(p, r.ka), mb = marker(q, r.kb);
+      return {
+        d: route(p, q, sd[0], sd[1], r.mo || 0), m: ma.m + mb.m, c: ma.c + mb.c,
+        stroke: on ? '#6EA8FF' : '#3A4352', sw: on ? 2 : 1.4, op: hovT && !on ? 0.35 : 1, glow: on ? 0.45 : 0
+      };
+    }).filter((x) => x);
+
+    const toLocal = (e) => {
+      const el = e.currentTarget, r = el.getBoundingClientRect();
+      const k = el.offsetWidth ? r.width / el.offsetWidth : 1;
+      return { x: (e.clientX - r.left) / k, y: (e.clientY - r.top) / k };
+    };
+    const onMove = (e) => {
+      const s0 = st();
+      if (!s0.link && !s0.drag) return;
+      const pt = toLocal(e);
+      if (s0.link) set({ link: Object.assign({}, s0.link, { x: pt.x, y: pt.y }) });
+      else set({ drag: Object.assign({}, s0.drag, { y: pt.y }) });
+    };
+    const flash = (msg) => { set({ toast: msg }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ toast: null }), 2600); };
+    const onUp = () => {
+      const s0 = st();
+      const C0 = s0.cols || BASE_COLS;
+      if (s0.drag) {
+        const d = s0.drag;
+        if (d.over !== undefined && d.over !== d.from) {
+          const arr = C0[d.t].slice();
+          const mv = arr.splice(d.from, 1)[0];
+          arr.splice(d.over, 0, mv);
+          const nc = Object.assign({}, C0); nc[d.t] = arr;
+          set({ cols: nc, drag: null, hovRow: { t: d.t, i: d.over } });
+          flash('ستون ' + mv[0] + ' جابجا شد');
+        } else set({ drag: null });
+      } else if (s0.link) {
+        const l = s0.link;
+        if (l.over) {
+          const R0 = s0.rels || BASE_RELS;
+          const from = C0[l.t][l.i][0], to = C0[l.over.t][l.over.i][0];
+          set({ rels: R0.concat([{ a: l.t, ac: from, ka: 'zeroMany', b: l.over.t, bc: to, kb: 'onlyOne', mo: -10 }]), link: null });
+          flash('رابطه‌ی ' + l.t + '.' + from + ' → ' + l.over.t + '.' + to + ' ساخته شد');
+        } else set({ link: null });
+      }
+    };
+    const insert = (t, at) => {
+      const C0 = st().cols || BASE_COLS;
+      const arr = C0[t].slice(); arr.splice(at, 0, ['new_column', 'varchar(64)', '']);
+      const nc = Object.assign({}, C0); nc[t] = arr;
+      set({ cols: nc, edit: { t: t, i: at }, plus: null, hovRow: { t: t, i: at } });
+    };
+    const rename = (t, i, v) => {
+      const C0 = st().cols || BASE_COLS;
+      const arr = C0[t].slice(); const name = (v || '').trim();
+      if (!name) arr.splice(i, 1); else arr[i] = [name, arr[i][1], arr[i][2]];
+      const nc = Object.assign({}, C0); nc[t] = arr;
+      set({ cols: nc, edit: null });
+    };
+
+    const tables = Object.keys(LAY).map((t) => {
+      const L = LAY[t], list = cols[t];
+      const hot = hovT === t;
+      const relCount = relsD.filter((r) => r.a === t || r.b === t).length;
+      const rows = list.map((c, i) => {
+        const f = c[2], pk = f.indexOf('pk') >= 0, fk = f.indexOf('fk') >= 0;
+        const isHov = !!hovRow && hovRow.t === t && hovRow.i === i && !drag && !link;
+        const isDragSrc = !!drag && drag.t === t && drag.from === i;
+        const isOver = !!drag && drag.t === t && drag.over === i && drag.over !== drag.from;
+        const isSrc = !!link && link.t === t && link.i === i;
+        const isTarget = !!link && !!link.over && link.over.t === t && link.over.i === i;
+        const isEdit = !!edit && edit.t === t && edit.i === i;
+        const lit = hotCols.has(t + '.' + c[0]);
+        const startLink = (sd) => (e) => {
+          if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
+          const a = anchor(t, i, sd);
+          set({ link: { t: t, i: i, sd: sd, sx: a.x + sd * 2, sy: a.y, x: a.x + sd * 30, y: a.y, over: null } });
+        };
+        return {
+          n: c[0], t: c[1], key: pk ? 'PK' : (fk ? 'FK' : ''), kc: pk ? '#E8B54A' : '#7FB0FF',
+          q: (f.indexOf('nn') < 0 && !pk) ? '?' : '',
+          hov: isHov, editing: isEdit, plain: !isEdit, z: isHov ? 5 : 1,
+          bg: isTarget ? 'rgba(76,141,255,0.22)' : (isHov || isSrc ? 'rgba(76,141,255,0.10)' : (isDragSrc ? 'rgba(76,141,255,0.06)' : (lit ? 'rgba(76,141,255,0.07)' : 'transparent'))),
+          sh: isTarget ? 'inset 0 0 0 1.5px #4C8DFF' : 'none',
+          op: isDragSrc ? 0.35 : 1,
+          nc: lit || isHov || isTarget ? '#FFFFFF' : '#DCE1EA', fw: lit || isHov || isTarget ? 600 : 400,
+          lineTop: (isOver && drag.over < drag.from) || (!!plus && plus.t === t && plus.i === i && plus.pos === 'top'),
+          lineBot: (isOver && drag.over > drag.from) || (!!plus && plus.t === t && plus.i === i && plus.pos === 'bot'),
+          enter: () => {
+            const s0 = st();
+            const o = { hovRow: { t: t, i: i }, hovT: t };
+            if (s0.drag && s0.drag.t === t) o.drag = Object.assign({}, s0.drag, { over: i });
+            if (s0.link) o.link = Object.assign({}, s0.link, { over: (s0.link.t === t && s0.link.i === i) ? null : { t: t, i: i } });
+            set(o);
+          },
+          grab: (e) => { if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); } set({ drag: { t: t, from: i, over: i, y: rowY(t, i) } }); },
+          linkR: startLink(1), linkL: startLink(-1),
+          addAbove: () => insert(t, i), addBelow: () => insert(t, i + 1),
+          plusTopIn: () => set({ plus: { t: t, i: i, pos: 'top' } }), plusBotIn: () => set({ plus: { t: t, i: i, pos: 'bot' } }), plusOut: () => set({ plus: null }),
+          key2: (e) => { if (e.key === 'Enter') { const v = e.target.value; rename(t, i, v); if (v.trim()) setTimeout(() => insert(t, i + 1), 0); } else if (e.key === 'Escape') rename(t, i, ''); },
+          commit: (e) => { if (st().edit) rename(t, i, e.target.value); }
+        };
+      });
+      return {
+        name: t, x: L.x, y: L.y, w: L.w, c: L.c, hb: rgba(L.c, 0.14), rows: rows, hot: hot,
+        relCount: fa(relCount) + ' رابطه',
+        bd: hot ? '#3E5C8F' : '#232A35',
+        sh: hot ? '0 0 0 1px rgba(76,141,255,0.35), 0 10px 28px rgba(0,0,0,0.45)' : '0 4px 14px rgba(0,0,0,0.35)',
+        enter: () => { if (!st().drag) set({ hovT: t }); },
+        leave: () => { const s0 = st(); const o = { hovT: null, plus: null }; if (!s0.drag) o.hovRow = null; if (s0.link) o.link = Object.assign({}, s0.link, { over: null }); set(o); }
+      };
+    });
+
+    let ghost = { x: 0, y: 0, w: 0, n: '', t: '', key: '', kc: '#7FB0FF' };
+    if (drag) {
+      const c = cols[drag.t][drag.from], f = c[2], pk = f.indexOf('pk') >= 0;
+      ghost = { x: LAY[drag.t].x + 10, y: (drag.y || rowY(drag.t, drag.from)) - 14, w: LAY[drag.t].w - 4, n: c[0], t: c[1], key: pk ? 'PK' : (f.indexOf('fk') >= 0 ? 'FK' : ''), kc: pk ? '#E8B54A' : '#7FB0FF' };
+    }
+    let lk = { d: '', sx: 0, sy: 0, ex: 0, ey: 0, er: 4, ef: '#4C8DFF', tx: 0, ty: 0, label: '', hint: '', hc: '#8A93A3', tb: '#2A3240' };
+    if (link) {
+      let ex = link.x, ey = link.y, over = link.over;
+      let label = link.t + '.' + cols[link.t][link.i][0] + ' → …';
+      if (over) {
+        const sd = LAY[over.t].x + LAY[over.t].w / 2 > link.sx ? -1 : 1;
+        const a = anchor(over.t, over.i, sd); ex = a.x; ey = a.y;
+        label = link.t + '.' + cols[link.t][link.i][0] + ' → ' + over.t + '.' + cols[over.t][over.i][0];
+      }
+      const dir = ex >= link.sx ? 1 : -1;
+      const c1 = link.sx + link.sd * 60;
+      lk = {
+        d: 'M' + link.sx + ' ' + link.sy + 'C' + c1 + ' ' + link.sy + ' ' + (ex - dir * 50) + ' ' + ey + ' ' + ex + ' ' + ey,
+        sx: link.sx, sy: link.sy, ex: ex, ey: ey, er: over ? 6 : 4, ef: over ? '#4C8DFF' : '#0D1015',
+        tx: link.x + 16, ty: link.y + 14, label: label,
+        hint: over ? 'رها کنید تا رابطه ساخته شود · N:1' : 'روی یک ستون رها کنید',
+        hc: over ? '#7FB0FF' : '#8A93A3', tb: over ? '#4C8DFF' : '#2A3240'
+      };
+    }
+    return {
+      rels: rels, tables: tables, ghost: ghost, lk: lk,
+      dragging: !!drag, linking: !!link, onMove: onMove, onUp: onUp,
+      cursor: drag ? 'grabbing' : (link ? 'crosshair' : 'default'),
+      hasToast: !!S.toast, toast: S.toast || '',
+      reset: () => set({ cols: null, rels: null, hovT: 'orders', hovRow: { t: 'orders', i: 1 }, drag: null, link: null, edit: null, plus: null, toast: null })
+    };
+  }
+}
+</script>
+
+
+</body></html>

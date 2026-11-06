@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "Bundler",
+    "baseUrl": "./",
+    "checkJs": false,
+    "types": ["vite/client", "unplugin-icons/types/vue"],
+    "paths": { "@/*": ["src/*"] }
+  },
+  "include": ["src/**/*", "*.config.js"],
+  "exclude": ["node_modules", "dist", "src-tauri"]
+}

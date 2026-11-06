@@ -1,0 +1,65 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "ERD Editor",
+  "version": "0.1.0",
+  "identifier": "ir.shivadev.erdeditor",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1421",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "ERD Editor",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 900,
+        "minHeight": 560,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; connect-src ipc: http://ipc.localhost"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "deb",
+      "appimage"
+    ],
+    "category": "DeveloperTool",
+    "shortDescription": "Local ERD diagram editor",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.png"
+    ],
+    "fileAssociations": [
+      {
+        "ext": [
+          "erd.json"
+        ],
+        "name": "ERD diagram",
+        "description": "ERD diagram",
+        "mimeType": "application/vnd.shiva.erd+json",
+        "role": "Editor"
+      }
+    ],
+    "linux": {
+      "deb": {
+        "desktopTemplate": "erd-editor.desktop",
+        "files": {
+          "/usr/share/mime/packages/erd-editor.xml": "../mime/erd-editor.xml"
+        }
+      },
+      "appimage": {
+        "files": {}
+      }
+    }
+  }
+}
