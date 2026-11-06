@@ -36,7 +36,6 @@ Reference implementation: `src/model/`.
   "color": "#4C8DFF",         // header color, or null
   "note": "text",             // optional
   "noteVisible": true,        // note pinned on canvas (default false)
-  "groupId": "g_...",         // optional, membership in a group
   "x": 120, "y": 80,          // canvas position (world units)
   "collapsed": false,
   "columns": [ /* Column */ ],
@@ -93,7 +92,7 @@ FK is **not** a column flag: it is derived from `refs`.
 { "id": "g_...", "name": "Sales", "color": "#E8B54A", "note": "",
   "x": 0, "y": 0, "w": 800, "h": 500, "collapsed": false }
 ```
-Membership is stored on the table (`groupId`), the frame geometry on the group. Moving a group moves its member tables by the same delta.
+**Membership is not stored.** A table (or group) belongs to the innermost group that contains it *completely* (`groupAt` in `src/model/geometry.js`). Dragging a table out of the frame, or resizing the frame, changes membership automatically. Moving a group moves everything completely inside it by the same delta. (`groupId` from early drafts is ignored on load.)
 
 ## Enum
 `{ "id", "name", "values": [ { "name": "draft", "note"?: "" } ], "note"?: "" }`
@@ -107,7 +106,7 @@ Membership is stored on the table (`groupId`), the frame geometry on the group. 
 | level | when | result |
 |---|---|---|
 | `fatal` | not an object, wrong `format`, bad/newer `version`, duplicate ids, wrong types of core containers | `doc` is `null`, file is not opened |
-| `warn` | dangling ref/group/index reference, duplicate table or column names, bad color/cardinality, unknown `dbType` | `doc` is opened, bad values are repaired or kept, and listed in `issues` (shown as a banner) |
+| `warn` | dangling ref/index reference, duplicate table or column names, bad color/cardinality, unknown `dbType` | `doc` is opened, bad values are repaired or kept, and listed in `issues` (shown as a banner) |
 
 ## Change log
 - v1 — initial.

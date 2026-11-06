@@ -1,9 +1,14 @@
 import { computed } from "vue";
 
+import {
+    contentBounds,
+    groupRect,
+    tableRect,
+    unionRects,
+} from "@/model/geometry";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
 
-import { contentBounds, groupRect, tableRect, unionRects } from "./geometry";
 import {
     centerOn,
     clampZoom,

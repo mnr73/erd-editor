@@ -178,6 +178,8 @@ function indexDef(r, path, warn) {
 }
 
 function table(r, path, warn) {
+    // `groupId` was removed from the format: membership is derived from geometry (docs/FORMAT.md)
+    delete r.groupId;
     const columns = items(r.columns, `${path}.columns`, warn, (c, p) =>
         column(c, p, warn),
     );
@@ -194,7 +196,6 @@ function table(r, path, warn) {
         color: color(r.color, `${path}.color`, warn),
         note: str(r.note),
         noteVisible: bool(r.noteVisible),
-        groupId: typeof r.groupId === "string" && r.groupId ? r.groupId : null,
         x: num(r.x),
         y: num(r.y),
         collapsed: bool(r.collapsed),
@@ -274,15 +275,10 @@ function enumDef(r, path, warn) {
 
 /** References between entities + duplicate names. Problems are reported, never silently fixed. */
 function crossCheck(doc, warn) {
-    const groupIds = new Set(doc.groups.map((g) => g.id));
     const tables = new Map(doc.tables.map((t) => [t.id, t]));
 
     doc.tables.forEach((t, ti) => {
         const path = `tables[${ti}]`;
-        if (t.groupId && !groupIds.has(t.groupId)) {
-            warn("group-missing", `${path}.groupId`, { id: t.groupId });
-            t.groupId = null;
-        }
         const colIds = new Set(t.columns.map((c) => c.id));
         t.indexes.forEach((ix, ii) => {
             for (const c of ix.columns) {

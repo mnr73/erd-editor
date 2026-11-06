@@ -1,7 +1,10 @@
 {
   "format": "erd-editor",
   "version": 1,
-  "meta": { "name": "shop", "dbType": "mysql" },
+  "meta": {
+    "name": "shop",
+    "dbType": "mysql"
+  },
   "palette": ["#14b8a6"],
   "tables": [
     {
@@ -9,7 +12,6 @@
       "name": "users",
       "color": "#4C8DFF",
       "note": "Registered customers",
-      "groupId": "g_sales",
       "x": 80,
       "y": 80,
       "columns": [
@@ -31,13 +33,16 @@
         }
       ],
       "indexes": [
-        { "id": "i_users_email", "columns": ["c_users_email"], "unique": true }
+        {
+          "id": "i_users_email",
+          "columns": ["c_users_email"],
+          "unique": true
+        }
       ]
     },
     {
       "id": "t_orders",
       "name": "orders",
-      "groupId": "g_sales",
       "x": 420,
       "y": 80,
       "columns": [
@@ -92,5 +97,7 @@
       "h": 360
     }
   ],
-  "unknownTopLevel": { "kept": true }
+  "unknownTopLevel": {
+    "kept": true
+  }
 }

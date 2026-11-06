@@ -3,10 +3,15 @@ import { computed } from "vue";
 
 import { useI18n } from "vue-i18n";
 
+import {
+  contentBounds,
+  groupRect,
+  tableRect,
+  unionRects,
+} from "@/model/geometry";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
 
-import { contentBounds, groupRect, tableRect, unionRects } from "./geometry";
 import { useCanvasCamera } from "./useCanvasCamera";
 import { minimapTransform, visibleWorldRect } from "./viewport";
 

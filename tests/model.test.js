@@ -51,7 +51,6 @@ describe("validate", () => {
     it("keeps the doc and warns on dangling references", () => {
         const d = JSON.parse(shop());
         d.refs[0].to.columns = ["c_gone"];
-        d.tables[0].groupId = "g_gone";
         d.tables[1].color = "red";
         d.refs[0].from.cardinality = "many";
         d.refs[0].onDelete = "explode";
@@ -60,13 +59,12 @@ describe("validate", () => {
         expect(codes(r)).toEqual(
             expect.arrayContaining([
                 "ref-column-missing",
-                "group-missing",
                 "bad-color",
                 "bad-cardinality",
                 "bad-ref-action",
             ]),
         );
-        expect(r.doc.tables[0].groupId).toBeNull();
+        expect(r.doc.tables[0]).not.toHaveProperty("groupId");
         expect(r.doc.refs[0].from.cardinality).toBe("0..*");
     });
 

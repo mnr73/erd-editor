@@ -2,6 +2,8 @@ import { ref, shallowRef } from "vue";
 
 import { defineStore } from "pinia";
 
+import { rangeIds } from "@/model/columns";
+
 export const TOOLS = ["select", "pan", "table"];
 
 /**
@@ -18,6 +20,9 @@ export const useEditorStore = defineStore("editor", () => {
     // column popover. Values are ids; null = nothing. Not saved, not undoable.
     const renaming = ref(null); // { kind: "table" | "column", tableId, columnId? }
     const columnPopover = ref(null); // { tableId, columnId }
+    // Selected columns of ONE table: { tableId, ids: Set, anchor } (anchor = last plain-clicked id,
+    // the start of Shift ranges). Replaced, never mutated.
+    const columnSelection = shallowRef(null);
 
     function setTool(next) {
         if (TOOLS.includes(next)) tool.value = next;
@@ -25,6 +30,11 @@ export const useEditorStore = defineStore("editor", () => {
 
     function setSelection(ids) {
         selected.value = new Set(ids);
+        if (
+            columnSelection.value &&
+            !selected.value.has(columnSelection.value.tableId)
+        )
+            columnSelection.value = null;
     }
     const clearSelection = () => setSelection([]);
 
@@ -41,6 +51,28 @@ export const useEditorStore = defineStore("editor", () => {
         const next = [...selected.value].filter((id) => validIds.has(id));
         if (next.length !== selected.value.size) setSelection(next);
     }
+
+    function selectColumn(table, id, { ctrl = false, shift = false } = {}) {
+        const cur = columnSelection.value;
+        const same = cur?.tableId === table.id;
+        let ids;
+        let anchor = id;
+        if (shift && same) {
+            anchor = cur.anchor;
+            ids = new Set(rangeIds(table.columns, cur.anchor, id));
+        } else if (ctrl && same) {
+            ids = new Set(cur.ids);
+            if (!ids.delete(id)) ids.add(id);
+            anchor = cur.anchor;
+        } else {
+            ids = new Set([id]);
+        }
+        columnSelection.value = ids.size
+            ? { tableId: table.id, ids, anchor }
+            : null;
+        if (columnSelection.value) selected.value = new Set([table.id]);
+    }
+    const clearColumnSelection = () => (columnSelection.value = null);
 
     const startRename = (target) => (renaming.value = target);
     /**
@@ -77,6 +109,9 @@ export const useEditorStore = defineStore("editor", () => {
         setViewportSize,
         renaming,
         columnPopover,
+        columnSelection,
+        selectColumn,
+        clearColumnSelection,
         startRename,
         startRenameSoon,
         stopRename,

@@ -1,15 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import {
-    contentBounds,
-    rectContains,
-    rectFromPoints,
-    rectsIntersect,
-    tableHeight,
-    tableWidth,
-    unionRects,
-} from "@/canvas/geometry";
-import {
     ZOOM_MAX,
     ZOOM_MIN,
     centerOn,
@@ -28,6 +19,15 @@ import {
     createGroup,
     createTable,
 } from "@/model/document";
+import {
+    contentBounds,
+    rectContains,
+    rectFromPoints,
+    rectsIntersect,
+    tableHeight,
+    tableWidth,
+    unionRects,
+} from "@/model/geometry";
 
 const view = { x: 100, y: 50, zoom: 2 };
 
@@ -147,7 +147,7 @@ describe("geometry", () => {
         ]);
         expect(tableWidth(small)).toBe(200);
         expect(tableWidth(wide)).toBeGreaterThan(200);
-        expect(tableWidth(table("x".repeat(200), []))).toBe(360);
+        expect(tableWidth(table("x".repeat(500), []))).toBe(800);
     });
 
     it("rect helpers", () => {

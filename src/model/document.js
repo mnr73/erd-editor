@@ -46,7 +46,6 @@ export function createTable(partial = {}) {
         color: null,
         note: "",
         noteVisible: false,
-        groupId: null,
         x: 0,
         y: 0,
         collapsed: false,

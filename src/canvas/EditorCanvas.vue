@@ -23,6 +23,16 @@ import {
   IconToolTable,
 } from "@/icons";
 import { fkColumnKeys } from "@/model/document";
+import {
+  groupMembership,
+  groupRect,
+  movedWith,
+  rectContains,
+  rectFromPoints,
+  rectsIntersect,
+  resizeRect,
+  tableRect,
+} from "@/model/geometry";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
 
@@ -30,13 +40,6 @@ import CanvasGroup from "./CanvasGroup.vue";
 import CanvasMinimap from "./CanvasMinimap.vue";
 import CanvasTable from "./CanvasTable.vue";
 import ColumnEditor from "./ColumnEditor.vue";
-import {
-  groupRect,
-  rectContains,
-  rectFromPoints,
-  rectsIntersect,
-  tableRect,
-} from "./geometry";
 import { useCanvasCamera } from "./useCanvasCamera";
 import { screenToWorld } from "./viewport";
 
@@ -66,19 +69,19 @@ const indexKeys = computed(() => {
       for (const c of ix.columns) keys.add(`${t.id}.${c}`);
   return keys;
 });
+// Membership is derived: a table is in a section only when it lies completely inside it.
+const membership = computed(() => groupMembership(doc.doc));
 const memberCounts = computed(() => {
   const counts = new Map();
-  for (const t of doc.doc.tables)
-    if (t.groupId) counts.set(t.groupId, (counts.get(t.groupId) ?? 0) + 1);
+  for (const gid of membership.value.values())
+    counts.set(gid, (counts.get(gid) ?? 0) + 1);
   return counts;
 });
 
-/** Ids that follow the pointer while dragging: selected items + members of selected sections. */
+/** Ids that follow the pointer while dragging: selected items + everything inside selected sections. */
 const dragIds = computed(() => {
-  const ids = new Set(editor.selected);
-  for (const t of doc.doc.tables)
-    if (t.groupId && editor.selected.has(t.groupId)) ids.add(t.id);
-  return ids;
+  const { tables, groups } = movedWith(doc.doc, [...editor.selected]);
+  return new Set([...editor.selected, ...tables, ...groups]);
 });
 
 /* ---------------------------------- state ----------------------------------- */
@@ -87,6 +90,7 @@ const drag = ref(null); // { startX, startY, dx, dy, moved }
 const marquee = ref(null); // { a, b } in screen px relative to the canvas
 const panning = ref(null); // { x, y }
 const spaceDown = ref(false);
+const resize = ref(null); // { id, handle, startX, startY, rect, live }
 const ctx = useTemplateRef("ctx");
 const ctxTarget = ref(null); // what the open context menu was opened on
 const colorFor = ref(null); // table id whose header-color popover is open
@@ -184,6 +188,11 @@ function onPointerMove(e) {
   } else if (marquee.value) {
     marquee.value = { ...marquee.value, b: localPoint(e) };
     selectInMarquee();
+  } else if (resize.value) {
+    const r = resize.value;
+    const dx = (e.clientX - r.startX) / view.value.zoom;
+    const dy = (e.clientY - r.startY) / view.value.zoom;
+    resize.value = { ...r, live: resizeRect(r.rect, r.handle, dx, dy) };
   } else if (drag.value) {
     const dx = (e.clientX - drag.value.startX) / view.value.zoom;
     const dy = (e.clientY - drag.value.startY) / view.value.zoom;
@@ -205,7 +214,37 @@ function onPointerUp(e) {
     root.value.releasePointerCapture(e.pointerId);
   panning.value = null;
   marquee.value = null;
+  if (resize.value) finishResize();
   if (drag.value) finishDrag();
+}
+
+function startResize(e, id, handle) {
+  if (e.button !== 0) return;
+  e.stopPropagation();
+  const g = doc.doc.groups.find((x) => x.id === id);
+  resize.value = {
+    id,
+    handle,
+    startX: e.clientX,
+    startY: e.clientY,
+    rect: groupRect(g),
+    live: groupRect(g),
+  };
+  root.value.setPointerCapture(e.pointerId);
+}
+
+function finishResize() {
+  const r = resize.value;
+  resize.value = null;
+  if (
+    r?.live &&
+    (r.live.x !== r.rect.x ||
+      r.live.y !== r.rect.y ||
+      r.live.w !== r.rect.w ||
+      r.live.h !== r.rect.h)
+  ) {
+    doc.setGroupRect(r.id, r.live);
+  }
 }
 
 function selectInMarquee() {
@@ -364,12 +403,22 @@ const columnItems = () => [
   },
 ];
 
+/** True when nothing but the bare canvas / world layer is under the pointer. */
+function isEmptyCanvasAt(e) {
+  const hit = document.elementFromPoint(e.clientX, e.clientY);
+  return (
+    !!hit &&
+    (hit === root.value ||
+      hit.hasAttribute("data-world") ||
+      !hit.closest(
+        "[data-table-id], [data-group-id], [role=dialog], [role=img], button",
+      ))
+  );
+}
+
 function onContextMenu(e) {
   e.preventDefault();
-  if (
-    e.target === root.value ||
-    e.target.closest("[data-world]") === e.target
-  ) {
+  if (isEmptyCanvasAt(e)) {
     ctxTarget.value = { kind: "canvas", point: worldPoint(e) };
     ctx.value.show(e, canvasItems());
   }
@@ -641,6 +690,7 @@ defineExpose({ camera });
     <div
       class="absolute top-0 left-0 origin-top-left"
       dir="ltr"
+      data-world
       :style="worldStyle"
     >
       <CanvasGroup
@@ -653,7 +703,10 @@ defineExpose({ camera });
         :dx="drag?.moved && dragIds.has(g.id) ? drag.dx : 0"
         :dy="drag?.moved && dragIds.has(g.id) ? drag.dy : 0"
         :ui-dir="uiDir"
+        :zoom="view.zoom"
+        :resizing="resize?.id === g.id ? resize.live : null"
         @pointerdown="onItemDown($event, g.id)"
+        @resize-start="(ev, handle) => startResize(ev, g.id, handle)"
       />
       <CanvasTable
         v-for="tb in doc.doc.tables"

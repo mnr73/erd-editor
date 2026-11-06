@@ -39,8 +39,7 @@
           "type": "timestamp"
         }
       ],
-      "color": "#4C8DFF",
-      "groupId": "g_sales"
+      "color": "#4C8DFF"
     },
     {
       "id": "t_customers",
@@ -73,8 +72,7 @@
           "type": "bigint"
         }
       ],
-      "color": "#4C8DFF",
-      "groupId": "g_sales"
+      "color": "#4C8DFF"
     },
     {
       "id": "t_orders",
@@ -116,7 +114,6 @@
         }
       ],
       "color": "#8B7CF6",
-      "groupId": "g_sales",
       "note": "Order header"
     },
     {
@@ -157,8 +154,7 @@
           "type": "numeric(12,2)"
         }
       ],
-      "color": "#8B7CF6",
-      "groupId": "g_sales"
+      "color": "#8B7CF6"
     },
     {
       "id": "t_payments",
@@ -192,8 +188,7 @@
           "type": "varchar(20)"
         }
       ],
-      "color": "#4CB86B",
-      "groupId": "g_sales"
+      "color": "#4CB86B"
     },
     {
       "id": "t_products",
@@ -234,8 +229,7 @@
           "type": "bigint"
         }
       ],
-      "color": "#E0A33A",
-      "groupId": "g_stock"
+      "color": "#E0A33A"
     },
     {
       "id": "t_categories",
@@ -263,8 +257,7 @@
           "notNull": true
         }
       ],
-      "color": "#E0A33A",
-      "groupId": "g_stock"
+      "color": "#E0A33A"
     },
     {
       "id": "t_stock",
@@ -300,8 +293,7 @@
           "default": "0"
         }
       ],
-      "color": "#2BB3A8",
-      "groupId": "g_stock"
+      "color": "#2BB3A8"
     },
     {
       "id": "t_warehouses",
@@ -329,8 +321,7 @@
           "type": "varchar(80)"
         }
       ],
-      "color": "#2BB3A8",
-      "groupId": "g_stock"
+      "color": "#2BB3A8"
     },
     {
       "id": "t_audit",

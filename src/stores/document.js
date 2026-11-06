@@ -1,7 +1,8 @@
-import { computed, ref, shallowRef } from "vue";
+import { computed, markRaw, ref } from "vue";
 
 import { defineStore } from "pinia";
 
+import { moveSelection } from "@/model/columns";
 import {
     cloneTable,
     createColumn,
@@ -11,58 +12,158 @@ import {
     createRef,
     createTable,
 } from "@/model/document";
+import { movedWith } from "@/model/geometry";
 import { History } from "@/model/history";
 import { nextName, uniqueName } from "@/model/names";
 import { serializeErd, snapshotErd } from "@/model/serialize";
 import { parseErd } from "@/model/validate";
 
+let tabSeq = 0;
+
+/** One open document: its content, file path, saved baseline and own undo history. */
+function createTab(document = createDocument(), path = null, issues = []) {
+    const baseline = snapshotErd(document);
+    return {
+        id: `tab_${++tabSeq}`,
+        doc: document,
+        path,
+        issues,
+        savedSnapshot: baseline,
+        // not reactive on purpose: changes are announced through `tick`
+        history: markRaw(new History(baseline)),
+    };
+}
+
 /**
- * The open document. Plain object state; every mutation goes through `commit()`, which
- * snapshots for undo/redo and marks the file dirty. Visual-only changes (view pan/zoom)
- * use `setView()` and are not undoable and not dirty.
+ * The open documents (tabs). Everything outside this file sees ONE document, the active tab, through
+ * `doc`, `path`, `dirty`, `undo()`, ...; tabs only add `tabs`, `activeId`, `newTab()`, `closeTab()`.
+ * Every mutation goes through `commit()`, which snapshots for undo/redo and marks the file dirty.
+ * Visual-only changes (view pan/zoom) use `setView()` and are not undoable and not dirty.
  */
 export const useDocumentStore = defineStore("document", () => {
-    const doc = ref(createDocument());
-    const path = shallowRef(null);
-    const issues = shallowRef([]);
-    const savedSnapshot = shallowRef(snapshotErd(doc.value));
-    const history = shallowRef(new History(savedSnapshot.value));
-    // bumped on undo/redo so `canUndo` / `canRedo` stay reactive (History is not reactive)
+    const tabs = ref([createTab()]);
+    const activeId = ref(tabs.value[0].id);
+    // bumped on every change so `canUndo` / `canRedo` / `dirty` stay reactive (History is not reactive)
     const tick = ref(0);
-    // bumped when a different document is loaded (not on undo/redo): the canvas re-fits its camera
+    // bumped when a different document is shown (load, new, tab switch), NOT on undo/redo:
+    // the canvas re-fits its camera and clears the selection
     const loadId = ref(0);
 
-    const dirty = computed(
-        () => (tick.value, snapshotErd(doc.value) !== savedSnapshot.value),
+    const active = computed(() =>
+        tabs.value.find((t) => t.id === activeId.value),
     );
-    const canUndo = computed(() => (tick.value, history.value.canUndo));
-    const canRedo = computed(() => (tick.value, history.value.canRedo));
+    const doc = computed({
+        get: () => active.value.doc,
+        set: (v) => (active.value.doc = v),
+    });
+    const path = computed({
+        get: () => active.value.path,
+        set: (v) => (active.value.path = v),
+    });
+    const issues = computed(() => active.value.issues);
+
+    const isDirty = (tab) => snapshotErd(tab.doc) !== tab.savedSnapshot;
+    const dirty = computed(() => (tick.value, isDirty(active.value)));
+    const canUndo = computed(() => (tick.value, active.value.history.canUndo));
+    const canRedo = computed(() => (tick.value, active.value.history.canRedo));
     const tableById = computed(
         () => (tick.value, new Map(doc.value.tables.map((t) => [t.id, t]))),
     );
+    /** Lightweight list for the tab bar. */
+    const tabList = computed(() => {
+        void tick.value;
+        return tabs.value.map((t) => ({
+            id: t.id,
+            path: t.path,
+            name: t.doc.meta.name,
+            dirty: isDirty(t),
+            active: t.id === activeId.value,
+        }));
+    });
 
-    /** Load parsed file text. Returns issues; `doc` stays untouched on a fatal issue. */
-    function load(text, filePath = null) {
-        const result = parseErd(text);
-        issues.value = result.issues;
-        if (!result.doc) return result.issues;
-        doc.value = result.doc;
-        path.value = filePath;
-        savedSnapshot.value = snapshotErd(doc.value);
-        history.value = new History(savedSnapshot.value);
+    function shown() {
         tick.value++;
         loadId.value++;
+    }
+
+    /** Replace the ACTIVE tab with parsed file text. Returns issues; nothing changes on a fatal one. */
+    function load(text, filePath = null) {
+        const result = parseErd(text);
+        if (!result.doc) {
+            active.value.issues = result.issues;
+            return result.issues;
+        }
+        Object.assign(
+            active.value,
+            createTab(result.doc, filePath, result.issues),
+            {
+                id: active.value.id,
+            },
+        );
+        shown();
         return result.issues;
     }
 
     function newDocument(name = "") {
-        doc.value = createDocument(name);
-        path.value = null;
-        issues.value = [];
-        savedSnapshot.value = snapshotErd(doc.value);
-        history.value = new History(savedSnapshot.value);
-        tick.value++;
-        loadId.value++;
+        Object.assign(active.value, createTab(createDocument(name)), {
+            id: active.value.id,
+        });
+        shown();
+    }
+
+    /** An untitled, untouched tab can be reused instead of opening yet another one. */
+    const isPristine = (tab) =>
+        !tab.path &&
+        !isDirty(tab) &&
+        !tab.doc.tables.length &&
+        !tab.doc.groups.length;
+
+    /**
+     * Open file text in a tab: an already open path is just activated; a pristine untitled tab is
+     * reused; otherwise a new tab is added. Returns { id, issues } (id null on a fatal issue).
+     */
+    function openText(text, filePath = null) {
+        const same = filePath && tabs.value.find((t) => t.path === filePath);
+        if (same) {
+            activateTab(same.id);
+            return { id: same.id, issues: same.issues };
+        }
+        const result = parseErd(text);
+        if (!result.doc) return { id: null, issues: result.issues };
+        const tab = createTab(result.doc, filePath, result.issues);
+        const reuse = isPristine(active.value);
+        if (reuse) tabs.value.splice(tabs.value.indexOf(active.value), 1, tab);
+        else tabs.value.push(tab);
+        activeId.value = tab.id;
+        shown();
+        return { id: tab.id, issues: result.issues };
+    }
+
+    function newTab(name = "") {
+        const tab = createTab(createDocument(name));
+        tabs.value.push(tab);
+        activeId.value = tab.id;
+        shown();
+        return tab.id;
+    }
+
+    function activateTab(id) {
+        if (id === activeId.value || !tabs.value.some((t) => t.id === id))
+            return;
+        activeId.value = id;
+        shown();
+    }
+
+    /** Close a tab (the caller confirms unsaved changes). The last tab is replaced by an empty one. */
+    function closeTab(id) {
+        const i = tabs.value.findIndex((t) => t.id === id);
+        if (i < 0) return;
+        tabs.value.splice(i, 1);
+        if (!tabs.value.length) tabs.value.push(createTab());
+        if (id === activeId.value) {
+            activeId.value = tabs.value[Math.min(i, tabs.value.length - 1)].id;
+            shown();
+        } else tick.value++;
     }
 
     /** Text to write to disk. Call `markSaved()` after the write succeeds. */
@@ -71,15 +172,15 @@ export const useDocumentStore = defineStore("document", () => {
     }
 
     function markSaved(filePath = path.value) {
-        path.value = filePath;
-        savedSnapshot.value = snapshotErd(doc.value);
+        active.value.path = filePath;
+        active.value.savedSnapshot = snapshotErd(doc.value);
         tick.value++;
     }
 
     /** Apply `fn(doc)` as one undo step. `key` coalesces rapid edits (drag, typing). */
     function commit(fn, key = null, { amend = false } = {}) {
         fn(doc.value);
-        history.value.record(snapshotErd(doc.value), { key, amend });
+        active.value.history.record(snapshotErd(doc.value), { key, amend });
         tick.value++;
     }
 
@@ -91,8 +192,8 @@ export const useDocumentStore = defineStore("document", () => {
         doc.value = restored;
         tick.value++;
     }
-    const undo = () => restore(history.value.undo());
-    const redo = () => restore(history.value.redo());
+    const undo = () => restore(active.value.history.undo());
+    const redo = () => restore(active.value.history.redo());
 
     function setView(view) {
         Object.assign(doc.value.view, view);
@@ -199,25 +300,7 @@ export const useDocumentStore = defineStore("document", () => {
 
     /** Removes the column and everything that points at it (refs, index entries). */
     function removeColumn(tableId, columnId) {
-        commit((d) => {
-            const t = d.tables.find((x) => x.id === tableId);
-            if (!t) return;
-            t.columns = t.columns.filter((c) => c.id !== columnId);
-            for (const ix of t.indexes)
-                ix.columns = ix.columns.filter((c) => c !== columnId);
-            t.indexes = t.indexes.filter((ix) => ix.columns.length);
-            d.refs = d.refs.filter(
-                (r) =>
-                    !(
-                        r.from.table === tableId &&
-                        r.from.columns.includes(columnId)
-                    ) &&
-                    !(
-                        r.to.table === tableId &&
-                        r.to.columns.includes(columnId)
-                    ),
-            );
-        });
+        removeColumns(tableId, [columnId]);
     }
 
     function moveColumn(tableId, from, to) {
@@ -251,43 +334,24 @@ export const useDocumentStore = defineStore("document", () => {
         return g.id;
     }
 
-    /** Move the frame and every member table by the same delta. */
-    function moveGroup(id, dx, dy) {
-        commit((d) => {
-            const g = d.groups.find((x) => x.id === id);
-            if (!g) return;
-            g.x += dx;
-            g.y += dy;
-            for (const t of d.tables) {
-                if (t.groupId === id) {
-                    t.x += dx;
-                    t.y += dy;
-                }
-            }
-        }, `move-group:${id}`);
-    }
-
     /**
      * Move a mixed selection by (dx, dy) as ONE undo step (coalesced while dragging).
-     * A selected group carries its member tables; a table that is selected AND inside a selected
-     * group is moved only once.
+     * A moved group carries everything lying completely inside it (tables and nested groups);
+     * an item that is both selected and inside a moved group moves only once.
      */
     function moveItems(ids, dx, dy) {
         if (!dx && !dy) return;
         commit(
             (d) => {
-                const idSet = new Set(ids);
-                const movedGroups = new Set(
-                    d.groups.filter((g) => idSet.has(g.id)).map((g) => g.id),
-                );
+                const { tables, groups } = movedWith(d, ids);
                 for (const g of d.groups) {
-                    if (movedGroups.has(g.id)) {
+                    if (groups.has(g.id)) {
                         g.x += dx;
                         g.y += dy;
                     }
                 }
                 for (const t of d.tables) {
-                    if (movedGroups.has(t.groupId) || idSet.has(t.id)) {
+                    if (tables.has(t.id)) {
                         t.x += dx;
                         t.y += dy;
                     }
@@ -297,22 +361,62 @@ export const useDocumentStore = defineStore("document", () => {
         );
     }
 
-    function setTableGroup(tableId, groupId) {
+    /** Resize / reposition a group frame (one coalesced undo step per drag). */
+    function setGroupRect(id, rect) {
         commit((d) => {
-            const t = d.tables.find((x) => x.id === tableId);
-            if (t)
-                t.groupId =
-                    groupId && d.groups.some((g) => g.id === groupId)
-                        ? groupId
-                        : null;
+            const g = d.groups.find((x) => x.id === id);
+            if (g) Object.assign(g, rect);
         });
     }
 
+    function updateGroup(id, patch, key = null) {
+        commit(
+            (d) => {
+                const g = d.groups.find((x) => x.id === id);
+                if (g) Object.assign(g, patch);
+            },
+            key && `${key}:${id}`,
+        );
+    }
+
+    /** Remove the frame only; the tables inside stay where they are. */
     function removeGroup(id) {
         commit((d) => {
             d.groups = d.groups.filter((g) => g.id !== id);
-            for (const t of d.tables) if (t.groupId === id) t.groupId = null;
         });
+    }
+
+    /* ---------------------------- column selections ---------------------------- */
+
+    /** Delete several columns of one table in one undo step (refs and index entries go with them). */
+    function removeColumns(tableId, columnIds) {
+        const set = new Set(columnIds);
+        commit((d) => {
+            const t = d.tables.find((x) => x.id === tableId);
+            if (!t) return;
+            t.columns = t.columns.filter((c) => !set.has(c.id));
+            for (const ix of t.indexes)
+                ix.columns = ix.columns.filter((c) => !set.has(c));
+            t.indexes = t.indexes.filter((ix) => ix.columns.length);
+            const hit = (end) =>
+                end.table === tableId && end.columns.some((c) => set.has(c));
+            d.refs = d.refs.filter((r) => !hit(r.from) && !hit(r.to));
+        });
+    }
+
+    /** Move the selected columns one step up (dir -1) / down (+1). Returns false at the edge. */
+    function moveColumns(tableId, columnIds, dir) {
+        let moved = false;
+        commit((d) => {
+            const t = d.tables.find((x) => x.id === tableId);
+            if (!t) return;
+            const next = moveSelection(t.columns, new Set(columnIds), dir);
+            if (next) {
+                t.columns = next;
+                moved = true;
+            }
+        });
+        return moved;
     }
 
     function addPaletteColor(hex) {
@@ -330,6 +434,9 @@ export const useDocumentStore = defineStore("document", () => {
     }
 
     return {
+        tabs,
+        tabList,
+        activeId,
         doc,
         path,
         issues,
@@ -340,6 +447,10 @@ export const useDocumentStore = defineStore("document", () => {
         tableById,
         load,
         newDocument,
+        openText,
+        newTab,
+        activateTab,
+        closeTab,
         serialize,
         markSaved,
         commit,
@@ -350,7 +461,6 @@ export const useDocumentStore = defineStore("document", () => {
         addDefaultTable,
         duplicateTables,
         removeTables,
-        setTableGroup,
         updateTable,
         removeTable,
         addColumn,
@@ -361,8 +471,11 @@ export const useDocumentStore = defineStore("document", () => {
         updateRef,
         removeRef,
         addGroup,
-        moveGroup,
         moveItems,
+        setGroupRect,
+        updateGroup,
+        removeColumns,
+        moveColumns,
         removeGroup,
         addPaletteColor,
         removePaletteColor,

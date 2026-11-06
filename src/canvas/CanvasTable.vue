@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, useTemplateRef } from "vue";
+import { computed, nextTick, ref, useTemplateRef } from "vue";
 
 import { useI18n } from "vue-i18n";
 
@@ -17,10 +17,16 @@ import {
   IconMore,
   IconNote,
 } from "@/icons";
+import { stepColumn } from "@/model/columns";
+import {
+  BODY_PAD,
+  HEADER_H,
+  ROW_H,
+  tableHeight,
+  tableWidth,
+} from "@/model/geometry";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
-
-import { BODY_PAD, HEADER_H, ROW_H, tableHeight, tableWidth } from "./geometry";
 
 /**
  * One table card. Size comes from geometry.js (same numbers the minimap / fit use), position is the
@@ -172,18 +178,98 @@ const dropLineTop = computed(() => {
   return BODY_PAD + (to > from ? to + 1 : to) * ROW_H;
 });
 
-function onRowKey(e, index) {
-  if (!e.altKey || (e.key !== "ArrowUp" && e.key !== "ArrowDown")) return;
-  e.preventDefault();
-  const to = index + (e.key === "ArrowDown" ? 1 : -1);
-  if (to >= 0 && to < props.table.columns.length)
-    doc.moveColumn(props.table.id, index, to);
+/* ------------------------- column selection (rows) ------------------------ */
+
+const selectedColumns = computed(() =>
+  editor.columnSelection?.tableId === props.table.id
+    ? editor.columnSelection.ids
+    : null,
+);
+const isColumnSelected = (id) => !!selectedColumns.value?.has(id);
+
+/**
+ * Click on a row selects it (Ctrl toggles, Shift extends from the anchor). Focus goes to the row so
+ * Alt+arrows and Delete act on the selection and keep working as long as it stays selected.
+ */
+function onRowDown(e, id) {
+  if (e.button !== 0) return;
+  if (e.target.closest("button, input, span.cursor-grab")) return;
+  e.stopPropagation();
+  editor.selectColumn(props.table, id, {
+    ctrl: e.ctrlKey || e.metaKey,
+    shift: e.shiftKey,
+  });
+  e.currentTarget.focus({ preventScroll: true });
+}
+
+/** Keyboard on a focused row: Alt+arrows move the selected block, arrows move the cursor, Delete removes. */
+function onRowKey(e, id) {
+  const sel = selectedColumns.value;
+  if (e.target.tagName === "INPUT") return;
+  if (e.altKey && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+    e.preventDefault();
+    e.stopPropagation();
+    const ids = sel?.size ? [...sel] : [id];
+    if (!sel?.size) editor.selectColumn(props.table, id);
+    doc.moveColumns(props.table.id, ids, e.key === "ArrowDown" ? 1 : -1);
+    return;
+  }
+  if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+    e.preventDefault();
+    e.stopPropagation();
+    const next = stepColumn(
+      props.table.columns,
+      id,
+      e.key === "ArrowDown" ? 1 : -1,
+    );
+    editor.selectColumn(props.table, next, { shift: e.shiftKey });
+    focusRow(next);
+    return;
+  }
+  if (e.key === "Delete" || e.key === "Backspace") {
+    if (!sel?.size) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const cols = props.table.columns;
+    const first = Math.min(
+      ...[...sel].map((cid) => cols.findIndex((c) => c.id === cid)),
+    );
+    doc.removeColumns(props.table.id, [...sel]);
+    const remaining = doc.tableById.get(props.table.id)?.columns ?? [];
+    const keep = remaining[Math.min(first, remaining.length - 1)];
+    keep
+      ? editor.selectColumn(props.table, keep.id)
+      : editor.clearColumnSelection();
+    if (keep) focusRow(keep.id);
+    return;
+  }
+  if (e.key === "Enter" || e.key === "F2") {
+    e.preventDefault();
+    editor.startRename({
+      kind: "column",
+      tableId: props.table.id,
+      columnId: id,
+    });
+    return;
+  }
+  if (e.key === "Escape") {
+    e.stopPropagation();
+    editor.clearColumnSelection();
+  }
+}
+
+function focusRow(id) {
+  nextTick(() =>
+    body.value
+      ?.querySelector(`[data-column-id="${id}"]`)
+      ?.focus({ preventScroll: true }),
+  );
 }
 </script>
 
 <template>
   <div
-    class="absolute overflow-hidden rounded-table border bg-card font-mono transition-shadow"
+    class="absolute rounded-table border bg-card font-mono transition-shadow"
     :class="[
       props.selected
         ? 'border-accent'
@@ -211,8 +297,10 @@ function onRowKey(e, index) {
     @pointerdown="emit('pointerdown', $event)"
   >
     <header
-      class="flex items-center gap-[7px] px-2"
-      :class="props.table.collapsed ? '' : 'border-b border-line'"
+      class="flex items-center gap-[7px] rounded-t-[7px] px-2"
+      :class="
+        props.table.collapsed ? 'rounded-b-[7px]' : 'border-b border-line'
+      "
       :style="{ height: `${HEADER_H}px`, background: headerBg }"
       @contextmenu.stop.prevent="emit('header-menu', $event)"
     >
@@ -275,13 +363,17 @@ function onRowKey(e, index) {
         class="group/row relative flex items-center gap-[5px] px-2"
         :class="[
           reorder?.from === i ? 'opacity-40' : '',
-          editingColumn === r.id ? 'bg-row-active' : 'hover:bg-hover',
+          editingColumn === r.id || isColumnSelected(r.id)
+            ? 'bg-row-active'
+            : 'hover:bg-hover',
+          isColumnSelected(r.id) ? 'ring-1 ring-inset ring-accent/60' : '',
         ]"
         :style="{ height: `${ROW_H}px` }"
         :data-column-id="r.id"
         tabindex="-1"
         @contextmenu.stop.prevent="emit('column-menu', $event, r.id)"
-        @keydown="onRowKey($event, i)"
+        @keydown="onRowKey($event, r.id)"
+        @pointerdown="onRowDown($event, r.id)"
       >
         <!-- 6-dot reorder handle, only on hover -->
         <span
