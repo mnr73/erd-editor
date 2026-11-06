@@ -5,10 +5,41 @@
 @import "@fontsource/jetbrains-mono/latin-400.css";
 @import "@fontsource/jetbrains-mono/latin-500.css";
 
+/*
+ * Two Vazirmatn builds:
+ *  - "Vazirmatn"    : standard build, digits stay Latin (0-9). Used for the workspace (canvas, tables,
+ *                     notes, inputs holding data) and as the Persian fallback behind Inter / JetBrains Mono.
+ *  - "Vazirmatn FD" : Farsi-Digits build, ASCII digits render as Persian digits. Used ONLY for the app's own
+ *                     UI chrome (menus, panels, toolbars, toasts) and only when the UI language is Persian.
+ */
 @font-face {
     font-family: "Vazirmatn";
     src: url("@/assets/fonts/Vazirmatn-Variable.woff2") format("woff2");
     font-weight: 100 900;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Vazirmatn FD";
+    src: url("@/assets/fonts/Vazirmatn-FD-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Vazirmatn FD";
+    src: url("@/assets/fonts/Vazirmatn-FD-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Vazirmatn FD";
+    src: url("@/assets/fonts/Vazirmatn-FD-SemiBold.woff2") format("woff2");
+    font-weight: 600;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Vazirmatn FD";
+    src: url("@/assets/fonts/Vazirmatn-FD-Bold.woff2") format("woff2");
+    font-weight: 700;
     font-display: swap;
 }
 
@@ -19,6 +50,13 @@
  */
 :root {
     color-scheme: dark;
+
+    /* Workspace / data text: Latin digits always */
+    --font-workspace:
+        "Inter", "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+    --font-code: "JetBrains Mono", "Vazirmatn", ui-monospace, monospace;
+    /* App chrome: Persian digits, applied only in the fa UI (see html[lang="fa"] below) */
+    --font-chrome-fa: "Vazirmatn FD", "Inter", ui-sans-serif, sans-serif;
 
     --c-app: #0b0d11;
     --c-panel: #0f1217;
@@ -97,8 +135,8 @@
 }
 
 @theme inline {
-    --font-sans: "Inter", "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
-    --font-mono: "JetBrains Mono", "Vazirmatn", ui-monospace, monospace;
+    --font-sans: var(--font-workspace);
+    --font-mono: var(--font-code);
 
     --color-app: var(--c-app);
     --color-panel: var(--c-panel);
@@ -152,18 +190,57 @@ body {
     user-select: none;
 }
 
-/* Persian UI: Vazirmatn leads; names/types inside tables stay on the mono stack. */
+/* Persian UI chrome gets Persian digits; everything that shows data keeps Latin digits. */
 html[lang="fa"] body {
-    font-family: "Vazirmatn", "Inter", ui-sans-serif, sans-serif;
+    font-family: var(--font-chrome-fa);
 }
 
+/*
+ * Data surfaces opt out of the chrome font: the canvas and anything inside it (tables, columns,
+ * notes, groups) plus every text field, since fields hold names, types, defaults and comments.
+ * Put `data-workspace` on any other container that shows data (e.g. inspector body).
+ */
+@layer base {
+    .canvas-grid,
+    [data-workspace],
+    input,
+    textarea,
+    [contenteditable] {
+        font-family: var(--font-workspace);
+    }
+}
 :where(input, textarea, [contenteditable]) {
     user-select: text;
 }
 
-:focus-visible {
-    outline: 2px solid var(--c-accent);
-    outline-offset: 1px;
+/*
+ * Focus ring: keyboard focus on real controls only. Must live in @layer base, otherwise this
+ * unlayered rule beats Tailwind utilities (outline-none) and rings appear on popovers, menus
+ * and anything focused by script (right-click, open popover, ...).
+ */
+@layer base {
+    :focus {
+        outline: none;
+    }
+    :is(
+        button,
+        a,
+        input,
+        textarea,
+        select,
+        summary,
+        [role="switch"],
+        [role="menuitem"]
+    ):focus-visible {
+        outline: 2px solid var(--c-accent);
+        outline-offset: 1px;
+    }
+    /* containers that receive focus by script, never show a ring */
+    [tabindex="-1"]:focus-visible,
+    [role="menu"]:focus-visible,
+    [role="dialog"]:focus-visible {
+        outline: none;
+    }
 }
 
 /* Dot-grid canvas background (16px, see style guide) */
