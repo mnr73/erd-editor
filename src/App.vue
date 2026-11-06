@@ -1,54 +1,40 @@
 <script setup>
 import { onMounted, onUnmounted, shallowRef } from "vue";
 
-import { useI18n } from "vue-i18n";
-
-import UiIconButton from "@/components/ui/UiIconButton.vue";
+import AppTitleBar from "@/components/AppTitleBar.vue";
+import ToolRail from "@/components/ToolRail.vue";
 import UiToastHost from "@/components/ui/UiToastHost.vue";
 
-import { useTheme } from "@/composables/useTheme";
+import EditorCanvas from "@/canvas/EditorCanvas.vue";
 import ComponentsPage from "@/dev/ComponentsPage.vue";
-import { setLocale } from "@/i18n";
-import { IconLanguage, IconThemeDark, IconThemeLight } from "@/icons";
+import { useDocumentStore } from "@/stores/document";
 import { listenOpenFile, readInitialFile } from "@/tauri";
 
-const { t, locale } = useI18n();
-const { theme, toggleTheme } = useTheme();
+const doc = useDocumentStore();
 const filePath = shallowRef(null);
+const showGallery = new URLSearchParams(location.search).has("components");
 let unlisten = null;
 
 onMounted(async () => {
   filePath.value = await readInitialFile();
   unlisten = await listenOpenFile((path) => (filePath.value = path));
+  // Until stage 8 (file I/O in Rust) the browser dev build opens a bundled sample diagram.
+  if (import.meta.env.DEV && !filePath.value) {
+    const sample = await import("@/dev/sample.erd.json?raw");
+    doc.load(sample.default, "~/projects/shop/shop.erd.json");
+  }
 });
 onUnmounted(() => unlisten?.());
 </script>
 
 <template>
-  <div class="flex h-full flex-col">
-    <!-- Temporary shell: replaced by the real title bar in stage 4 -->
-    <header
-      class="flex h-[var(--size-titlebar)] shrink-0 items-center gap-2 border-b border-line bg-panel px-3"
-    >
-      <span class="text-[13px] font-semibold">{{ t("app.name") }}</span>
-      <span class="truncate font-mono text-[11px] text-muted" dir="ltr">{{
-        filePath ?? t("app.noFile")
-      }}</span>
-      <span class="flex-1" />
-      <UiIconButton
-        :label="t('app.language')"
-        @click="setLocale(locale === 'en' ? 'fa' : 'en')"
-      >
-        <IconLanguage class="size-4" />
-      </UiIconButton>
-      <UiIconButton :label="t('app.theme')" @click="toggleTheme">
-        <component
-          :is="theme === 'dark' ? IconThemeLight : IconThemeDark"
-          class="size-4"
-        />
-      </UiIconButton>
-    </header>
-    <main class="min-h-0 flex-1"><ComponentsPage /></main>
-    <UiToastHost />
+  <ComponentsPage v-if="showGallery" />
+  <div v-else class="flex h-full flex-col">
+    <AppTitleBar />
+    <div class="flex min-h-0 flex-1">
+      <ToolRail />
+      <main class="min-w-0 flex-1"><EditorCanvas /></main>
+    </div>
   </div>
+  <UiToastHost />
 </template>

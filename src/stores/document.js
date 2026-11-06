@@ -26,6 +26,8 @@ export const useDocumentStore = defineStore("document", () => {
     const history = shallowRef(new History(savedSnapshot.value));
     // bumped on undo/redo so `canUndo` / `canRedo` stay reactive (History is not reactive)
     const tick = ref(0);
+    // bumped when a different document is loaded (not on undo/redo): the canvas re-fits its camera
+    const loadId = ref(0);
 
     const dirty = computed(
         () => (tick.value, snapshotErd(doc.value) !== savedSnapshot.value),
@@ -46,6 +48,7 @@ export const useDocumentStore = defineStore("document", () => {
         savedSnapshot.value = snapshotErd(doc.value);
         history.value = new History(savedSnapshot.value);
         tick.value++;
+        loadId.value++;
         return result.issues;
     }
 
@@ -56,6 +59,7 @@ export const useDocumentStore = defineStore("document", () => {
         savedSnapshot.value = snapshotErd(doc.value);
         history.value = new History(savedSnapshot.value);
         tick.value++;
+        loadId.value++;
     }
 
     /** Text to write to disk. Call `markSaved()` after the write succeeds. */
@@ -208,6 +212,36 @@ export const useDocumentStore = defineStore("document", () => {
         }, `move-group:${id}`);
     }
 
+    /**
+     * Move a mixed selection by (dx, dy) as ONE undo step (coalesced while dragging).
+     * A selected group carries its member tables; a table that is selected AND inside a selected
+     * group is moved only once.
+     */
+    function moveItems(ids, dx, dy) {
+        if (!dx && !dy) return;
+        commit(
+            (d) => {
+                const idSet = new Set(ids);
+                const movedGroups = new Set(
+                    d.groups.filter((g) => idSet.has(g.id)).map((g) => g.id),
+                );
+                for (const g of d.groups) {
+                    if (movedGroups.has(g.id)) {
+                        g.x += dx;
+                        g.y += dy;
+                    }
+                }
+                for (const t of d.tables) {
+                    if (movedGroups.has(t.groupId) || idSet.has(t.id)) {
+                        t.x += dx;
+                        t.y += dy;
+                    }
+                }
+            },
+            `move:${[...ids].sort().join(",")}`,
+        );
+    }
+
     function removeGroup(id) {
         commit((d) => {
             d.groups = d.groups.filter((g) => g.id !== id);
@@ -233,6 +267,7 @@ export const useDocumentStore = defineStore("document", () => {
         doc,
         path,
         issues,
+        loadId,
         dirty,
         canUndo,
         canRedo,
@@ -257,6 +292,7 @@ export const useDocumentStore = defineStore("document", () => {
         removeRef,
         addGroup,
         moveGroup,
+        moveItems,
         removeGroup,
         addPaletteColor,
         removePaletteColor,

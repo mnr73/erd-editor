@@ -1,0 +1,54 @@
+<script setup>
+import { computed } from "vue";
+
+import { useI18n } from "vue-i18n";
+
+import UiSegmented from "@/components/ui/UiSegmented.vue";
+
+import { setLocale } from "@/i18n";
+import { useDocumentStore } from "@/stores/document";
+import { splitPath } from "@/utils/path";
+
+/** Thin title bar: file location + unsaved dot on the start side, language switch on the end side. */
+const { t, locale } = useI18n();
+const doc = useDocumentStore();
+
+const file = computed(() => splitPath(doc.path));
+const fileName = computed(() => file.value.name || t("title.untitled"));
+const lang = computed({
+  get: () => locale.value,
+  set: (v) => setLocale(v),
+});
+</script>
+
+<template>
+  <header
+    class="flex h-[var(--size-titlebar)] shrink-0 items-center gap-3 border-b border-line bg-app px-3"
+  >
+    <div class="flex min-w-0 items-center gap-2">
+      <span class="size-5 shrink-0 rounded-[6px] bg-accent" />
+      <span
+        class="truncate font-mono text-xs text-faint"
+        dir="ltr"
+        data-workspace
+      >
+        {{ file.dir }}<span class="text-fg">{{ fileName }}</span>
+      </span>
+      <template v-if="doc.dirty">
+        <span class="size-[7px] shrink-0 rounded-full bg-warn" />
+        <span class="shrink-0 text-[11.5px] text-muted">{{
+          t("title.unsaved")
+        }}</span>
+      </template>
+    </div>
+    <span class="flex-1" />
+    <UiSegmented
+      v-model="lang"
+      :label="t('app.language')"
+      :options="[
+        { value: 'fa', label: 'فا' },
+        { value: 'en', label: 'EN' },
+      ]"
+    />
+  </header>
+</template>

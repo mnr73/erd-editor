@@ -96,3 +96,32 @@ describe("document store", () => {
         expect(s.doc.view.x).toBe(70);
     });
 });
+
+describe("moveItems", () => {
+    it("moves a mixed selection once, groups carry members, one undo step", () => {
+        // t_users is selected AND inside selected g_sales: must move exactly once
+        s.moveItems(["g_sales", "t_users"], 10, 20);
+        const [users, orders] = s.doc.tables;
+        expect([users.x, users.y]).toEqual([90, 100]);
+        expect([orders.x, orders.y]).toEqual([430, 100]);
+        expect([s.doc.groups[0].x, s.doc.groups[0].y]).toEqual([50, 40]);
+        s.undo();
+        expect([
+            s.doc.tables[0].x,
+            s.doc.tables[1].x,
+            s.doc.groups[0].x,
+        ]).toEqual([80, 420, 40]);
+    });
+
+    it("moving a single table leaves its group and siblings alone", () => {
+        s.moveItems(["t_orders"], -5, 0);
+        expect(s.doc.tables[1].x).toBe(415);
+        expect(s.doc.tables[0].x).toBe(80);
+        expect(s.doc.groups[0].x).toBe(40);
+    });
+
+    it("zero delta records nothing", () => {
+        s.moveItems(["t_orders"], 0, 0);
+        expect(s.dirty).toBe(false);
+    });
+});

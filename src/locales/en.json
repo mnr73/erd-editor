@@ -58,5 +58,25 @@
       "export": "Export",
       "delete": "Delete table"
     }
+  },
+  "title": {
+    "untitled": "Untitled",
+    "unsaved": "Unsaved"
+  },
+  "tools": {
+    "label": "Tools",
+    "select": "Select",
+    "pan": "Pan"
+  },
+  "canvas": {
+    "columnsCount": "{n} columns",
+    "expand": "Expand table",
+    "collapse": "Collapse table",
+    "noColumns": "No columns yet",
+    "minimap": "Minimap",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "zoomReset": "Reset zoom to 100%",
+    "fit": "Fit to screen"
   }
 }

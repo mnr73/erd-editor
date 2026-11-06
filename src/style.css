@@ -91,6 +91,7 @@
 
     /* Fixed UI sizes (px) */
     --size-row: 22px;
+    --size-empty-body: 64px;
     --size-table-header: 30px;
     --size-tool-button: 34px;
     --size-titlebar: 40px;
@@ -98,6 +99,8 @@
     --size-inspector: 320px;
     --size-toolbar: 48px;
     --canvas-grid: 16px;
+    /* table header = table color mixed into the card surface */
+    --mix-header: 14%;
 }
 
 [data-theme="light"] {
@@ -113,7 +116,7 @@
     --c-fg: #161a22;
     --c-fg-soft: #3a4352;
     --c-muted: #5b6474;
-    --c-faint: #7c8596;
+    --c-faint: #667086;
     --c-hover: rgba(15, 23, 42, 0.06);
     --c-accent: #2f6fe0;
     --c-accent-text: #2f6fe0;
@@ -126,6 +129,7 @@
     --c-kbd: #eef1f6;
     --c-kbd-fg: #5b6474;
     --c-grid-dot: rgba(60, 80, 120, 0.14);
+    --mix-header: 12%;
 
     --shadow-popover:
         0 12px 32px rgba(15, 23, 42, 0.16), 0 0 0 1px var(--c-line-strong);

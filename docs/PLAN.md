@@ -34,7 +34,7 @@
 - کامپوننت‌های عمومی: Popover، ContextMenu، Tooltip، Toast، Switch، ColorSwatch، IconButton (slot محور).
 - صفحه‌ی dev برای دیدن همه‌ی کامپوننت‌ها.
 
-### ۴. بوم
+### ۴. بوم ✅
 - pan/zoom، dot grid، minimap، انتخاب مستطیلی و چندتایی.
 - ماشین حالت ورودی (pointer events) و کوردینیت‌های world↔screen.
 

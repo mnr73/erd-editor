@@ -1,0 +1,520 @@
+{
+  "format": "erd-editor",
+  "version": 1,
+  "meta": {
+    "name": "shop",
+    "dbType": "mysql"
+  },
+  "tables": [
+    {
+      "id": "t_users",
+      "name": "users",
+      "x": 60,
+      "y": 80,
+      "columns": [
+        {
+          "id": "c_users_id",
+          "name": "id",
+          "type": "bigint",
+          "pk": true,
+          "increment": true,
+          "notNull": true
+        },
+        {
+          "id": "c_users_email",
+          "name": "email",
+          "type": "varchar(255)",
+          "unique": true,
+          "notNull": true
+        },
+        {
+          "id": "c_users_name",
+          "name": "name",
+          "type": "varchar(120)",
+          "notNull": true
+        },
+        {
+          "id": "c_users_created_at",
+          "name": "created_at",
+          "type": "timestamp"
+        }
+      ],
+      "color": "#4C8DFF",
+      "groupId": "g_sales"
+    },
+    {
+      "id": "t_customers",
+      "name": "customers",
+      "x": 60,
+      "y": 300,
+      "columns": [
+        {
+          "id": "c_customers_id",
+          "name": "id",
+          "type": "bigint",
+          "pk": true,
+          "increment": true,
+          "notNull": true
+        },
+        {
+          "id": "c_customers_user_id",
+          "name": "user_id",
+          "type": "bigint",
+          "notNull": true
+        },
+        {
+          "id": "c_customers_phone",
+          "name": "phone",
+          "type": "varchar(20)"
+        },
+        {
+          "id": "c_customers_address_id",
+          "name": "address_id",
+          "type": "bigint"
+        }
+      ],
+      "color": "#4C8DFF",
+      "groupId": "g_sales"
+    },
+    {
+      "id": "t_orders",
+      "name": "orders",
+      "x": 340,
+      "y": 80,
+      "columns": [
+        {
+          "id": "c_orders_id",
+          "name": "id",
+          "type": "bigint",
+          "pk": true,
+          "increment": true,
+          "notNull": true
+        },
+        {
+          "id": "c_orders_customer_id",
+          "name": "customer_id",
+          "type": "bigint",
+          "notNull": true
+        },
+        {
+          "id": "c_orders_status",
+          "name": "status",
+          "type": "varchar(20)",
+          "notNull": true,
+          "default": "'draft'"
+        },
+        {
+          "id": "c_orders_total",
+          "name": "total",
+          "type": "numeric(12,2)",
+          "notNull": true
+        },
+        {
+          "id": "c_orders_placed_at",
+          "name": "placed_at",
+          "type": "timestamp"
+        }
+      ],
+      "color": "#8B7CF6",
+      "groupId": "g_sales",
+      "note": "Order header"
+    },
+    {
+      "id": "t_order_items",
+      "name": "order_items",
+      "x": 340,
+      "y": 330,
+      "columns": [
+        {
+          "id": "c_order_items_id",
+          "name": "id",
+          "type": "bigint",
+          "pk": true,
+          "increment": true,
+          "notNull": true
+        },
+        {
+          "id": "c_order_items_order_id",
+          "name": "order_id",
+          "type": "bigint",
+          "notNull": true
+        },
+        {
+          "id": "c_order_items_product_id",
+          "name": "product_id",
+          "type": "bigint",
+          "notNull": true
+        },
+        {
+          "id": "c_order_items_qty",
+          "name": "qty",
+          "type": "int",
+          "notNull": true
+        },
+        {
+          "id": "c_order_items_price",
+          "name": "price",
+          "type": "numeric(12,2)"
+        }
+      ],
+      "color": "#8B7CF6",
+      "groupId": "g_sales"
+    },
+    {
+      "id": "t_payments",
+      "name": "payments",
+      "x": 640,
+      "y": 80,
+      "columns": [
+        {
+          "id": "c_payments_id",
+          "name": "id",
+          "type": "bigint",
+          "pk": true,
+          "increment": true,
+          "notNull": true
+        },
+        {
+          "id": "c_payments_order_id",
+          "name": "order_id",
+          "type": "bigint",
+          "notNull": true
+        },
+        {
+          "id": "c_payments_amount",
+          "name": "amount",
+          "type": "numeric(12,2)",
+          "notNull": true
+        },
+        {
+          "id": "c_payments_method",
+          "name": "method",
+          "type": "varchar(20)"
+        }
+      ],
+      "color": "#4CB86B",
+      "groupId": "g_sales"
+    },
+    {
+      "id": "t_products",
+      "name": "products",
+      "x": 930,
+      "y": 420,
+      "columns": [
+        {
+          "id": "c_products_id",
+          "name": "id",
+          "type": "bigint",
+          "pk": true,
+          "increment": true,
+          "notNull": true
+        },
+        {
+          "id": "c_products_sku",
+          "name": "sku",
+          "type": "varchar(40)",
+          "unique": true,
+          "notNull": true
+        },
+        {
+          "id": "c_products_title",
+          "name": "title",
+          "type": "varchar(200)",
+          "notNull": true
+        },
+        {
+          "id": "c_products_price",
+          "name": "price",
+          "type": "numeric(12,2)",
+          "notNull": true
+        },
+        {
+          "id": "c_products_category_id",
+          "name": "category_id",
+          "type": "bigint"
+        }
+      ],
+      "color": "#E0A33A",
+      "groupId": "g_stock"
+    },
+    {
+      "id": "t_categories",
+      "name": "categories",
+      "x": 1220,
+      "y": 420,
+      "columns": [
+        {
+          "id": "c_categories_id",
+          "name": "id",
+          "type": "bigint",
+          "pk": true,
+          "increment": true,
+          "notNull": true
+        },
+        {
+          "id": "c_categories_parent_id",
+          "name": "parent_id",
+          "type": "bigint"
+        },
+        {
+          "id": "c_categories_name",
+          "name": "name",
+          "type": "varchar(120)",
+          "notNull": true
+        }
+      ],
+      "color": "#E0A33A",
+      "groupId": "g_stock"
+    },
+    {
+      "id": "t_stock",
+      "name": "stock",
+      "x": 930,
+      "y": 690,
+      "columns": [
+        {
+          "id": "c_stock_id",
+          "name": "id",
+          "type": "bigint",
+          "pk": true,
+          "increment": true,
+          "notNull": true
+        },
+        {
+          "id": "c_stock_product_id",
+          "name": "product_id",
+          "type": "bigint",
+          "notNull": true
+        },
+        {
+          "id": "c_stock_warehouse_id",
+          "name": "warehouse_id",
+          "type": "bigint",
+          "notNull": true
+        },
+        {
+          "id": "c_stock_qty",
+          "name": "qty",
+          "type": "int",
+          "notNull": true,
+          "default": "0"
+        }
+      ],
+      "color": "#2BB3A8",
+      "groupId": "g_stock"
+    },
+    {
+      "id": "t_warehouses",
+      "name": "warehouses",
+      "x": 1220,
+      "y": 690,
+      "columns": [
+        {
+          "id": "c_warehouses_id",
+          "name": "id",
+          "type": "bigint",
+          "pk": true,
+          "increment": true,
+          "notNull": true
+        },
+        {
+          "id": "c_warehouses_name",
+          "name": "name",
+          "type": "varchar(120)",
+          "notNull": true
+        },
+        {
+          "id": "c_warehouses_city",
+          "name": "city",
+          "type": "varchar(80)"
+        }
+      ],
+      "color": "#2BB3A8",
+      "groupId": "g_stock"
+    },
+    {
+      "id": "t_audit",
+      "name": "audit_log",
+      "x": 60,
+      "y": 640,
+      "columns": [
+        {
+          "id": "c_audit_id",
+          "name": "id",
+          "type": "bigint",
+          "pk": true,
+          "increment": true,
+          "notNull": true
+        },
+        {
+          "id": "c_audit_actor_id",
+          "name": "actor_id",
+          "type": "bigint"
+        },
+        {
+          "id": "c_audit_action",
+          "name": "action",
+          "type": "varchar(60)",
+          "notNull": true
+        },
+        {
+          "id": "c_audit_payload",
+          "name": "payload",
+          "type": "json"
+        }
+      ],
+      "color": "#8792A6"
+    },
+    {
+      "id": "t_empty",
+      "name": "drafts",
+      "x": 340,
+      "y": 640,
+      "columns": []
+    }
+  ],
+  "groups": [
+    {
+      "id": "g_sales",
+      "name": "Sales & Orders",
+      "color": "#8B7CF6",
+      "x": 30,
+      "y": 30,
+      "w": 840,
+      "h": 560
+    },
+    {
+      "id": "g_stock",
+      "name": "Catalog & Stock",
+      "color": "#E0A33A",
+      "x": 900,
+      "y": 380,
+      "w": 640,
+      "h": 470
+    }
+  ],
+  "refs": [
+    {
+      "id": "r_cust_user",
+      "from": {
+        "table": "t_customers",
+        "columns": ["c_customers_user_id"],
+        "cardinality": "0..1"
+      },
+      "to": {
+        "table": "t_users",
+        "columns": ["c_users_id"],
+        "cardinality": "1"
+      },
+      "label": "is"
+    },
+    {
+      "id": "r_order_cust",
+      "from": {
+        "table": "t_orders",
+        "columns": ["c_orders_customer_id"],
+        "cardinality": "0..*"
+      },
+      "to": {
+        "table": "t_customers",
+        "columns": ["c_customers_id"],
+        "cardinality": "1"
+      },
+      "label": "places",
+      "onDelete": "cascade"
+    },
+    {
+      "id": "r_item_order",
+      "from": {
+        "table": "t_order_items",
+        "columns": ["c_order_items_order_id"],
+        "cardinality": "0..*"
+      },
+      "to": {
+        "table": "t_orders",
+        "columns": ["c_orders_id"],
+        "cardinality": "1"
+      },
+      "onDelete": "cascade"
+    },
+    {
+      "id": "r_item_prod",
+      "from": {
+        "table": "t_order_items",
+        "columns": ["c_order_items_product_id"],
+        "cardinality": "0..*"
+      },
+      "to": {
+        "table": "t_products",
+        "columns": ["c_products_id"],
+        "cardinality": "1"
+      }
+    },
+    {
+      "id": "r_pay_order",
+      "from": {
+        "table": "t_payments",
+        "columns": ["c_payments_order_id"],
+        "cardinality": "0..*"
+      },
+      "to": {
+        "table": "t_orders",
+        "columns": ["c_orders_id"],
+        "cardinality": "1"
+      }
+    },
+    {
+      "id": "r_prod_cat",
+      "from": {
+        "table": "t_products",
+        "columns": ["c_products_category_id"],
+        "cardinality": "0..*"
+      },
+      "to": {
+        "table": "t_categories",
+        "columns": ["c_categories_id"],
+        "cardinality": "0..1"
+      }
+    },
+    {
+      "id": "r_cat_parent",
+      "from": {
+        "table": "t_categories",
+        "columns": ["c_categories_parent_id"],
+        "cardinality": "0..*"
+      },
+      "to": {
+        "table": "t_categories",
+        "columns": ["c_categories_id"],
+        "cardinality": "0..1"
+      }
+    },
+    {
+      "id": "r_stock_prod",
+      "from": {
+        "table": "t_stock",
+        "columns": ["c_stock_product_id"],
+        "cardinality": "0..*"
+      },
+      "to": {
+        "table": "t_products",
+        "columns": ["c_products_id"],
+        "cardinality": "1"
+      },
+      "onDelete": "cascade"
+    },
+    {
+      "id": "r_stock_wh",
+      "from": {
+        "table": "t_stock",
+        "columns": ["c_stock_warehouse_id"],
+        "cardinality": "0..*"
+      },
+      "to": {
+        "table": "t_warehouses",
+        "columns": ["c_warehouses_id"],
+        "cardinality": "1"
+      }
+    }
+  ]
+}

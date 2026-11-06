@@ -103,3 +103,6 @@ export { default as IconColComment } from "~icons/hugeicons/comment-01";
 export { default as IconNote } from "~icons/hugeicons/note-01";
 /** Pin note on canvas (?) */
 export { default as IconPin } from "~icons/hugeicons/pin";
+
+/** Pan tool (H) */
+export { default as IconToolPan } from "~icons/hugeicons/hand-grab";

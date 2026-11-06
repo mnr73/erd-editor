@@ -7,7 +7,8 @@ Local, cross-platform ERD editor (Tauri 2 + Vue 3). Opens one `*.erd.json` file 
 src/            Vue app (JS, no auto-import; icons only via src/icons.js)
 src/locales/    en.json (default), fa.json
 src/model/      file format core: validate, migrate, serialize, history (pure JS, no Vue)
-src/stores/     Pinia document store (all mutations, undo/redo)
+src/stores/     Pinia: document (all mutations, undo/redo) and editor (tool, selection, viewport)
+src/canvas/     infinite canvas: geometry + viewport math (pure), EditorCanvas, CanvasTable/Group/Minimap
 schema/         erd.schema.json (JSON Schema of the file), spec in docs/FORMAT.md
 tests/          vitest
 src-tauri/      Rust shell (single-instance, initial_file, dialog)
