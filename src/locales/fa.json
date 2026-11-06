@@ -2,6 +2,61 @@
   "app": {
     "name": "ویرایشگر ERD",
     "noFile": "فایلی باز نیست",
-    "language": "زبان"
+    "language": "زبان",
+    "theme": "تغییر تم"
+  },
+  "common": {
+    "add": "افزودن",
+    "cancel": "انصراف",
+    "delete": "حذف",
+    "duplicate": "تکثیر",
+    "close": "بستن",
+    "save": "ذخیره",
+    "undo": "برگرداندن",
+    "redo": "از نو"
+  },
+  "palette": {
+    "title": "پالت",
+    "mine": "رنگ‌های من",
+    "none": "بدون رنگ",
+    "add": "افزودن رنگ جدید",
+    "pick": "انتخاب رنگ",
+    "remove": "حذف {color}",
+    "names": {
+      "blue": "آبی",
+      "purple": "بنفش",
+      "pink": "صورتی",
+      "red": "قرمز",
+      "orange": "نارنجی",
+      "amber": "کهربایی",
+      "green": "سبز",
+      "teal": "فیروزه‌ای",
+      "sky": "آسمانی",
+      "gray": "خاکستری"
+    }
+  },
+  "dev": {
+    "title": "کامپوننت‌ها",
+    "buttons": "دکمه‌ها",
+    "switches": "سوییچ و فیلد",
+    "popover": "Popover",
+    "menu": "منو و منوی راست‌کلیک",
+    "toast": "Toast",
+    "tooltip": "Tooltip",
+    "palette": "پالت رنگ",
+    "colorsOpen": "باز کردن پالت",
+    "menuOpen": "باز کردن منو",
+    "rightClick": "اینجا راست‌کلیک کن",
+    "sample": "محتوای نمونه‌ی popover",
+    "toastInfo": "toast اطلاعات",
+    "toastError": "toast خطا",
+    "toastUndo": "toast با عملیات",
+    "undone": "برگردانده شد",
+    "fileMenu": {
+      "open": "باز کردن…",
+      "save": "ذخیره",
+      "export": "خروجی",
+      "delete": "حذف جدول"
+    }
   }
 }

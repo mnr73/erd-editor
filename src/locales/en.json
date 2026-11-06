@@ -2,6 +2,61 @@
   "app": {
     "name": "ERD Editor",
     "noFile": "No file open",
-    "language": "Language"
+    "language": "Language",
+    "theme": "Toggle theme"
+  },
+  "common": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "duplicate": "Duplicate",
+    "close": "Close",
+    "save": "Save",
+    "undo": "Undo",
+    "redo": "Redo"
+  },
+  "palette": {
+    "title": "Palette",
+    "mine": "My colors",
+    "none": "No color",
+    "add": "Add new color",
+    "pick": "Pick a color",
+    "remove": "Remove {color}",
+    "names": {
+      "blue": "Blue",
+      "purple": "Purple",
+      "pink": "Pink",
+      "red": "Red",
+      "orange": "Orange",
+      "amber": "Amber",
+      "green": "Green",
+      "teal": "Teal",
+      "sky": "Sky",
+      "gray": "Gray"
+    }
+  },
+  "dev": {
+    "title": "Components",
+    "buttons": "Buttons",
+    "switches": "Switch and input",
+    "popover": "Popover",
+    "menu": "Menu and context menu",
+    "toast": "Toast",
+    "tooltip": "Tooltip",
+    "palette": "Color palette",
+    "colorsOpen": "Open palette",
+    "menuOpen": "Open menu",
+    "rightClick": "Right-click here",
+    "sample": "Sample popover content",
+    "toastInfo": "Info toast",
+    "toastError": "Error toast",
+    "toastUndo": "Toast with action",
+    "undone": "Undone",
+    "fileMenu": {
+      "open": "Open…",
+      "save": "Save",
+      "export": "Export",
+      "delete": "Delete table"
+    }
   }
 }

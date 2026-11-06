@@ -23,13 +23,13 @@
 - **file association** (`.erd.json`، mime مخصوص) در `tauri.conf.json` برای deb/AppImage و دریافت مسیر فایل از argv.
 - خروجی: `npm run tauri dev` پنجره‌ی خالی باز کند.
 
-### ۲. مدل داده و فرمت فایل (بدون UI) ✅ (انجام شد)
+### ۲. مدل داده و فرمت فایل (بدون UI) ✅
 - spec فرمت در `docs/FORMAT.md` + `erd.schema.json`، فیلد `version`، id پایدار، حفظ کلیدهای ناشناخته.
 - store (Pinia): tables, columns, refs, groups, notes, palette, view.
 - validate/migrate هنگام باز کردن؛ undo/redo (command stack یا snapshot).
 - تست واحد (vitest) برای validate و migration.
 
-### ۳. design tokens و کامپوننت‌های پایه‌ی UI
+### ۳. design tokens و کامپوننت‌های پایه‌ی UI ✅
 - تم تیره/روشن با CSS variables از style guide، RTL/LTR.
 - کامپوننت‌های عمومی: Popover، ContextMenu، Tooltip، Toast، Switch، ColorSwatch، IconButton (slot محور).
 - صفحه‌ی dev برای دیدن همه‌ی کامپوننت‌ها.

@@ -12,9 +12,128 @@
     font-display: swap;
 }
 
-@theme {
+/*
+ * Design tokens (from design/mockups style guide v0.1).
+ * Dark is the default theme; `[data-theme="light"]` overrides. Components only use the
+ * Tailwind names defined in @theme below, never raw hex values.
+ */
+:root {
+    color-scheme: dark;
+
+    --c-app: #0b0d11;
+    --c-panel: #0f1217;
+    --c-canvas: #0d1015;
+    --c-card: #151920;
+    --c-popover: #1a1f28;
+    --c-line: #1c2129;
+    --c-line-strong: #2a3446;
+    --c-fg: #e6eaf2;
+    --c-fg-soft: #c9d0dc;
+    --c-muted: #8a93a3;
+    --c-faint: #7d8696;
+    --c-hover: rgba(255, 255, 255, 0.06);
+    --c-accent: #4c8dff;
+    --c-accent-fg: #ffffff;
+    --c-accent-text: #7fb0ff;
+    --c-accent-soft: rgba(76, 141, 255, 0.16);
+    --c-warn: #e0a33a;
+    --c-danger: #f07a7a;
+    --c-success: #4cb86b;
+    --c-key-pk: #e8b54a;
+    --c-key-fk: #7fb0ff;
+    --c-kbd: #1d222c;
+    --c-kbd-fg: #9aa3b2;
+    --c-grid-dot: rgba(140, 160, 200, 0.1);
+
+    --shadow-popover:
+        0 12px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--c-line-strong);
+    --shadow-table: 0 4px 14px rgba(0, 0, 0, 0.35);
+    --shadow-table-hover: 0 6px 18px rgba(0, 0, 0, 0.4);
+    --shadow-table-drag: 0 22px 44px rgba(0, 0, 0, 0.5);
+
+    /* Fixed UI sizes (px) */
+    --size-row: 22px;
+    --size-table-header: 30px;
+    --size-tool-button: 34px;
+    --size-titlebar: 40px;
+    --size-statusbar: 26px;
+    --size-inspector: 320px;
+    --size-toolbar: 48px;
+    --canvas-grid: 16px;
+}
+
+[data-theme="light"] {
+    color-scheme: light;
+
+    --c-app: #f3f4f7;
+    --c-panel: #ffffff;
+    --c-canvas: #f6f7f9;
+    --c-card: #ffffff;
+    --c-popover: #ffffff;
+    --c-line: #e2e5eb;
+    --c-line-strong: #cdd3de;
+    --c-fg: #161a22;
+    --c-fg-soft: #3a4352;
+    --c-muted: #5b6474;
+    --c-faint: #7c8596;
+    --c-hover: rgba(15, 23, 42, 0.06);
+    --c-accent: #2f6fe0;
+    --c-accent-text: #2f6fe0;
+    --c-accent-soft: rgba(47, 111, 224, 0.12);
+    --c-warn: #b26a00;
+    --c-danger: #d64545;
+    --c-success: #1f8f45;
+    --c-key-pk: #a86a00;
+    --c-key-fk: #2f6fe0;
+    --c-kbd: #eef1f6;
+    --c-kbd-fg: #5b6474;
+    --c-grid-dot: rgba(60, 80, 120, 0.14);
+
+    --shadow-popover:
+        0 12px 32px rgba(15, 23, 42, 0.16), 0 0 0 1px var(--c-line-strong);
+    --shadow-table: 0 2px 8px rgba(15, 23, 42, 0.08);
+    --shadow-table-hover: 0 4px 14px rgba(15, 23, 42, 0.12);
+    --shadow-table-drag: 0 18px 36px rgba(15, 23, 42, 0.2);
+}
+
+@theme inline {
     --font-sans: "Inter", "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-mono: "JetBrains Mono", "Vazirmatn", ui-monospace, monospace;
+
+    --color-app: var(--c-app);
+    --color-panel: var(--c-panel);
+    --color-canvas: var(--c-canvas);
+    --color-card: var(--c-card);
+    --color-popover: var(--c-popover);
+    --color-line: var(--c-line);
+    --color-line-strong: var(--c-line-strong);
+    --color-fg: var(--c-fg);
+    --color-fg-soft: var(--c-fg-soft);
+    --color-muted: var(--c-muted);
+    --color-faint: var(--c-faint);
+    --color-hover: var(--c-hover);
+    --color-accent: var(--c-accent);
+    --color-accent-fg: var(--c-accent-fg);
+    --color-accent-text: var(--c-accent-text);
+    --color-accent-soft: var(--c-accent-soft);
+    --color-warn: var(--c-warn);
+    --color-danger: var(--c-danger);
+    --color-success: var(--c-success);
+    --color-key-pk: var(--c-key-pk);
+    --color-key-fk: var(--c-key-fk);
+    --color-kbd: var(--c-kbd);
+    --color-kbd-fg: var(--c-kbd-fg);
+
+    --radius-kbd: 4px;
+    --radius-chip: 6px;
+    --radius-control: 7px;
+    --radius-table: 8px;
+    --radius-popover: 12px;
+
+    --shadow-popover: var(--shadow-popover);
+    --shadow-table: var(--shadow-table);
+    --shadow-table-hover: var(--shadow-table-hover);
+    --shadow-table-drag: var(--shadow-table-drag);
 }
 
 html,
@@ -25,11 +144,55 @@ body,
 
 body {
     margin: 0;
+    background: var(--c-app);
+    color: var(--c-fg);
     font-family: var(--font-sans);
+    font-size: 13px;
     overflow: hidden;
     user-select: none;
 }
 
+/* Persian UI: Vazirmatn leads; names/types inside tables stay on the mono stack. */
 html[lang="fa"] body {
     font-family: "Vazirmatn", "Inter", ui-sans-serif, sans-serif;
+}
+
+:where(input, textarea, [contenteditable]) {
+    user-select: text;
+}
+
+:focus-visible {
+    outline: 2px solid var(--c-accent);
+    outline-offset: 1px;
+}
+
+/* Dot-grid canvas background (16px, see style guide) */
+.canvas-grid {
+    background-color: var(--c-canvas);
+    background-image: radial-gradient(
+        circle,
+        var(--c-grid-dot) 1px,
+        transparent 1.2px
+    );
+    background-size: var(--canvas-grid) var(--canvas-grid);
+}
+
+/* Popover / tooltip / menu enter animation */
+.pop-enter-active,
+.pop-leave-active {
+    transition:
+        opacity 0.12s ease,
+        transform 0.12s ease;
+}
+.pop-enter-from,
+.pop-leave-to {
+    opacity: 0;
+    transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pop-enter-active,
+    .pop-leave-active {
+        transition: none;
+    }
 }

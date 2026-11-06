@@ -27,3 +27,79 @@ export { default as IconSuccess } from "~icons/hugeicons/checkmark-circle-02";
 export { default as IconClose } from "~icons/hugeicons/cancel-01";
 /** Help / legend */
 export { default as IconHelp } from "~icons/hugeicons/help-circle";
+
+/* ---------------------------------- actions -------------------------------- */
+
+/** Add (new table / column / color) */
+export { default as IconAdd } from "~icons/hugeicons/add-01";
+/** Delete */
+export { default as IconDelete } from "~icons/hugeicons/delete-02";
+/** Duplicate / copy */
+export { default as IconCopy } from "~icons/hugeicons/copy-01";
+/** Edit / rename */
+export { default as IconEdit } from "~icons/hugeicons/edit-02";
+/** "More" button on rows, headers and cards */
+export { default as IconMore } from "~icons/hugeicons/more-horizontal";
+/** Search (Ctrl+K) */
+export { default as IconSearch } from "~icons/hugeicons/search-01";
+export { default as IconUndo } from "~icons/hugeicons/undo-02";
+export { default as IconRedo } from "~icons/hugeicons/redo-02";
+/** Open file */
+export { default as IconOpenFile } from "~icons/hugeicons/folder-open";
+/** Save */
+export { default as IconSave } from "~icons/hugeicons/floppy-disk";
+/** Export menu */
+export { default as IconExport } from "~icons/hugeicons/share-08";
+/** Keyboard shortcut hint */
+export { default as IconShortcuts } from "~icons/hugeicons/keyboard";
+
+/* ----------------------------------- chrome -------------------------------- */
+
+/** Chevron pointing down (collapse/expand, select) */
+export { default as IconChevronDown } from "~icons/hugeicons/arrow-down-01";
+/** Chevron pointing right; flips in RTL via `rtl:-scale-x-100` */
+export { default as IconChevronRight } from "~icons/hugeicons/arrow-right-01";
+export { default as IconThemeLight } from "~icons/hugeicons/sun-03";
+export { default as IconThemeDark } from "~icons/hugeicons/moon-02";
+export { default as IconLanguage } from "~icons/hugeicons/language-square";
+export { default as IconZoomIn } from "~icons/hugeicons/zoom-in-area";
+export { default as IconZoomOut } from "~icons/hugeicons/zoom-out-area";
+/** Fit to screen */
+export { default as IconFit } from "~icons/hugeicons/maximize-screen";
+export { default as IconHide } from "~icons/hugeicons/view-off";
+export { default as IconShow } from "~icons/hugeicons/view";
+
+/* ----------------------------------- tools --------------------------------- */
+
+/** Select tool (V) */
+export { default as IconToolSelect } from "~icons/hugeicons/cursor-pointer-01";
+/** New table tool (T) */
+export { default as IconToolTable } from "~icons/hugeicons/table";
+/** Section / group tool (S) */
+export { default as IconToolSection } from "~icons/hugeicons/group-items";
+/** Relationship tool (R) */
+export { default as IconToolRelation } from "~icons/hugeicons/link-04";
+/** Note tool (N) */
+export { default as IconToolNote } from "~icons/hugeicons/sticky-note-01";
+/** Drag handle (reorder columns) */
+export { default as IconDragHandle } from "~icons/hugeicons/drag-drop-vertical";
+
+/* ----------------------------- column attributes --------------------------- */
+/* Shown on a column row only when the attribute has a value. */
+
+/** Primary key */
+export { default as IconColPrimaryKey } from "~icons/hugeicons/key-01";
+/** Unique */
+export { default as IconColUnique } from "~icons/hugeicons/fingerprint-scan";
+/** Auto-increment */
+export { default as IconColIncrement } from "~icons/hugeicons/sorting-1-9";
+/** Default value (?) */
+export { default as IconColDefault } from "~icons/hugeicons/flash";
+/** Index (?) */
+export { default as IconColIndex } from "~icons/hugeicons/list-view";
+/** Comment / note on a column */
+export { default as IconColComment } from "~icons/hugeicons/comment-01";
+/** Note on a table or group */
+export { default as IconNote } from "~icons/hugeicons/note-01";
+/** Pin note on canvas (?) */
+export { default as IconPin } from "~icons/hugeicons/pin";
