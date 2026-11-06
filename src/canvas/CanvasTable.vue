@@ -212,6 +212,8 @@ function onRowKey(e, id) {
     const ids = sel?.size ? [...sel] : [id];
     if (!sel?.size) editor.selectColumn(props.table, id);
     doc.moveColumns(props.table.id, ids, e.key === "ArrowDown" ? 1 : -1);
+    // the list re-renders and the row may lose focus: put it back so the next Alt+arrow still lands
+    focusRow(id);
     return;
   }
   if (e.key === "ArrowUp" || e.key === "ArrowDown") {
