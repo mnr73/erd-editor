@@ -205,5 +205,42 @@
     "hint": "Notes are saved in the file and included in exports.",
     "clear": "Remove note",
     "open": "Open note"
+  },
+  "inspector": {
+    "title": "Inspector",
+    "toggle": "Inspector",
+    "close": "Close panel",
+    "back": "Back to table",
+    "tabTable": "Table",
+    "tabColumns": "Columns",
+    "tabRels": "Relations",
+    "tabNote": "Note",
+    "section": "Section",
+    "noSection": "No section",
+    "collapsed": "Show collapsed",
+    "columns": "Columns",
+    "relations": "Relations",
+    "duplicate": "Duplicate",
+    "delete": "Delete table",
+    "newColumn": "New column",
+    "noColumns": "No columns yet",
+    "noRelations": "No relationships on this table",
+    "sectionName": "Section name",
+    "sectionTables": "Tables inside",
+    "deleteSection": "Delete section",
+    "headerColor": "Header color",
+    "tables": "tables",
+    "relationships": "relationships",
+    "sections": "sections",
+    "empty": "Select a table, section or line to edit it here.",
+    "multi": "{n} items selected",
+    "groupSelected": "Group into section",
+    "deleteSelected": "Delete selected",
+    "hintClick": "Click a column row to edit it"
+  },
+  "search": {
+    "label": "Search the diagram",
+    "placeholder": "Search tables, columns…",
+    "none": "Nothing found"
   }
 }

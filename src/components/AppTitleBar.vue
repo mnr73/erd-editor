@@ -1,17 +1,24 @@
 <script setup>
-import { computed } from "vue";
+import { computed, useTemplateRef } from "vue";
 
 import { useI18n } from "vue-i18n";
 
+import AppSearch from "@/components/AppSearch.vue";
+import UiIconButton from "@/components/ui/UiIconButton.vue";
 import UiSegmented from "@/components/ui/UiSegmented.vue";
 
 import { setLocale } from "@/i18n";
+import { IconInspector } from "@/icons";
 import { useDocumentStore } from "@/stores/document";
+import { useEditorStore } from "@/stores/editor";
 import { splitPath } from "@/utils/path";
 
 /** Thin title bar: file location + unsaved dot on the start side, language switch on the end side. */
 const { t, locale } = useI18n();
 const doc = useDocumentStore();
+const search = useTemplateRef("search");
+defineExpose({ focusSearch: () => search.value?.focus() });
+const editor = useEditorStore();
 
 const file = computed(() => splitPath(doc.path));
 const fileName = computed(() => file.value.name || t("title.untitled"));
@@ -42,6 +49,15 @@ const lang = computed({
       </template>
     </div>
     <span class="flex-1" />
+    <AppSearch ref="search" />
+    <UiIconButton
+      :label="t('inspector.toggle')"
+      shortcut="Ctrl+\\"
+      :active="editor.inspectorOpen"
+      @click="editor.toggleInspector()"
+    >
+      <IconInspector class="size-4 rtl:-scale-x-100" />
+    </UiIconButton>
     <UiSegmented
       v-model="lang"
       :label="t('app.language')"

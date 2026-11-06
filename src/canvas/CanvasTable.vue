@@ -76,8 +76,8 @@ const headerBg = computed(() =>
 );
 /** Column id whose popover is open (this table only): the row stays highlighted. */
 const editingColumn = computed(() =>
-  editor.columnPopover?.tableId === props.table.id
-    ? editor.columnPopover.columnId
+  editor.activeColumn?.tableId === props.table.id
+    ? editor.activeColumn.columnId
     : null,
 );
 const renamingTable = computed(() =>

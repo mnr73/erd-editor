@@ -13,7 +13,11 @@ import { useDocumentStore } from "@/stores/document";
  * Note of a table or a section. The text is written as you type (one undo step per burst);
  * "Show on canvas" pins it as a card next to the item. Same component for both kinds.
  */
-const props = defineProps({ id: { type: String, required: true } });
+const props = defineProps({
+  id: { type: String, required: true },
+  fluid: Boolean,
+  autofocus: { type: Boolean, default: true },
+});
 const emit = defineEmits(["close"]);
 
 const { t } = useI18n();
@@ -34,6 +38,7 @@ function patch(p, key = null) {
 
 onMounted(async () => {
   await nextTick();
+  if (!props.autofocus) return;
   area.value?.focus({ preventScroll: true });
   area.value?.setSelectionRange(
     area.value.value.length,
@@ -43,7 +48,12 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="item" data-workspace class="flex w-[300px] flex-col gap-3 p-3">
+  <div
+    v-if="item"
+    data-workspace
+    class="flex flex-col gap-3"
+    :class="props.fluid ? 'w-full' : 'w-[300px] p-3'"
+  >
     <div class="flex items-center gap-2" dir="ltr">
       <h3 class="font-sans text-xs font-semibold text-fg">
         {{ t("note.title") }}

@@ -205,5 +205,42 @@
     "hint": "یادداشت‌ها در فایل ذخیره می‌شوند و در خروجی‌ها می‌آیند.",
     "clear": "حذف یادداشت",
     "open": "باز کردن یادداشت"
+  },
+  "inspector": {
+    "title": "پنل خصوصیات",
+    "toggle": "پنل خصوصیات",
+    "close": "بستن پنل",
+    "back": "بازگشت به جدول",
+    "tabTable": "جدول",
+    "tabColumns": "ستون‌ها",
+    "tabRels": "رابطه‌ها",
+    "tabNote": "یادداشت",
+    "section": "سکشن",
+    "noSection": "بدون سکشن",
+    "collapsed": "نمایش جمع‌شده",
+    "columns": "ستون‌ها",
+    "relations": "رابطه‌ها",
+    "duplicate": "کپی",
+    "delete": "حذف جدول",
+    "newColumn": "ستون جدید",
+    "noColumns": "هنوز ستونی نیست",
+    "noRelations": "این جدول رابطه‌ای ندارد",
+    "sectionName": "نام سکشن",
+    "sectionTables": "جدول‌های داخل",
+    "deleteSection": "حذف سکشن",
+    "headerColor": "رنگ هدر",
+    "tables": "جدول",
+    "relationships": "رابطه",
+    "sections": "سکشن",
+    "empty": "برای ویرایش، یک جدول، سکشن یا خط را انتخاب کنید.",
+    "multi": "{n} مورد انتخاب شده",
+    "groupSelected": "گروه‌بندی در سکشن",
+    "deleteSelected": "حذف انتخاب‌شده",
+    "hintClick": "برای ویرایش، روی سطر ستون کلیک کنید"
+  },
+  "search": {
+    "label": "جستجو در نمودار",
+    "placeholder": "جستجوی جدول و ستون…",
+    "none": "چیزی پیدا نشد"
   }
 }

@@ -1,7 +1,8 @@
 <script setup>
-import { onBeforeUnmount, onMounted } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
 import AppAskDialog from "@/components/AppAskDialog.vue";
+import AppInspector from "@/components/AppInspector.vue";
 import AppTabBar from "@/components/AppTabBar.vue";
 import AppTitleBar from "@/components/AppTitleBar.vue";
 import RelationLegend from "@/components/RelationLegend.vue";
@@ -31,6 +32,7 @@ const doc = useDocumentStore();
 const editor = useEditorStore();
 const showGallery = new URLSearchParams(location.search).has("components");
 const cleanups = [];
+const titleBar = ref(null);
 
 /** App-wide file shortcuts. They work even while typing (they never insert text). */
 function onKeyDown(e) {
@@ -44,7 +46,9 @@ function onKeyDown(e) {
     e.stopPropagation();
     fn();
   };
-  if (k === "s") run(() => saveActive({ forceDialog: e.shiftKey }));
+  if (k === "k") run(() => titleBar.value?.focusSearch());
+  else if (e.key === "\\") run(() => editor.toggleInspector());
+  else if (k === "s") run(() => saveActive({ forceDialog: e.shiftKey }));
   else if (k === "o") run(openWithDialog);
   else if (k === "n") run(newBoard);
   else if (k === "w") run(() => closeTabWithConfirm(doc.activeId));
@@ -86,7 +90,7 @@ onBeforeUnmount(() => cleanups.forEach((fn) => fn?.()));
 <template>
   <ComponentsPage v-if="showGallery" />
   <div v-else class="flex h-full flex-col">
-    <AppTitleBar />
+    <AppTitleBar ref="titleBar" />
     <AppTabBar />
     <StartPage v-if="doc.isFresh" />
     <div v-else class="flex min-h-0 flex-1">
@@ -98,6 +102,7 @@ onBeforeUnmount(() => cleanups.forEach((fn) => fn?.()));
           class="absolute bottom-4 inset-s-4 z-20"
         />
       </main>
+      <AppInspector v-if="editor.inspectorOpen" />
     </div>
   </div>
   <AppAskDialog />

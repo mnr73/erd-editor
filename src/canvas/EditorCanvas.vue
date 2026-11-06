@@ -867,7 +867,10 @@ const relationOpen = computed({
   get: () => !!editor.relationEditor,
   set: (v) => !v && editor.closeRelationEditor(),
 });
-const indexAnchor = ref(null);
+// derived from the store so the Inspector can open the index editor too
+const indexAnchor = computed(() =>
+  editor.indexEditor ? tableAnchor(editor.indexEditor.tableId) : null,
+);
 const indexOpen = computed({
   get: () => !!editor.indexEditor,
   set: (v) => !v && editor.closeIndexEditor(),
@@ -888,7 +891,6 @@ function tableAnchor(tableId) {
 }
 
 async function showIndexEditor(tableId, options) {
-  indexAnchor.value = tableAnchor(tableId);
   editor.openIndexEditor(tableId, options);
 }
 function openIndexFromColumn(indexId) {
@@ -1000,6 +1002,8 @@ function onKeyDown(e) {
   if (isTyping(e)) return;
   const mod = e.ctrlKey || e.metaKey;
   const k = e.key.toLowerCase();
+  // plain keys typed while a button inside the Inspector has focus must not act on the canvas
+  if (!mod && e.target.closest?.("[data-inspector]")) return;
 
   if (e.code === "Space") {
     if (!spaceDown.value) spaceDown.value = true;

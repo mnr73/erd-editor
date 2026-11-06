@@ -15,7 +15,10 @@ import { useDocumentStore } from "@/stores/document";
  * One relationship: both ends (table.column + cardinality), the derived kind (1:N …), On Delete /
  * On Update, an optional label, swap and delete. Every change is written immediately.
  */
-const props = defineProps({ refId: { type: String, required: true } });
+const props = defineProps({
+  refId: { type: String, required: true },
+  fluid: Boolean,
+});
 const emit = defineEmits(["close"]);
 
 const { t } = useI18n();
@@ -54,7 +57,8 @@ function remove() {
   <div
     v-if="ref"
     data-workspace
-    class="flex w-[320px] flex-col gap-3 p-3"
+    class="flex flex-col gap-3 p-3"
+    :class="props.fluid ? 'w-full' : 'w-[320px]'"
     @keydown.enter.self.prevent
   >
     <div class="flex items-center gap-2" dir="ltr">

@@ -130,3 +130,6 @@ export { default as IconRelationSwap } from "~icons/hugeicons/arrow-left-right";
 
 /** Notation legend toggle (the "?" in the tool rail) */
 export { default as IconLegend } from "~icons/hugeicons/help-circle";
+
+/** Toggle the Inspector side panel; flips in RTL via `rtl:-scale-x-100` */
+export { default as IconInspector } from "~icons/hugeicons/sidebar-right";

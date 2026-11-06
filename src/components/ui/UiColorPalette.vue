@@ -18,6 +18,7 @@ const model = defineModel({ type: [String, null], default: null });
 const props = defineProps({
   custom: { type: Array, default: () => [] }, // user colors, #rrggbb
   allowNone: { type: Boolean, default: true },
+  flush: Boolean, // no own padding / fixed width: sits flush inside a panel
 });
 const emit = defineEmits(["add", "remove"]);
 
@@ -37,7 +38,10 @@ function confirmAdd() {
 </script>
 
 <template>
-  <div class="flex w-[236px] flex-col gap-3 p-3">
+  <div
+    class="flex flex-col gap-3"
+    :class="props.flush ? 'w-full' : 'w-[236px] p-3'"
+  >
     <section class="flex flex-col gap-2">
       <h3 class="text-[11px] font-medium text-muted">
         {{ t("palette.title") }}

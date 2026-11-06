@@ -20,8 +20,9 @@ import { useDocumentStore } from "@/stores/document";
 const props = defineProps({
   tableId: { type: String, required: true },
   columnId: { type: String, required: true },
+  fluid: Boolean, // fill the parent (Inspector) instead of the popover width
 });
-const emit = defineEmits(["close", "navigate", "index"]);
+const emit = defineEmits(["close", "navigate", "index", "removed"]);
 
 const { t } = useI18n();
 const doc = useDocumentStore();
@@ -66,6 +67,7 @@ function toggle(key) {
 }
 
 function remove() {
+  emit("removed", props.columnId);
   doc.removeColumn(props.tableId, props.columnId);
   emit("close");
 }
@@ -83,7 +85,8 @@ function onKey(e) {
   <div
     v-if="column"
     data-workspace
-    class="flex w-[300px] flex-col gap-3 p-3"
+    class="flex flex-col gap-3 p-3"
+    :class="props.fluid ? 'w-full' : 'w-[300px]'"
     @keydown="onKey"
   >
     <div class="flex gap-2" dir="ltr">

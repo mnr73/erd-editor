@@ -1,8 +1,17 @@
-import { ref, shallowRef } from "vue";
+import { computed, ref, shallowRef } from "vue";
 
 import { defineStore } from "pinia";
 
 import { rangeIds } from "@/model/columns";
+
+const INSPECTOR_KEY = "erd-editor.inspector";
+const readInspectorOpen = () => {
+    try {
+        return localStorage.getItem(INSPECTOR_KEY) !== "0";
+    } catch {
+        return true;
+    }
+};
 
 export const TOOLS = ["select", "pan", "table", "relation", "section"];
 
@@ -30,21 +39,48 @@ export const useEditorStore = defineStore("editor", () => {
     const hoverRefId = ref(null);
     // Relation editor popover: { refId, anchor: {x,y} }
     const legendOpen = ref(false);
+    // Inspector (right panel). When it is open, editing a column / line / note happens there instead
+    // of in a popover. `inspectorColumn` = the column expanded in its Columns tab.
+    const inspectorOpen = ref(readInspectorOpen());
+    const inspectorTab = ref("table"); // table | columns | rels | note
+    const inspectorColumn = ref(null); // { tableId, columnId }
+    const inspectorBack = ref(null); // table to return to from a relationship opened out of its list
+    function setInspectorOpen(v) {
+        inspectorOpen.value = v;
+        try {
+            localStorage.setItem(INSPECTOR_KEY, v ? "1" : "0");
+        } catch {
+            /* storage unavailable: the panel just won't be remembered */
+        }
+    }
+    const toggleInspector = () => setInspectorOpen(!inspectorOpen.value);
     // Note editor popover: the id of the table / section whose note is open
     const noteEditor = ref(null);
-    const openNoteEditor = (id) => (noteEditor.value = id);
+    function openNoteEditor(id) {
+        if (inspectorOpen.value) {
+            selectedRefId.value = null;
+            selected.value = new Set([id]);
+            inspectorTab.value = "note";
+            return;
+        }
+        noteEditor.value = id;
+    }
     const closeNoteEditor = () => (noteEditor.value = null);
     const relationEditor = ref(null);
-    const openRelationEditor = (refId, anchor) =>
-        (relationEditor.value = { refId, anchor });
+    function openRelationEditor(refId, anchor) {
+        if (inspectorOpen.value) return selectRef(refId);
+        relationEditor.value = { refId, anchor };
+    }
     const closeRelationEditor = () => (relationEditor.value = null);
 
     function setTool(next) {
         if (TOOLS.includes(next)) tool.value = next;
     }
 
-    function selectRef(id) {
+    /** `back` = the table to return to from the Inspector; any other way of selecting clears it. */
+    function selectRef(id, { back = null } = {}) {
         selectedRefId.value = id;
+        inspectorBack.value = id ? back : null;
         if (id) {
             selected.value = new Set();
             columnSelection.value = null;
@@ -54,6 +90,12 @@ export const useEditorStore = defineStore("editor", () => {
     function setSelection(ids) {
         selected.value = new Set(ids);
         if (selected.value.size) selectedRefId.value = null;
+        const ic = inspectorColumn.value;
+        if (
+            ic &&
+            !(selected.value.size === 1 && selected.value.has(ic.tableId))
+        )
+            inspectorColumn.value = null;
         if (
             columnSelection.value &&
             !selected.value.has(columnSelection.value.tableId)
@@ -97,6 +139,10 @@ export const useEditorStore = defineStore("editor", () => {
         if (columnSelection.value) {
             selected.value = new Set([table.id]);
             selectedRefId.value = null;
+            if (inspectorOpen.value && ids.size === 1) {
+                inspectorColumn.value = { tableId: table.id, columnId: id };
+                inspectorTab.value = "columns";
+            }
         }
     }
     const clearColumnSelection = () => (columnSelection.value = null);
@@ -117,8 +163,28 @@ export const useEditorStore = defineStore("editor", () => {
         renaming.value.tableId === tableId &&
         (renaming.value.columnId ?? null) === columnId;
 
-    const openColumnPopover = (tableId, columnId) =>
-        (columnPopover.value = { tableId, columnId });
+    function openColumnPopover(tableId, columnId) {
+        if (inspectorOpen.value) {
+            selectedRefId.value = null;
+            selected.value = new Set([tableId]);
+            inspectorColumn.value = { tableId, columnId };
+            inspectorTab.value = "columns";
+            return;
+        }
+        columnPopover.value = { tableId, columnId };
+    }
+    /** The column whose editor is open (popover or Inspector): its row stays highlighted on the canvas. */
+    const activeColumn = computed(() => {
+        if (columnPopover.value) return columnPopover.value;
+        const ic = inspectorColumn.value;
+        return inspectorOpen.value &&
+            inspectorTab.value === "columns" &&
+            ic &&
+            selected.value.size === 1 &&
+            selected.value.has(ic.tableId)
+            ? ic
+            : null;
+    });
     const closeColumnPopover = () => (columnPopover.value = null);
     const openIndexEditor = (tableId, { columns = [], focus = null } = {}) =>
         (indexEditor.value = { tableId, columns, focus });
@@ -148,6 +214,13 @@ export const useEditorStore = defineStore("editor", () => {
         selectedRefId,
         hoverRefId,
         legendOpen,
+        inspectorOpen,
+        inspectorTab,
+        inspectorColumn,
+        inspectorBack,
+        setInspectorOpen,
+        toggleInspector,
+        activeColumn,
         noteEditor,
         openNoteEditor,
         closeNoteEditor,
