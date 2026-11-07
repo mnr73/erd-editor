@@ -33,7 +33,13 @@ const lang = computed({
     class="flex h-[var(--size-titlebar)] shrink-0 items-center gap-3 border-b border-line bg-app px-3"
   >
     <div class="flex min-w-0 items-center gap-2">
-      <span class="size-5 shrink-0 rounded-[6px] bg-accent" />
+      <img
+        src="/icon.svg"
+        alt=""
+        aria-hidden="true"
+        class="size-5 shrink-0"
+        draggable="false"
+      />
       <span
         class="truncate font-mono text-xs text-faint"
         dir="ltr"

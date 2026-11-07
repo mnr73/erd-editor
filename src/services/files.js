@@ -1,7 +1,9 @@
 import { askChoice } from "@/composables/useAsk";
 import { useToast } from "@/composables/useToast";
 import { i18n } from "@/i18n";
+import { buildSampleDocument } from "@/model/sample";
 import { useDocumentStore } from "@/stores/document";
+import { useEditorStore } from "@/stores/editor";
 import {
     ensureExt,
     isTauri,
@@ -59,8 +61,30 @@ export async function openWithDialog() {
     if (paths.length) await openPaths(paths);
 }
 
+/** The "new board" button / Ctrl+N: asks which kind (see AppNewBoardDialog). */
 export function newBoard() {
+    useEditorStore().openNew();
+}
+
+/** A blank board in a new tab (or in the empty start tab). */
+export function newEmptyBoard() {
     useDocumentStore().newTab();
+}
+
+/** The sample board, worded in the UI language. Opens as a new, unsaved tab. */
+export function newSampleBoard() {
+    const text = Object.fromEntries(
+        [
+            "name",
+            "boardNote",
+            "categoriesNote",
+            "slugNote",
+            "sectionAccounts",
+            "sectionContent",
+            "sticky",
+        ].map((k) => [k, t(`sample.${k}`)]),
+    );
+    useDocumentStore().openDocument(buildSampleDocument(text));
 }
 
 /** Save the active tab; asks for a path when it has none. Returns true when saved. */

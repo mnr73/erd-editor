@@ -143,10 +143,13 @@
     "title": "ERD Editor",
     "subtitle": "Draw database diagrams in one .erd.json file.",
     "new": "New board",
-    "newHint": "Start with an empty canvas",
     "open": "Open file…",
     "openHint": "Pick a .erd.json from disk",
-    "browserNote": "File dialogs are only available in the desktop app."
+    "browserNote": "File dialogs are only available in the desktop app.",
+    "empty": "Empty board",
+    "emptyHint": "Start with an empty canvas",
+    "sample": "Sample board",
+    "sampleHint": "A small blog schema with sections, keys, relations and notes to explore"
   },
   "index": {
     "title": "Indexes",
@@ -541,5 +544,14 @@
       "rightClick": "Context menu on anything"
     },
     "tipsTitle": "Tips that save time"
+  },
+  "sample": {
+    "name": "Sample blog",
+    "boardNote": "A small blog database to explore the editor. Edit or delete anything.",
+    "slugNote": "Used in the URL; must be unique.",
+    "sectionAccounts": "Accounts",
+    "sectionContent": "Content",
+    "sticky": "Start here: double-click empty canvas for a table, drag from a column's dot to draw a relationship, press ? for help.",
+    "categoriesNote": "Categories can nest: parent_id points at another category."
   }
 }

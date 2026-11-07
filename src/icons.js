@@ -120,6 +120,7 @@ export { default as IconRelationHandle } from "~icons/hugeicons/link-04";
 
 /** New board / new tab */
 export { default as IconNewFile } from "~icons/hugeicons/file-add";
+export { default as IconSampleBoard } from "~icons/hugeicons/database-01";
 /** A diagram file (tab, start page) */
 export { default as IconFile } from "~icons/hugeicons/file-01";
 

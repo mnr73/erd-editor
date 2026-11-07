@@ -6,6 +6,7 @@ import AppExportDialog from "@/components/AppExportDialog.vue";
 import AppHelpDialog from "@/components/AppHelpDialog.vue";
 import AppImportDialog from "@/components/AppImportDialog.vue";
 import AppInspector from "@/components/AppInspector.vue";
+import AppNewBoardDialog from "@/components/AppNewBoardDialog.vue";
 import AppTabBar from "@/components/AppTabBar.vue";
 import AppTitleBar from "@/components/AppTitleBar.vue";
 import StartPage from "@/components/StartPage.vue";
@@ -120,5 +121,6 @@ onBeforeUnmount(() => cleanups.forEach((fn) => fn?.()));
   <AppExportDialog />
   <AppHelpDialog />
   <AppImportDialog />
+  <AppNewBoardDialog />
   <UiToastHost />
 </template>

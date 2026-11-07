@@ -166,6 +166,11 @@ export const useEditorStore = defineStore("editor", () => {
     const closeHelp = () => (helpOpen.value = false);
     const toggleHelp = () => (helpOpen.value ? closeHelp() : openHelp());
 
+    // "New board" chooser (modal, not saved)
+    const newOpen = ref(false);
+    const openNew = () => (newOpen.value = true);
+    const closeNew = () => (newOpen.value = false);
+
     // Export / import dialogs (modal, not saved)
     const exportOpen = ref(false);
     const importOpen = ref(false);
@@ -269,6 +274,9 @@ export const useEditorStore = defineStore("editor", () => {
         exportOpen,
         exportScope,
         importOpen,
+        newOpen,
+        openNew,
+        closeNew,
         openExport,
         closeExport,
         openImport,
