@@ -5,9 +5,20 @@ import { useI18n } from "vue-i18n";
 
 import UiKbd from "@/components/ui/UiKbd.vue";
 
+import {
+  APP_AUTHOR,
+  APP_LICENSE,
+  APP_VERSION,
+  GITHUB_URL,
+  ISSUES_URL,
+  RELEASES_URL,
+  SITE_URL,
+  SITE_URL_FA,
+} from "@/app-info";
 import { FEATURE_GROUPS, TIPS } from "@/help/features";
 import { SHORTCUT_GROUPS } from "@/help/shortcuts";
 import {
+  IconBug,
   IconChevronDown,
   IconClose,
   IconColComment,
@@ -15,7 +26,10 @@ import {
   IconColIncrement,
   IconColIndex,
   IconColUnique,
+  IconDownload,
   IconDragHandle,
+  IconGithub,
+  IconGlobe,
   IconInsertColumn,
   IconMore,
   IconNote,
@@ -26,19 +40,31 @@ import {
 } from "@/icons";
 import { markerPath } from "@/model/relations";
 import { useEditorStore } from "@/stores/editor";
+import { openExternal } from "@/tauri";
 
 /**
- * Help dialog with three tabs:
+ * Help dialog with four tabs:
  *  - Icons: every symbol the board draws (column icons, keys, relationship ends, controls),
  *    rendered with the same icons and the same `markerPath` the canvas uses;
  *  - About: what the app is and what it can do;
- *  - Shortcuts: every key and mouse gesture, from src/help/shortcuts.js.
+ *  - Shortcuts: every key and mouse gesture, from src/help/shortcuts.js;
+ *  - Info: version, author, licence and the project links (src/app-info.js).
  */
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const editor = useEditorStore();
 const box = useTemplateRef("box");
 
-const TABS = ["icons", "about", "shortcuts"];
+const TABS = ["icons", "about", "shortcuts", "info"];
+
+const siteUrl = computed(() =>
+  locale.value === "fa" ? SITE_URL_FA : SITE_URL,
+);
+const LINKS = computed(() => [
+  { id: "github", url: GITHUB_URL, icon: IconGithub },
+  { id: "site", url: siteUrl.value, icon: IconGlobe },
+  { id: "releases", url: RELEASES_URL, icon: IconDownload },
+  { id: "issues", url: ISSUES_URL, icon: IconBug },
+]);
 
 /**
  * Tips mention keys inline as [[Alt+↑]]. In a right-to-left sentence a Latin run next to arrows or
@@ -395,6 +421,59 @@ const kinds = computed(() =>
                   <p class="mt-1 text-[11.5px] leading-[1.8] text-muted">
                     {{ t(`help.f.${f}.text`) }}
                   </p>
+                </li>
+              </ul>
+            </section>
+          </div>
+
+          <!-- INFO -->
+          <div
+            v-else-if="editor.helpTab === 'info'"
+            class="flex max-w-[78ch] flex-col gap-5"
+            data-help-section="info"
+          >
+            <section class="flex items-center gap-3">
+              <img src="/icon.svg" alt="" class="size-12" draggable="false" />
+              <div>
+                <h3 class="text-sm font-semibold text-fg">
+                  {{ t("app.name") }}
+                </h3>
+                <p class="text-xs text-muted" data-workspace>
+                  {{ t("help.info.version") }}
+                  <span class="font-mono text-fg-soft" data-app-version>{{
+                    APP_VERSION
+                  }}</span>
+                </p>
+              </div>
+            </section>
+            <dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-xs">
+              <dt class="text-muted">{{ t("help.info.author") }}</dt>
+              <dd class="text-fg-soft" data-workspace>{{ APP_AUTHOR }}</dd>
+              <dt class="text-muted">{{ t("help.info.license") }}</dt>
+              <dd class="text-fg-soft" data-workspace>{{ APP_LICENSE }}</dd>
+            </dl>
+            <section>
+              <h3 class="mb-2 text-xs font-semibold text-fg">
+                {{ t("help.info.links") }}
+              </h3>
+              <ul class="flex flex-col gap-1.5">
+                <li v-for="l in LINKS" :key="l.id">
+                  <button
+                    type="button"
+                    :data-help-link="l.id"
+                    class="inline-flex flex-wrap items-center gap-x-2 rounded-control px-2 py-1.5 text-start text-xs text-accent-text hover:bg-hover"
+                    @click="openExternal(l.url)"
+                  >
+                    <component :is="l.icon" class="size-4 shrink-0" />
+                    <span class="whitespace-nowrap">{{
+                      t(`help.info.link.${l.id}`)
+                    }}</span>
+                    <span
+                      class="font-mono text-[11px] whitespace-nowrap text-muted"
+                      dir="ltr"
+                      >{{ l.url.replace("https://", "") }}</span
+                    >
+                  </button>
                 </li>
               </ul>
             </section>

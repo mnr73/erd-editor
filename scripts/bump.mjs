@@ -24,7 +24,7 @@ const sub = (f, re, to) => {
 sub("package.json", /("version": ")[^"]+/, `$1${next}`);
 const lock = JSON.parse(read("package-lock.json"));
 lock.version = lock.packages[""].version = next;
-writeFileSync("package-lock.json", JSON.stringify(lock, null, 4) + "\n");
+writeFileSync("package-lock.json", JSON.stringify(lock, null, 2) + "\n");
 sub("src-tauri/tauri.conf.json", /("version": ")[^"]+/, `$1${next}`);
 sub("src-tauri/Cargo.toml", /^(version = ")[^"]+/m, `$1${next}`);
 sub(

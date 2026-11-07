@@ -364,7 +364,8 @@
     "tab": {
       "icons": "Icons & notation",
       "about": "About the app",
-      "shortcuts": "Shortcuts & tips"
+      "shortcuts": "Shortcuts & tips",
+      "info": "Info"
     },
     "group": {
       "files": "Files and tabs",
@@ -557,7 +558,19 @@
       "middleTab": "Close a tab",
       "rightClick": "Context menu on anything"
     },
-    "tipsTitle": "Tips that save time"
+    "tipsTitle": "Tips that save time",
+    "info": {
+      "version": "Version",
+      "author": "Author",
+      "license": "License",
+      "links": "Links",
+      "link": {
+        "github": "Source code on GitHub",
+        "site": "Website and tutorials",
+        "releases": "Releases and downloads",
+        "issues": "Report a problem"
+      }
+    }
   },
   "sample": {
     "name": "Sample blog",

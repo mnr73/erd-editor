@@ -64,6 +64,11 @@
         }
       }
     },
-    "longDescription": "Local ERD diagram editor. Opens *.erd.json files on a graphical canvas; exports SQL, DBML, PNG, SVG and Markdown."
+    "longDescription": "Local ERD diagram editor. Opens *.erd.json files on a graphical canvas; exports SQL, DBML, PNG, SVG and Markdown.",
+    "publisher": "mnrTech",
+    "copyright": "Copyright (c) 2026 mnrTech",
+    "license": "MIT",
+    "licenseFile": "../LICENSE",
+    "homepage": "https://mnr73.github.io/erd-editor/"
   }
 }

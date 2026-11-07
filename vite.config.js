@@ -1,5 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 import vue from "@vitejs/plugin-vue";
+import { readFileSync } from "node:fs";
 import { URL, fileURLToPath } from "node:url";
 import Icons from "unplugin-icons/vite";
 import { defineConfig } from "vite";
@@ -18,7 +19,12 @@ function iconsTreeShaking() {
 }
 
 // https://v2.tauri.app/start/frontend/vite/
+const { version } = JSON.parse(
+    readFileSync(new URL("./package.json", import.meta.url), "utf8"),
+);
+
 export default defineConfig({
+    define: { __APP_VERSION__: JSON.stringify(version) },
     plugins: [
         vue(),
         tailwindcss(),

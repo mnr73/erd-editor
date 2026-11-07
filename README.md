@@ -23,3 +23,7 @@ npm test && npm run lint
 Linux needs `libwebkit2gtk-4.1-dev build-essential libssl-dev librsvg2-dev libxdo-dev pkg-config`.
 
 Open a file from the command line with `erd-editor path/to/file.erd.json`; a second launch hands its file to the running window.
+
+## License
+
+[MIT](LICENSE) © mnrTech

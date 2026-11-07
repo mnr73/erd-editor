@@ -3,6 +3,7 @@ import { listen } from "@tauri-apps/api/event";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { ask, open, save } from "@tauri-apps/plugin-dialog";
+import { openUrl } from "@tauri-apps/plugin-opener";
 
 /** True when running inside the Tauri shell (false in a plain browser, e.g. `npm run dev`). */
 export const isTauri = () => "__TAURI_INTERNALS__" in window;
@@ -14,6 +15,12 @@ const EXT = ".erd.json";
 export async function readInitialFile() {
     if (!isTauri()) return null;
     return invoke("initial_file");
+}
+
+/** Open a web link in the user's browser (the desktop webview never navigates away from the app). */
+export async function openExternal(url) {
+    if (isTauri()) return openUrl(url);
+    window.open(url, "_blank", "noopener,noreferrer");
 }
 
 /** Called when a second launch forwards another file to the running instance. */
