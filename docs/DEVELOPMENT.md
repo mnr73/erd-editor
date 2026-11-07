@@ -74,3 +74,13 @@ Tests live in `tests/`. Most call `src/model` directly. For a UI change, run `np
 ## Releases
 
 SemVer. `npm run bump -- patch`, commit, `git tag vX.Y.Z`, `git push origin main vX.Y.Z`. GitHub Actions builds Linux, Windows and macOS and publishes the release. See [`RELEASING.md`](RELEASING.md).
+
+## The website
+
+`site/` is a plain static site (no build step): `index.html` (English) and `fa/index.html` (Persian, RTL) share `assets/style.css`. It is published to GitHub Pages by `.github/workflows/pages.yml` whenever `site/` changes on `main`. One-time setup: repo Settings → Pages → Source: **GitHub Actions**.
+
+- Preview: `cd site && python3 -m http.server 8099`.
+- Keep both languages in step when you change one.
+- `site/example.erd.json` is the file shown on the page. `tests/site.test.js` checks it is valid, matches the JSON Schema and is in the app's own saved form, so the page cannot show a file the app would reject.
+- Screenshots in `site/assets/app-*.png` come from the sample board; retake them when the UI changes.
+- Fonts in `site/assets/fonts` are the same files the app bundles (Inter, JetBrains Mono, Vazirmatn; licences in the font packages).

@@ -1,0 +1,89 @@
+{
+  "format": "erd-editor",
+  "version": 1,
+  "meta": {
+    "name": "shop",
+    "dbType": "postgres"
+  },
+  "tables": [
+    {
+      "id": "t_users",
+      "name": "users",
+      "color": "#4C8DFF",
+      "x": 80,
+      "y": 80,
+      "columns": [
+        {
+          "id": "c_users_id",
+          "name": "id",
+          "type": "bigint",
+          "pk": true,
+          "notNull": true,
+          "increment": true
+        },
+        {
+          "id": "c_users_email",
+          "name": "email",
+          "type": "varchar(255)",
+          "unique": true,
+          "notNull": true,
+          "note": "Login name"
+        }
+      ]
+    },
+    {
+      "id": "t_orders",
+      "name": "orders",
+      "x": 420,
+      "y": 80,
+      "columns": [
+        {
+          "id": "c_orders_id",
+          "name": "id",
+          "type": "bigint",
+          "pk": true,
+          "notNull": true,
+          "increment": true
+        },
+        {
+          "id": "c_orders_user",
+          "name": "user_id",
+          "type": "bigint",
+          "notNull": true
+        },
+        {
+          "id": "c_orders_status",
+          "name": "status",
+          "type": "varchar(20)",
+          "default": "'new'"
+        }
+      ]
+    }
+  ],
+  "refs": [
+    {
+      "id": "r_orders_user",
+      "label": "places",
+      "from": {
+        "table": "t_orders",
+        "columns": [
+          "c_orders_user"
+        ],
+        "cardinality": "0..*"
+      },
+      "to": {
+        "table": "t_users",
+        "columns": [
+          "c_users_id"
+        ],
+        "cardinality": "1"
+      },
+      "onDelete": "cascade"
+    }
+  ],
+  "view": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  }
+}

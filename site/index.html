@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ERD Editor: a local, file-based database diagram editor</title>
+  <meta name="description" content="Draw database diagrams in one .erd.json file. Local desktop app for Linux, Windows and macOS. Exports SQL, DBML, PNG, SVG and Markdown. Built to be read and edited by AI agents too." />
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+  <link rel="alternate" hreflang="en" href="https://mnr73.github.io/erd-editor/" />
+  <link rel="alternate" hreflang="fa" href="https://mnr73.github.io/erd-editor/fa/" />
+  <link rel="canonical" href="https://mnr73.github.io/erd-editor/" />
+  <meta property="og:title" content="ERD Editor" />
+  <meta property="og:description" content="Local database diagram editor. One .erd.json file is the whole project." />
+  <meta property="og:image" content="https://mnr73.github.io/erd-editor/assets/app-en-dark.png" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/icon.svg" alt="" width="28" height="28" />ERD Editor</a>
+    <nav class="links">
+      <a href="#why">Why</a>
+      <a href="#features">Features</a>
+      <a href="#start">Get started</a>
+      <a href="#ai">AI agents</a>
+      <a href="#compare">Compare</a>
+      <a href="#download">Download</a>
+      <a class="gh" href="https://github.com/mnr73/erd-editor">GitHub</a>
+      <a class="lang" href="fa/" hreflang="fa" lang="fa">فارسی</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap hero">
+  <h1>Database diagrams that live in one file</h1>
+  <p class="lead">A local desktop editor for ER diagrams. Your whole project is a single <code>.erd.json</code> file you can commit, diff and hand to an AI agent. No account, no cloud.</p>
+  <div class="btns">
+    <a class="btn primary" href="#download">Download</a>
+    <a class="btn" href="https://github.com/mnr73/erd-editor">View on GitHub</a>
+  </div>
+  <p class="small">Linux · Windows · macOS · free and open source</p>
+  <div class="shot"><img src="assets/app-en-dark.png" alt="ERD Editor showing a blog database with five tables in two sections, relationship lines and the Inspector panel" width="1440" height="900" /></div>
+</div>
+
+<section id="why">
+  <div class="wrap">
+    <h2>Why another ERD tool?</h2>
+    <p class="sub">Most diagram tools keep your schema in their cloud or in a format only they read. This one keeps it in a file you own.</p>
+    <div class="grid">
+      <div class="card"><h3>One file, one source of truth</h3><p>The <code>.erd.json</code> file is the project. SQL, DBML, images and Markdown are generated from it, never edited by hand. Keys are written in a fixed order and defaults are left out, so Git diffs stay small.</p></div>
+      <div class="card"><h3>Local and private</h3><p>Nothing is uploaded. Open with from your file manager, drop a file on the window, or use the dialog. Saves are atomic: a crash never leaves half a file.</p></div>
+      <div class="card"><h3>Made for AI agents too</h3><p>A documented format, a JSON Schema and a ready-made skill let an agent read and write your diagram as plain JSON. There is also an export that is a briefing written for an agent.</p></div>
+      <div class="card"><h3>Lines attach to columns</h3><p>Relationships connect a column to a column with Crow's Foot ends, not a box to a box. Both cardinalities, ON DELETE and ON UPDATE live on the line.</p></div>
+      <div class="card"><h3>Sections that move things</h3><p>Group tables into a frame by area. Moving the section moves everything inside; dragging a table out removes it from the group. Membership is worked out from the layout, never stored.</p></div>
+      <div class="card"><h3>English and Persian</h3><p>The whole interface is available in English and Persian, with right-to-left layout. Table data always keeps Latin digits.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <h2>Features</h2>
+    <p class="sub">Everything below is in the app today.</p>
+    <div class="grid">
+      <div class="card"><span class="tag">Draw</span><h3>Tables, columns, types</h3><p>Add a table by double-clicking the canvas. Tab moves to the next column. A type picker fills length, precision, scale and enum values, and hides types your database does not have.</p></div>
+      <div class="card"><span class="tag">Draw</span><h3>Indexes and keys</h3><p>Select columns and press <kbd>Ctrl</kbd>+<kbd>I</kbd> for a composite index with a chosen column order. PK, unique, not null, auto-increment and defaults are per column.</p></div>
+      <div class="card"><span class="tag">Organize</span><h3>Inspector and notes</h3><p>A side panel edits whatever is selected. Tables, columns and sections carry notes, and sticky notes can sit anywhere. Notes travel into the exports.</p></div>
+      <div class="card"><span class="tag">Organize</span><h3>Search, tabs, undo</h3><p><kbd>Ctrl</kbd>+<kbd>K</kbd> finds tables, columns and notes. Several boards open in tabs. Undo and redo keep 500 steps, including moves and resizes.</p></div>
+      <div class="card"><span class="tag">Share</span><h3>Export SQL and DBML</h3><p>CREATE TABLE, indexes and foreign keys for MySQL, PostgreSQL, SQLite, SQL Server or plain ANSI, and DBML for dbdiagram.io. Anything a database cannot express is reported, not dropped silently.</p></div>
+      <div class="card"><span class="tag">Share</span><h3>Images and selections</h3><p>PNG or SVG of the whole board or only of what you selected, in dark or light.</p></div>
+      <div class="card"><span class="tag">Share</span><h3>Import SQL</h3><p>Paste or open a schema dump (<code>CREATE TABLE</code>, indexes, foreign keys, comments, enums) and it becomes a new board.</p></div>
+      <div class="card"><span class="tag">Share</span><h3>Agent briefing</h3><p>A Markdown export with a short how-to-read guide, every table with its notes, relationships and open points.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <h2>Get started in a minute</h2>
+    <p class="sub">No sign-up and nothing to configure.</p>
+    <ol class="steps">
+      <li><b>Install it</b><span>Download the installer for your system below, or use the AppImage on Linux.</span></li>
+      <li><b>Try the sample</b><span>Press <kbd>Ctrl</kbd>+<kbd>N</kbd> and pick <em>Sample board</em> for a small blog database with sections, keys, relations and notes.</span></li>
+      <li><b>Draw your own</b><span>Double-click the canvas for a table. Drag from a column's dot to another table for a relationship. Press <kbd>?</kbd> for help.</span></li>
+      <li><b>Save and export</b><span><kbd>Ctrl</kbd>+<kbd>S</kbd> writes the <code>.erd.json</code>. <kbd>Ctrl</kbd>+<kbd>E</kbd> exports SQL, DBML, images or Markdown.</span></li>
+    </ol>
+    <h2 style="margin-top:48px">Keyboard</h2>
+    <div class="keys">
+      <div><span>New board</span><kbd>Ctrl N</kbd></div>
+      <div><span>Open</span><kbd>Ctrl O</kbd></div>
+      <div><span>Save</span><kbd>Ctrl S</kbd></div>
+      <div><span>Export</span><kbd>Ctrl E</kbd></div>
+      <div><span>Import SQL</span><kbd>Ctrl Shift I</kbd></div>
+      <div><span>Search</span><kbd>Ctrl K</kbd></div>
+      <div><span>Undo / redo</span><kbd>Ctrl Z</kbd> <kbd>Ctrl Y</kbd></div>
+      <div><span>Inspector</span><kbd>Ctrl \</kbd></div>
+      <div><span>Fit all</span><kbd>Shift 1</kbd></div>
+      <div><span>Rename</span><kbd>F2</kbd></div>
+      <div><span>Composite index</span><kbd>Ctrl I</kbd></div>
+      <div><span>Help</span><kbd>?</kbd> <kbd>F1</kbd></div>
+    </div>
+  </div>
+</section>
+
+<section id="ai">
+  <div class="wrap">
+    <h2>Built for people and AI agents</h2>
+    <p class="sub">Because the project is plain JSON with a schema, an agent can read your database design, change it and hand it back, and you open the result in the editor.</p>
+    <div class="cols">
+      <div>
+        <div class="grid" style="grid-template-columns:1fr">
+          <div class="card"><h3>1. The file format</h3><p>Every field is described in <a href="https://github.com/mnr73/erd-editor/blob/main/docs/FORMAT.md">docs/FORMAT.md</a>, with a machine-readable <a href="https://github.com/mnr73/erd-editor/blob/main/schema/erd.schema.json">JSON Schema</a>. Ids are stable, so renaming never breaks a reference.</p></div>
+          <div class="card"><h3>2. The agent skill</h3><p>A single Markdown file that teaches any coding agent the format, the rules for editing it safely, and how to check its work. <a href="https://github.com/mnr73/erd-editor/blob/main/skills/erd-editor/SKILL.md">Read the skill</a>, or give your agent this link:</p><p style="margin-top:10px"><code>https://raw.githubusercontent.com/mnr73/erd-editor/main/skills/erd-editor/SKILL.md</code></p></div>
+          <div class="card"><h3>3. Developing the app</h3><p>Contributors who use an agent get <a href="https://github.com/mnr73/erd-editor/blob/main/AGENTS.md">AGENTS.md</a>: the conventions and the traps the code does not tell you.</p></div>
+        </div>
+      </div>
+      <pre>{
+  "format": "erd-editor",
+  "version": 1,
+  "meta": { "name": "shop", "dbType": "postgres" },
+  "tables": [
+    {
+      "id": "t_orders", "name": "orders",
+      "columns": [
+        { "id": "c_orders_id", "name": "id",
+          "type": "bigint", "pk": true },
+        { "id": "c_orders_user", "name": "user_id",
+          "type": "bigint", "notNull": true }
+      ]
+    }
+  ],
+  "refs": [
+    {
+      "id": "r_orders_user", "label": "places",
+      "from": { "table": "t_orders",
+                "columns": ["c_orders_user"],
+                "cardinality": "0..*" },
+      "to":   { "table": "t_users",
+                "columns": ["c_users_id"],
+                "cardinality": "1" },
+      "onDelete": "cascade"
+    }
+  ]
+}</pre>
+    </div>
+    <p class="note">Shortened excerpt. The complete file is <a href="example.erd.json">example.erd.json</a>.</p>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="wrap">
+    <h2>How it compares</h2>
+    <p class="sub">Different tools suit different jobs. This is where this one fits.</p>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th class="me">ERD Editor</th><th>dbdiagram.io</th><th>drawDB</th><th>MySQL Workbench</th><th>draw.io</th></tr></thead>
+      <tbody>
+        <tr><td>Works offline, no account</td><td class="me y">Yes</td><td class="n">Online service</td><td class="n">Runs in the browser</td><td class="y">Yes</td><td class="y">Yes (desktop app)</td></tr>
+        <tr><td>Whole project is one plain-text file you own</td><td class="me y">JSON, with a schema</td><td class="n">Saved in the service</td><td class="n">Saved in the browser</td><td class="n">Own project format</td><td class="n">Diagram file (XML)</td></tr>
+        <tr><td>Models columns, keys and relationships (not just shapes)</td><td class="me y">Yes</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td><td class="n">No, general shapes</td></tr>
+        <tr><td>Documented JSON Schema and an agent skill</td><td class="me y">Yes</td><td class="n">No</td><td class="n">No</td><td class="n">No</td><td class="n">No</td></tr>
+        <tr><td>Connects to a live database to reverse-engineer it</td><td class="me n">No (imports a SQL dump)</td><td class="n">No</td><td class="n">No</td><td class="y">Yes</td><td class="n">No</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">The other columns are our understanding of those tools and may be out of date, so check their sites before deciding. If a cell is wrong, <a href="https://github.com/mnr73/erd-editor/issues">open an issue</a> and we will fix it. ERD Editor does not connect to a running database: it works from a SQL dump you import.</p>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <h2>Download</h2>
+    <p class="sub">Latest release, built by GitHub Actions for each system.</p>
+    <div class="dl" id="dl">
+      <a href="https://github.com/mnr73/erd-editor/releases/latest" data-os="linux"><b>Linux</b><span>.deb · .rpm · AppImage</span></a>
+      <a href="https://github.com/mnr73/erd-editor/releases/latest" data-os="windows"><b>Windows</b><span>.msi · .exe installer</span></a>
+      <a href="https://github.com/mnr73/erd-editor/releases/latest" data-os="mac"><b>macOS</b><span>.dmg · Apple Silicon and Intel</span></a>
+    </div>
+    <p class="note">The builds are not code-signed yet. Windows SmartScreen may say "unknown publisher": choose <em>More info</em>, then <em>Run anyway</em>. On macOS, right-click the app and choose <em>Open</em> the first time.</p>
+    <p class="note">Or build it yourself: <code>git clone https://github.com/mnr73/erd-editor &amp;&amp; cd erd-editor &amp;&amp; npm install &amp;&amp; npm run tauri build</code></p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>ERD Editor · Tauri 2 + Vue 3</span>
+    <span><a href="https://github.com/mnr73/erd-editor">GitHub</a> · <a href="https://github.com/mnr73/erd-editor/issues">Report an issue</a> · <a href="https://github.com/mnr73/erd-editor/blob/main/docs/DEVELOPMENT.md">Contribute</a> · <a href="fa/" lang="fa" hreflang="fa">فارسی</a></span>
+  </div>
+</footer>
+<script>
+  // highlight the download card for the visitor's system
+  (function () {
+    var p = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+    var ua = navigator.userAgent;
+    var os = /win/i.test(p) ? "windows" : /mac/i.test(p) ? "mac" : /linux|x11/i.test(p + ua) && !/android/i.test(ua) ? "linux" : "";
+    var el = os && document.querySelector('#dl [data-os="' + os + '"]');
+    if (el) el.classList.add("you");
+  })();
+</script>
+</body>
+</html>

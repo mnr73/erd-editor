@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ERD Editor: ویرایشگر محلی نمودار پایگاه‌داده</title>
+  <meta name="description" content="نمودار پایگاه‌داده را در یک فایل .erd.json بکشید. برنامه‌ی محلی برای لینوکس، ویندوز و مک. خروجی SQL، DBML، PNG، SVG و Markdown. برای کار با ایجنت‌های هوش مصنوعی هم ساخته شده است." />
+  <link rel="icon" href="../assets/icon.svg" type="image/svg+xml" />
+  <link rel="alternate" hreflang="en" href="https://mnr73.github.io/erd-editor/" />
+  <link rel="alternate" hreflang="fa" href="https://mnr73.github.io/erd-editor/fa/" />
+  <link rel="canonical" href="https://mnr73.github.io/erd-editor/fa/" />
+  <meta property="og:title" content="ERD Editor" />
+  <meta property="og:description" content="ویرایشگر محلی نمودار پایگاه‌داده. یک فایل .erd.json کل پروژه است." />
+  <meta property="og:image" content="https://mnr73.github.io/erd-editor/assets/app-fa-dark.png" />
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="../assets/icon.svg" alt="" width="28" height="28" />ERD Editor</a>
+    <nav class="links">
+      <a href="#why">چرا</a>
+      <a href="#features">قابلیت‌ها</a>
+      <a href="#start">شروع</a>
+      <a href="#ai">هوش مصنوعی</a>
+      <a href="#compare">مقایسه</a>
+      <a href="#download">دانلود</a>
+      <a class="gh" href="https://github.com/mnr73/erd-editor">GitHub</a>
+      <a class="lang" href="../" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap hero">
+  <h1>نمودار پایگاه‌داده، در یک فایل</h1>
+  <p class="lead">ویرایشگر محلی نمودار <bdi>ER</bdi>. کل پروژه‌ی شما یک فایل <code>.erd.json</code> است که می‌شود کامیت کرد، diff گرفت و به یک ایجنت هوش مصنوعی داد. بدون حساب کاربری و بدون ابر.</p>
+  <div class="btns">
+    <a class="btn primary" href="#download">دانلود</a>
+    <a class="btn" href="https://github.com/mnr73/erd-editor">مشاهده در GitHub</a>
+  </div>
+  <p class="small">لینوکس · ویندوز · مک · رایگان و متن‌باز</p>
+  <div class="shot"><img src="../assets/app-fa-dark.png" alt="ERD Editor با رابط فارسی: یک پایگاه‌داده‌ی وبلاگ با پنج جدول در دو سکشن، خطوط رابطه و پنل Inspector" width="1440" height="900" /></div>
+</div>
+
+<section id="why">
+  <div class="wrap">
+    <h2>چرا یک ابزار ERD دیگر؟</h2>
+    <p class="sub">بیشتر ابزارهای نمودار، طرح پایگاه‌داده‌ی شما را در ابر خودشان یا در قالبی نگه می‌دارند که فقط خودشان می‌خوانند. این ابزار آن را در فایلی نگه می‌دارد که مال خودتان است.</p>
+    <div class="grid">
+      <div class="card"><h3>یک فایل، یک منبع حقیقت</h3><p>فایل <code>.erd.json</code> خودِ پروژه است. SQL، DBML، تصویر و Markdown از روی آن ساخته می‌شوند و هرگز دستی ویرایش نمی‌شوند. کلیدها با ترتیب ثابت نوشته می‌شوند و مقدارهای پیش‌فرض نمی‌آیند، پس diffهای Git کوچک می‌مانند.</p></div>
+      <div class="card"><h3>محلی و خصوصی</h3><p>هیچ چیز آپلود نمی‌شود. فایل را با Open with از مدیر فایل باز کنید، روی پنجره بکشید یا از دیالوگ انتخاب کنید. ذخیره اتمی است: خرابی هرگز نیمی از فایل را نمی‌گذارد.</p></div>
+      <div class="card"><h3>برای ایجنت‌های هوش مصنوعی هم</h3><p>یک فرمت مستند، JSON Schema و یک اسکیل آماده به ایجنت اجازه می‌دهد نمودار شما را مثل JSON ساده بخواند و بنویسد. یک خروجی هم هست که اصلاً یک بریف برای ایجنت است.</p></div>
+      <div class="card"><h3>خط به ستون وصل می‌شود</h3><p>رابطه‌ها ستون را به ستون وصل می‌کنند، نه جعبه را به جعبه، با نماد Crow's Foot. هر دو کاردینالیتی، ON DELETE و ON UPDATE روی خط تنظیم می‌شوند.</p></div>
+      <div class="card"><h3>سکشنی که همراهش را می‌برد</h3><p>جدول‌ها را بر اساس حوزه در یک قاب جمع کنید. با جابه‌جایی سکشن همه‌ی داخلش می‌روند و با کشیدن یک جدول به بیرون از گروه خارج می‌شود. عضویت از روی چیدمان به دست می‌آید و ذخیره نمی‌شود.</p></div>
+      <div class="card"><h3>فارسی و انگلیسی</h3><p>کل رابطه‌ی کاربری هم فارسی دارد هم انگلیسی، با چیدمان راست‌به‌چپ. داده‌ی جدول‌ها همیشه عدد لاتین دارد.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <h2>قابلیت‌ها</h2>
+    <p class="sub">هر چه این‌جا آمده، همین حالا در برنامه هست.</p>
+    <div class="grid">
+      <div class="card"><span class="tag">رسم</span><h3>جدول، ستون، نوع</h3><p>با دابل‌کلیک روی بوم جدول اضافه کنید. Tab به ستون بعدی می‌رود. انتخابگر نوع، طول، دقت، مقیاس و مقدارهای enum را پر می‌کند و نوع‌هایی را که پایگاه‌داده‌ی شما ندارد پنهان می‌کند.</p></div>
+      <div class="card"><span class="tag">رسم</span><h3>ایندکس و کلید</h3><p>چند ستون را انتخاب کنید و <kbd>Ctrl</kbd>+<kbd>I</kbd> بزنید تا ایندکس ترکیبی با ترتیب دلخواه بسازید. PK، unique، not null، auto-increment و مقدار پیش‌فرض برای هر ستون جدا تنظیم می‌شود.</p></div>
+      <div class="card"><span class="tag">سازماندهی</span><h3>Inspector و یادداشت</h3><p>پنل کناری هر چه را انتخاب کرده‌اید ویرایش می‌کند. جدول، ستون و سکشن یادداشت دارند و یادداشت چسبان را می‌شود هر جا گذاشت. یادداشت‌ها به خروجی‌ها هم می‌روند.</p></div>
+      <div class="card"><span class="tag">سازماندهی</span><h3>جستجو، تب، Undo</h3><p><kbd>Ctrl</kbd>+<kbd>K</kbd> جدول، ستون و یادداشت را پیدا می‌کند. چند بورد در تب‌ها باز می‌شوند. Undo و Redo ۵۰۰ مرحله نگه می‌دارند، با جابه‌جایی و تغییر اندازه.</p></div>
+      <div class="card"><span class="tag">اشتراک</span><h3>خروجی SQL و DBML</h3><p>CREATE TABLE، ایندکس و کلید خارجی برای MySQL، PostgreSQL، SQLite، SQL Server یا ANSI ساده، و DBML برای dbdiagram.io. هر چه پایگاه‌داده نتواند بیان کند گزارش می‌شود و بی‌صدا حذف نمی‌شود.</p></div>
+      <div class="card"><span class="tag">اشتراک</span><h3>تصویر و خروجی از انتخاب</h3><p>PNG یا SVG از کل بورد یا فقط از آنچه انتخاب کرده‌اید، تیره یا روشن.</p></div>
+      <div class="card"><span class="tag">اشتراک</span><h3>وارد کردن SQL</h3><p>یک dump طرح (<code>CREATE TABLE</code>، ایندکس، کلید خارجی، کامنت، enum) را باز کنید یا بچسبانید تا یک بورد جدید شود.</p></div>
+      <div class="card"><span class="tag">اشتراک</span><h3>بریف ایجنت</h3><p>خروجی Markdown با راهنمای کوتاه خواندن، همه‌ی جدول‌ها با یادداشت‌هایشان، رابطه‌ها و نکته‌های باز.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <h2>در یک دقیقه شروع کنید</h2>
+    <p class="sub">بدون ثبت‌نام و بدون تنظیمات.</p>
+    <ol class="steps">
+      <li><b>نصب کنید</b><span>نصب‌کننده‌ی سیستم خود را از پایین بگیرید، یا در لینوکس AppImage را اجرا کنید.</span></li>
+      <li><b>نمونه را ببینید</b><span><kbd>Ctrl</kbd>+<kbd>N</kbd> بزنید و <em>بورد نمونه</em> را انتخاب کنید: یک پایگاه‌داده‌ی وبلاگ کوچک با سکشن، کلید، رابطه و یادداشت.</span></li>
+      <li><b>مال خودتان را بکشید</b><span>روی بوم دابل‌کلیک کنید تا جدول بسازید. از نقطه‌ی یک ستون به جدول دیگر بکشید تا رابطه بسازید. با <kbd>?</kbd> راهنما باز می‌شود.</span></li>
+      <li><b>ذخیره و خروجی</b><span><kbd>Ctrl</kbd>+<kbd>S</kbd> فایل <code>.erd.json</code> را می‌نویسد. <kbd>Ctrl</kbd>+<kbd>E</kbd> خروجی SQL، DBML، تصویر یا Markdown می‌دهد.</span></li>
+    </ol>
+    <h2 style="margin-top:48px">میان‌برها</h2>
+    <div class="keys">
+      <div><span>بورد جدید</span><kbd>Ctrl N</kbd></div>
+      <div><span>باز کردن</span><kbd>Ctrl O</kbd></div>
+      <div><span>ذخیره</span><kbd>Ctrl S</kbd></div>
+      <div><span>خروجی</span><kbd>Ctrl E</kbd></div>
+      <div><span>وارد کردن SQL</span><kbd>Ctrl Shift I</kbd></div>
+      <div><span>جستجو</span><kbd>Ctrl K</kbd></div>
+      <div><span>Undo / Redo</span><kbd>Ctrl Z</kbd> <kbd>Ctrl Y</kbd></div>
+      <div><span>Inspector</span><kbd>Ctrl \</kbd></div>
+      <div><span>نمایش همه</span><kbd>Shift 1</kbd></div>
+      <div><span>تغییر نام</span><kbd>F2</kbd></div>
+      <div><span>ایندکس ترکیبی</span><kbd>Ctrl I</kbd></div>
+      <div><span>راهنما</span><kbd>?</kbd> <kbd>F1</kbd></div>
+    </div>
+    <p class="note">میان‌برها روی کیبورد فارسی هم کار می‌کنند، چون کلید فیزیکی را می‌خوانند.</p>
+  </div>
+</section>
+
+<section id="ai">
+  <div class="wrap">
+    <h2>برای آدم‌ها و ایجنت‌های هوش مصنوعی</h2>
+    <p class="sub">چون پروژه JSON ساده با یک schema است، ایجنت می‌تواند طرح پایگاه‌داده‌ی شما را بخواند، تغییر دهد و پس بدهد، و شما نتیجه را در ویرایشگر باز می‌کنید.</p>
+    <div class="cols">
+      <div>
+        <div class="grid" style="grid-template-columns:1fr">
+          <div class="card"><h3>۱. فرمت فایل</h3><p>همه‌ی فیلدها در <a href="https://github.com/mnr73/erd-editor/blob/main/docs/FORMAT.md">docs/FORMAT.md</a> توضیح داده شده‌اند، همراه با <a href="https://github.com/mnr73/erd-editor/blob/main/schema/erd.schema.json">JSON Schema</a> قابل‌خواندن برای ماشین. شناسه‌ها ثابت‌اند، پس تغییر نام هیچ ارجاعی را خراب نمی‌کند.</p></div>
+          <div class="card"><h3>۲. اسکیل ایجنت</h3><p>یک فایل Markdown که به هر ایجنت کدنویسی فرمت، قواعد ویرایش امن و راه بررسی کارش را یاد می‌دهد. <a href="https://github.com/mnr73/erd-editor/blob/main/skills/erd-editor/SKILL.md">اسکیل را بخوانید</a>، یا این لینک را به ایجنت خود بدهید:</p><p style="margin-top:10px"><code>https://raw.githubusercontent.com/mnr73/erd-editor/main/skills/erd-editor/SKILL.md</code></p></div>
+          <div class="card"><h3>۳. توسعه‌ی خود برنامه</h3><p>مشارکت‌کننده‌هایی که از ایجنت استفاده می‌کنند فایل <a href="https://github.com/mnr73/erd-editor/blob/main/AGENTS.md">AGENTS.md</a> را دارند: قراردادها و تله‌هایی که از روی کد معلوم نیست.</p></div>
+        </div>
+      </div>
+      <pre>{
+  "format": "erd-editor",
+  "version": 1,
+  "meta": { "name": "shop", "dbType": "postgres" },
+  "tables": [
+    {
+      "id": "t_orders", "name": "orders",
+      "columns": [
+        { "id": "c_orders_id", "name": "id",
+          "type": "bigint", "pk": true },
+        { "id": "c_orders_user", "name": "user_id",
+          "type": "bigint", "notNull": true }
+      ]
+    }
+  ],
+  "refs": [
+    {
+      "id": "r_orders_user", "label": "places",
+      "from": { "table": "t_orders",
+                "columns": ["c_orders_user"],
+                "cardinality": "0..*" },
+      "to":   { "table": "t_users",
+                "columns": ["c_users_id"],
+                "cardinality": "1" },
+      "onDelete": "cascade"
+    }
+  ]
+}</pre>
+    </div>
+    <p class="note">خلاصه‌شده است. فایل کامل: <a href="../example.erd.json">example.erd.json</a>.</p>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="wrap">
+    <h2>مقایسه با ابزارهای مشابه</h2>
+    <p class="sub">ابزارهای مختلف به کارهای مختلف می‌خورند. جای این ابزار این‌جاست.</p>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th class="me">ERD Editor</th><th>dbdiagram.io</th><th>drawDB</th><th>MySQL Workbench</th><th>draw.io</th></tr></thead>
+      <tbody>
+        <tr><td>بدون اینترنت و بدون حساب کاربری</td><td class="me y">بله</td><td class="n">سرویس آنلاین</td><td class="n">داخل مرورگر</td><td class="y">بله</td><td class="y">بله (نسخه‌ی دسکتاپ)</td></tr>
+        <tr><td>کل پروژه یک فایل متنی ساده که مال شماست</td><td class="me y"><bdi>JSON</bdi> همراه با <bdi>schema</bdi></td><td class="n">در خود سرویس ذخیره می‌شود</td><td class="n">در مرورگر ذخیره می‌شود</td><td class="n">قالب پروژه‌ی خودش</td><td class="n">فایل نمودار (XML)</td></tr>
+        <tr><td>ستون، کلید و رابطه را می‌شناسد (فقط شکل نیست)</td><td class="me y">بله</td><td class="y">بله</td><td class="y">بله</td><td class="y">بله</td><td class="n">نه، شکل‌های عمومی</td></tr>
+        <tr><td>JSON Schema مستند و اسکیل ایجنت</td><td class="me y">بله</td><td class="n">نه</td><td class="n">نه</td><td class="n">نه</td><td class="n">نه</td></tr>
+        <tr><td>اتصال به پایگاه‌داده‌ی زنده و مهندسی معکوس</td><td class="me n">نه (dump ‏SQL را وارد می‌کند)</td><td class="n">نه</td><td class="n">نه</td><td class="y">بله</td><td class="n">نه</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">ستون‌های ابزارهای دیگر برداشت ماست و ممکن است قدیمی شده باشد، پس پیش از تصمیم سایت خودشان را ببینید. اگر خانه‌ای غلط است <a href="https://github.com/mnr73/erd-editor/issues">یک issue بازکنید</a> تا درست کنیم. ERD Editor به پایگاه‌داده‌ی در حال اجرا وصل نمی‌شود: با dump ‏SQL کار می‌کند.</p>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <h2>دانلود</h2>
+    <p class="sub">آخرین نسخه، ساخته‌شده با GitHub Actions برای هر سیستم.</p>
+    <div class="dl" id="dl">
+      <a href="https://github.com/mnr73/erd-editor/releases/latest" data-os="linux"><b>لینوکس</b><span><bdi dir="ltr">.deb · .rpm · AppImage</bdi></span></a>
+      <a href="https://github.com/mnr73/erd-editor/releases/latest" data-os="windows"><b>ویندوز</b><span>نصب‌کننده‌ی <bdi dir="ltr">.msi</bdi> و <bdi dir="ltr">.exe</bdi></span></a>
+      <a href="https://github.com/mnr73/erd-editor/releases/latest" data-os="mac"><b>مک</b><span><bdi dir="ltr">.dmg</bdi> · اپل سیلیکون و اینتل</span></a>
+    </div>
+    <p class="note">نسخه‌ها هنوز امضای دیجیتال ندارند. ویندوز ممکن است SmartScreen با «ناشر ناشناس» هشدار بدهد: <em>More info</em> و بعد <em>Run anyway</em> را بزنید. در مک بار اول روی برنامه راست‌کلیک و <em>Open</em> را انتخاب کنید.</p>
+    <p class="note">یا خودتان بسازید: <code>git clone https://github.com/mnr73/erd-editor &amp;&amp; cd erd-editor &amp;&amp; npm install &amp;&amp; npm run tauri build</code></p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>ERD Editor · Tauri 2 + Vue 3</span>
+    <span><a href="https://github.com/mnr73/erd-editor">GitHub</a> · <a href="https://github.com/mnr73/erd-editor/issues">گزارش مشکل</a> · <a href="https://github.com/mnr73/erd-editor/blob/main/docs/DEVELOPMENT.md">مشارکت</a> · <a href="../" lang="en" hreflang="en">English</a></span>
+  </div>
+</footer>
+<script>
+  (function () {
+    var p = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+    var ua = navigator.userAgent;
+    var os = /win/i.test(p) ? "windows" : /mac/i.test(p) ? "mac" : /linux|x11/i.test(p + ua) && !/android/i.test(ua) ? "linux" : "";
+    var el = os && document.querySelector('#dl [data-os="' + os + '"]');
+    if (el) el.classList.add("you");
+  })();
+</script>
+</body>
+</html>
