@@ -51,8 +51,11 @@
       "deb": {
         "desktopTemplate": "erd-editor.desktop",
         "files": {
-          "/usr/share/mime/packages/erd-editor.xml": "../mime/erd-editor.xml"
-        }
+          "/usr/share/mime/packages/erd-editor.xml": "../mime/erd-editor.xml",
+          "/usr/share/doc/erd-editor/copyright": "linux/copyright"
+        },
+        "section": "devel",
+        "priority": "optional"
       },
       "appimage": {
         "files": {}
@@ -60,7 +63,8 @@
       "rpm": {
         "desktopTemplate": "erd-editor.desktop",
         "files": {
-          "/usr/share/mime/packages/erd-editor.xml": "../mime/erd-editor.xml"
+          "/usr/share/mime/packages/erd-editor.xml": "../mime/erd-editor.xml",
+          "/usr/share/licenses/erd-editor/LICENSE": "../LICENSE"
         }
       }
     },
