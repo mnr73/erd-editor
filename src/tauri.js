@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { ask, open, save } from "@tauri-apps/plugin-dialog";
 
@@ -20,6 +21,57 @@ export async function listenOpenFile(handler) {
     if (!isTauri()) return () => {};
     return listen("open-file", (e) => handler(e.payload));
 }
+
+/**
+ * Files dragged onto the window. `onHover(bool)` tells when a file is over the window,
+ * `onDrop(entries)` gets `[{ name, path }]` in the desktop app (the webview reports real paths)
+ * and `[{ name, file }]` in a browser (`npm run dev`). Returns the unlisten function.
+ */
+export async function listenFileDrop({ onHover, onDrop }) {
+    if (isTauri()) {
+        return getCurrentWebview().onDragDropEvent((e) => {
+            const p = e.payload;
+            if (p.type === "enter") onHover(true);
+            else if (p.type === "leave") onHover(false);
+            else if (p.type === "drop") {
+                onHover(false);
+                onDrop(p.paths.map((path) => ({ name: baseFile(path), path })));
+            }
+        });
+    }
+    const hasFiles = (e) => e.dataTransfer?.types?.includes("Files");
+    const over = (e) => {
+        if (!hasFiles(e)) return;
+        e.preventDefault();
+        onHover(true);
+    };
+    const leave = (e) => {
+        // leaving the window, not moving between child elements
+        if (!e.relatedTarget) onHover(false);
+    };
+    const drop = (e) => {
+        if (!hasFiles(e)) return;
+        e.preventDefault();
+        onHover(false);
+        onDrop(
+            [...e.dataTransfer.files].map((file) => ({
+                name: file.name,
+                file,
+            })),
+        );
+    };
+    window.addEventListener("dragover", over);
+    window.addEventListener("dragleave", leave);
+    window.addEventListener("drop", drop);
+    return () => {
+        window.removeEventListener("dragover", over);
+        window.removeEventListener("dragleave", leave);
+        window.removeEventListener("drop", drop);
+    };
+}
+
+const baseFile = (path) =>
+    path.slice(Math.max(path.lastIndexOf("/"), path.lastIndexOf("\\")) + 1);
 
 /** Native "open" dialog (multiple files allowed). Returns an array of paths ([] if cancelled). */
 export async function pickFiles() {

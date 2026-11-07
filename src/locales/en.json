@@ -132,7 +132,20 @@
     "openFailed": "Could not open {name}: {reason}",
     "openedWithWarnings": "{name} opened with {n} warning(s)",
     "unsavedTitle": "Save changes to {name}?",
-    "unsavedMessage": "Your changes will be lost if you don't save them."
+    "unsavedMessage": "Your changes will be lost if you don't save them.",
+    "dropTitle": "Drop to open",
+    "dropHint": "Only",
+    "dropNotErd": "{name} is not an .erd.json file",
+    "fatal": {
+      "invalid-json": "the file is not valid JSON",
+      "not-object": "the structure is not valid: the top level must be an object",
+      "wrong-format": "the structure is not valid: this is not an ERD Editor file (\"format\" must be \"erd-editor\")",
+      "bad-version": "the structure is not valid: \"version\" must be a whole number, 1 or more",
+      "newer-version": "the file was made by a newer version of ERD Editor (file version {found}, this app supports up to {supported})",
+      "missing-migration": "no way to upgrade this file version",
+      "bad-container": "the structure is not valid: \"{path}\" must be a list",
+      "duplicate-id": "the structure is not valid: duplicate id in \"{path}\""
+    }
   },
   "tabs": {
     "label": "Open boards",

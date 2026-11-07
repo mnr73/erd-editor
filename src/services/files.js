@@ -12,13 +12,19 @@ import {
     readFile,
     writeFile,
 } from "@/tauri";
-import { baseName } from "@/utils/path";
+import { baseName, isErdName } from "@/utils/path";
 
 /**
  * File actions shared by the title bar, tab bar, start page and shortcuts.
  * Everything that touches disk lives here so components stay presentational.
  */
 const t = (key, params) => i18n.global.t(key, params);
+
+/** Readable reason for a fatal validation code (falls back to the code itself). */
+function fatalReason(fatal) {
+    const key = `file.fatal.${fatal.code}`;
+    return i18n.global.te(key) ? t(key, fatal) : fatal.code;
+}
 
 function toastIssues(issues, name) {
     const toast = useToast();
@@ -27,7 +33,7 @@ function toastIssues(issues, name) {
         toast.push({
             kind: "error",
             timeout: 0,
-            text: t("file.openFailed", { name, reason: fatal.code }),
+            text: t("file.openFailed", { name, reason: fatalReason(fatal) }),
         });
     else if (issues.length)
         toast.push({
@@ -51,6 +57,32 @@ export async function openPaths(paths) {
                 kind: "error",
                 timeout: 0,
                 text: t("file.openFailed", { name: baseName(path), reason: e }),
+            });
+        }
+    }
+}
+
+/**
+ * Open files dropped on the window: `[{ name, path }]` (desktop) or `[{ name, file }]` (browser).
+ * Wrong extension and broken structure are reported, nothing is opened.
+ */
+export async function openDropped(entries) {
+    const doc = useDocumentStore();
+    const toast = useToast();
+    for (const { name, path, file } of entries) {
+        if (!isErdName(name)) {
+            toast.push({ kind: "error", text: t("file.dropNotErd", { name }) });
+            continue;
+        }
+        try {
+            const text = file ? await file.text() : await readFile(path);
+            const { id, issues } = doc.openText(text, path ?? null);
+            if (!id || issues.length) toastIssues(issues, baseName(name));
+        } catch (e) {
+            toast.push({
+                kind: "error",
+                timeout: 0,
+                text: t("file.openFailed", { name: baseName(name), reason: e }),
             });
         }
     }

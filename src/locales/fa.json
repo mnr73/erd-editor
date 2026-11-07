@@ -132,7 +132,20 @@
     "openFailed": "{name} باز نشد: {reason}",
     "openedWithWarnings": "{name} با {n} هشدار باز شد",
     "unsavedTitle": "تغییرات «{name}» ذخیره شود؟",
-    "unsavedMessage": "اگر ذخیره نکنید تغییرات از بین می‌رود."
+    "unsavedMessage": "اگر ذخیره نکنید تغییرات از بین می‌رود.",
+    "dropTitle": "برای باز کردن رها کنید",
+    "dropHint": "فقط فایل‌های",
+    "dropNotErd": "{name} فایل .erd.json نیست",
+    "fatal": {
+      "invalid-json": "فایل JSON معتبر نیست",
+      "not-object": "ساختار درست نیست: سطح بالای فایل باید یک شیء باشد",
+      "wrong-format": "ساختار درست نیست: این فایل ERD Editor نیست (مقدار \"format\" باید \"erd-editor\" باشد)",
+      "bad-version": "ساختار درست نیست: \"version\" باید عدد صحیح و ۱ یا بیشتر باشد",
+      "newer-version": "این فایل با نسخه‌ی جدیدتری از ERD Editor ساخته شده (نسخه‌ی فایل {found}، این برنامه تا {supported} را پشتیبانی می‌کند)",
+      "missing-migration": "راهی برای ارتقای این نسخه‌ی فایل نیست",
+      "bad-container": "ساختار درست نیست: \"{path}\" باید یک لیست باشد",
+      "duplicate-id": "ساختار درست نیست: شناسه‌ی تکراری در \"{path}\""
+    }
   },
   "tabs": {
     "label": "بوردهای باز",

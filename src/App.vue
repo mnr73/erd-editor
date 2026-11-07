@@ -2,6 +2,7 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
 import AppAskDialog from "@/components/AppAskDialog.vue";
+import AppDropOverlay from "@/components/AppDropOverlay.vue";
 import AppExportDialog from "@/components/AppExportDialog.vue";
 import AppHelpDialog from "@/components/AppHelpDialog.vue";
 import AppImportDialog from "@/components/AppImportDialog.vue";
@@ -19,6 +20,7 @@ import {
   closeTabWithConfirm,
   confirmCloseAll,
   newBoard,
+  openDropped,
   openPaths,
   openWithDialog,
   saveActive,
@@ -26,6 +28,7 @@ import {
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
 import {
+  listenFileDrop,
   listenOpenFile,
   onWindowCloseRequested,
   readInitialFile,
@@ -37,6 +40,7 @@ const editor = useEditorStore();
 const showGallery = new URLSearchParams(location.search).has("components");
 const cleanups = [];
 const titleBar = ref(null);
+const dragging = ref(false);
 
 /** App-wide file shortcuts. They work even while typing (they never insert text). */
 function onKeyDown(e) {
@@ -99,6 +103,12 @@ onMounted(async () => {
     doc.startBoard();
   }
   cleanups.push(await listenOpenFile((path) => openPaths([path])));
+  cleanups.push(
+    await listenFileDrop({
+      onHover: (v) => (dragging.value = v),
+      onDrop: openDropped,
+    }),
+  );
   cleanups.push(await onWindowCloseRequested(confirmCloseAll));
 });
 onBeforeUnmount(() => cleanups.forEach((fn) => fn?.()));
@@ -123,5 +133,6 @@ onBeforeUnmount(() => cleanups.forEach((fn) => fn?.()));
   <AppHelpDialog />
   <AppImportDialog />
   <AppNewBoardDialog />
+  <AppDropOverlay :show="dragging" />
   <UiToastHost />
 </template>

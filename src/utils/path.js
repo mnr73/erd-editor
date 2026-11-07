@@ -10,6 +10,11 @@ export function shortenHome(dir, home) {
     return home && dir.startsWith(home) ? `~${dir.slice(home.length)}` : dir;
 }
 
+/** True for a file name that ends in `.erd.json` (any case). */
+export function isErdName(name) {
+    return /\.erd\.json$/i.test(name ?? "");
+}
+
 /** Tab label: the file name without the `.erd.json` suffix. */
 export function baseName(path) {
     return splitPath(path)
