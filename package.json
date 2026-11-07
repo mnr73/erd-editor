@@ -1,7 +1,7 @@
 {
   "name": "erd-editor",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Local database diagram (ERD) editor. One .erd.json file is the whole project.",
   "license": "MIT",
   "author": "mnrTech",
