@@ -52,6 +52,25 @@ describe("sides", () => {
         expect(sides(tbl("a", 0, 0), tbl("b", 600, 0))).toEqual([1, -1]);
         expect(sides(tbl("a", 600, 0), tbl("b", 0, 0))).toEqual([-1, 1]);
     });
+    it("a narrow table under a wide one still overlaps it: loop, never run backwards", () => {
+        // centres are 75 apart but x ranges overlap (the sample board's posts / comments)
+        const wide = tbl("a", 550, 70, ["a_long_column_name_here", "id"]);
+        const narrow = tbl("b", 550, 334);
+        const rw = tableRect(wide);
+        const rn = tableRect(narrow);
+        expect(Math.abs(rw.x + rw.w / 2 - (rn.x + rn.w / 2))).toBeGreaterThan(
+            0,
+        );
+        expect(sides(wide, narrow)).toEqual([1, 1]);
+        expect(sides(narrow, wide)).toEqual([1, 1]);
+    });
+    it("tables with a small gap loop, with enough room they face each other", () => {
+        const a = tbl("a", 0, 0);
+        const w = tableRect(a).w;
+        expect(sides(a, tbl("b", w + 10, 0))).toEqual([1, 1]);
+        expect(sides(a, tbl("b", w + 40, 0))).toEqual([1, -1]);
+        expect(sides(tbl("b", w + 40, 0), a)).toEqual([-1, 1]);
+    });
     it("stacked tables and self references loop on the same side", () => {
         expect(sides(tbl("a", 0, 0), tbl("b", 20, 400))).toEqual([1, 1]);
         const a = tbl("a", 0, 0);

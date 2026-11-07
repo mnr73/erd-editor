@@ -13,7 +13,7 @@ const STUB = 12; // straight piece next to the table before the line bends
 const LOOP = 40; // how far a same-side loop sticks out
 const SELF_LOOP = 34;
 const CORNER = 6;
-const SAME_SIDE_GAP = 60; // tables whose centres are closer than this (in x) loop on the same side
+const FACING_GAP = 40; // tables need at least this much empty space between them (in x) to face each other
 
 /** Y (world) of the anchor of column `columnId`; collapsed tables and unknown columns use the header. */
 export function anchorY(table, columnId) {
@@ -28,10 +28,13 @@ export function sides(a, b) {
     const ra = tableRect(a);
     const rb = tableRect(b);
     if (a.id === b.id) return [1, 1];
-    const ca = ra.x + ra.w / 2;
-    const cb = rb.x + rb.w / 2;
-    if (Math.abs(ca - cb) < SAME_SIDE_GAP) return [1, 1];
-    return ca < cb ? [1, -1] : [-1, 1];
+    // Compare the real gap between the edges, not the centres: a narrow table under a wide one has
+    // centres far apart while the two still overlap, and a line "between" them would run backwards.
+    const gapRight = rb.x - (ra.x + ra.w); // b is to the right of a
+    const gapLeft = ra.x - (rb.x + rb.w); // b is to the left of a
+    if (gapRight >= FACING_GAP) return [1, -1];
+    if (gapLeft >= FACING_GAP) return [-1, 1];
+    return [1, 1];
 }
 
 /**
