@@ -17,14 +17,6 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Updater signing key must be configured
-        env:
-          KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-        run: |
-          if [ -z "$KEY" ]; then
-            echo "::error::Secret TAURI_SIGNING_PRIVATE_KEY is missing (Settings > Secrets and variables > Actions). Without it the release cannot update installed apps."
-            exit 1
-          fi
       - name: Tag must match every version file
         run: |
           tag="${GITHUB_REF_NAME#v}"
@@ -34,6 +26,11 @@ jobs:
           echo "tag=$tag package.json=$pkg tauri.conf.json=$tauri Cargo.toml=$cargo"
           [ "$tag" = "$pkg" ] && [ "$tag" = "$tauri" ] && [ "$tag" = "$cargo" ]
       - run: npm ci
+      - name: Updater signing key must match the public key in the app
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: node scripts/check-signing-key.mjs
       - run: npm run lint
       - run: npx vitest run
 

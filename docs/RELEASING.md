@@ -39,6 +39,16 @@ The signing key pair was generated with `npm run tauri signer generate`. The **p
 
 **Back the private key up.** Without it no future release can update apps that are already installed; you would have to ship a new public key by a manual reinstall.
 
+### If an installed app says the update signature is invalid
+
+The key in the `TAURI_SIGNING_PRIVATE_KEY` secret is not the private half of `plugins.updater.pubkey` in `src-tauri/tauri.conf.json`. A release signed with another key can never be fixed afterwards: make a new release (bump, tag) with the right secret. The release workflow now checks this first (`scripts/check-signing-key.mjs`) and stops before building. To check by hand:
+
+```sh
+TAURI_SIGNING_PRIVATE_KEY="$(cat path/to/updater.key)" TAURI_SIGNING_PRIVATE_KEY_PASSWORD="" node scripts/check-signing-key.mjs
+```
+
+The secret must be the whole content of the `.key` file, not the `.pub` file.
+
 ### Notes
 
 - On Linux the updater installs the AppImage payload, which works for AppImage users. A `.deb` / `.rpm` install is owned by the package manager, so those users should install the new package by hand (not tested).
