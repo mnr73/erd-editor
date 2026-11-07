@@ -33,5 +33,5 @@ sub(
     `$1${next}`,
 );
 console.log(
-    `${pkg.version} -> ${next}\nnext: git commit -am "release v${next}" && git tag v${next} && git push --follow-tags`,
+    `${pkg.version} -> ${next}\nnext: git commit -am "release v${next}" && git tag v${next} && git push origin main v${next}`,
 );

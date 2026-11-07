@@ -12,7 +12,7 @@ Versioning is [SemVer](https://semver.org): `MAJOR.MINOR.PATCH`. First release: 
 npm run bump -- patch        # or minor | major | 1.2.3  (edits all 5 version places)
 git commit -am "release v1.0.1"
 git tag v1.0.1
-git push --follow-tags
+git push origin main v1.0.1   # push the tag by name; --follow-tags skips lightweight tags
 ```
 
 Pushing the tag runs `.github/workflows/release.yml`:
