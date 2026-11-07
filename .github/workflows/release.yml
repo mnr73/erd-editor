@@ -17,6 +17,14 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Updater signing key must be configured
+        env:
+          KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::error::Secret TAURI_SIGNING_PRIVATE_KEY is missing (Settings > Secrets and variables > Actions). Without it the release cannot update installed apps."
+            exit 1
+          fi
       - name: Tag must match every version file
         run: |
           tag="${GITHUB_REF_NAME#v}"
@@ -71,10 +79,14 @@ jobs:
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # signs the update packages; the matching public key is in tauri.conf.json
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: ${{ github.ref_name }}
           releaseName: ERD Editor ${{ github.ref_name }}
           releaseBody: See the assets below to download this version.
+          includeUpdaterJson: true
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}

@@ -39,8 +39,9 @@ import {
   IconToolTable,
 } from "@/icons";
 import { markerPath } from "@/model/relations";
+import { autoUpdate } from "@/services/updates";
 import { useEditorStore } from "@/stores/editor";
-import { openExternal } from "@/tauri";
+import { isTauri, openExternal } from "@/tauri";
 
 /**
  * Help dialog with four tabs:
@@ -452,6 +453,17 @@ const kinds = computed(() =>
               <dt class="text-muted">{{ t("help.info.license") }}</dt>
               <dd class="text-fg-soft" data-workspace>{{ APP_LICENSE }}</dd>
             </dl>
+            <section v-if="isTauri()" data-help-update>
+              <button
+                type="button"
+                data-check-update
+                class="inline-flex items-center gap-2 rounded-control border border-line-strong px-3 py-1.5 text-xs text-fg hover:bg-hover"
+                @click="autoUpdate({ manual: true })"
+              >
+                <IconDownload class="size-4" />
+                {{ t("update.check") }}
+              </button>
+            </section>
             <section>
               <h3 class="mb-2 text-xs font-semibold text-fg">
                 {{ t("help.info.links") }}

@@ -25,6 +25,7 @@ import {
   openWithDialog,
   saveActive,
 } from "@/services/files";
+import { autoUpdate } from "@/services/updates";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
 import {
@@ -110,6 +111,8 @@ onMounted(async () => {
     }),
   );
   cleanups.push(await onWindowCloseRequested(confirmCloseAll));
+  // after everything is on screen; never awaited, so a slow network cannot delay the app
+  setTimeout(() => autoUpdate(), 3000);
 });
 onBeforeUnmount(() => cleanups.forEach((fn) => fn?.()));
 </script>

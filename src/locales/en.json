@@ -580,5 +580,13 @@
     "sectionContent": "Content",
     "sticky": "Start here: double-click empty canvas for a table, drag from a column's dot to draw a relationship, press ? for help.",
     "categoriesNote": "Categories can nest: parent_id points at another category."
+  },
+  "update": {
+    "check": "Check for updates",
+    "downloading": "Downloading version {version}…",
+    "ready": "Version {version} is downloaded. Restart to finish updating.",
+    "restart": "Restart now",
+    "upToDate": "You are on the latest version.",
+    "failed": "Could not check for updates: {reason}"
   }
 }

@@ -4,6 +4,8 @@ import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { ask, open, save } from "@tauri-apps/plugin-dialog";
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { relaunch } from "@tauri-apps/plugin-process";
+import { check } from "@tauri-apps/plugin-updater";
 
 /** True when running inside the Tauri shell (false in a plain browser, e.g. `npm run dev`). */
 export const isTauri = () => "__TAURI_INTERNALS__" in window;
@@ -22,6 +24,11 @@ export async function openExternal(url) {
     if (isTauri()) return openUrl(url);
     window.open(url, "_blank", "noopener,noreferrer");
 }
+
+/** Updater plugin calls. In a plain browser there is nothing to update, so they resolve to "no update". */
+export const checkForUpdate = () =>
+    isTauri() ? check() : Promise.resolve(null);
+export const restartApp = () => relaunch();
 
 /** Called when a second launch forwards another file to the running instance. */
 export async function listenOpenFile(handler) {
