@@ -399,7 +399,7 @@ function focusRow(id) {
       <div
         v-for="(r, i) in rows"
         :key="r.id"
-        class="group/row relative flex items-center gap-[5px] px-2"
+        class="group/row relative flex items-center gap-[5px] ps-[26px] pe-2"
         :class="[
           reorder?.from === i ? 'opacity-40' : '',
           editingColumn === r.id || isColumnSelected(r.id)
@@ -420,7 +420,7 @@ function focusRow(id) {
       >
         <!-- 6-dot reorder handle, only on hover -->
         <span
-          class="absolute inset-s-0 top-0 hidden h-full w-3 cursor-grab items-center justify-center text-faint group-hover/row:flex"
+          class="absolute inset-s-[10px] top-0 hidden h-full w-3 cursor-grab items-center justify-center text-faint group-hover/row:flex"
           :title="t('column.dragHint')"
           @pointerdown="startReorder($event, i)"
           @pointermove="moveReorder"
@@ -496,10 +496,15 @@ function focusRow(id) {
           :aria-label="t('relation.connect')"
           :title="t('relation.connect')"
           :data-link-handle="r.id"
-          class="absolute top-1/2 z-10 hidden size-[10px] -translate-y-1/2 cursor-crosshair rounded-full border-2 border-accent bg-card hover:bg-accent group-hover/row:block"
-          :class="side === 'start' ? '-start-[5px]' : '-end-[5px]'"
+          class="group/dot absolute top-0 z-10 hidden h-full w-[18px] cursor-crosshair items-center justify-center group-hover/row:flex"
+          :class="side === 'start' ? '-start-[9px]' : '-end-[9px]'"
           @pointerdown.stop.prevent="emit('link-start', $event, r.id)"
-        />
+        >
+          <!-- the visible dot stays 10px; the button around it is the larger, invisible hit area -->
+          <span
+            class="size-[10px] rounded-full border-2 border-accent bg-card group-hover/dot:bg-accent"
+          />
+        </button>
 
         <!-- insert above / below: + dots on the row border, only on hover -->
         <button

@@ -31,6 +31,9 @@ export function textWidth(text, size) {
     return em * size;
 }
 
+/** Left padding of a column row: room for the reorder handle (hover) before the PK/FK label. */
+export const ROW_PAD_START = 26;
+
 const clamp = (v, min, max) => Math.max(min, Math.min(v, max));
 
 /** Natural width of a table: the widest of its header and its rows, in whole 10px steps. */
@@ -52,7 +55,7 @@ export function tableWidth(table) {
         // padding + key label + gap + name + gap + icons + gap + type + gap + "more" button (reserved
         // so hovering a row never reflows it) + padding
         const row =
-            8 +
+            ROW_PAD_START +
             18 +
             5 +
             textWidth(c.name, 11.5) +
