@@ -8,7 +8,13 @@ import UiIconButton from "@/components/ui/UiIconButton.vue";
 import UiSegmented from "@/components/ui/UiSegmented.vue";
 
 import { setLocale } from "@/i18n";
-import { IconDownload, IconInspector, IconUpload } from "@/icons";
+import {
+  IconDownload,
+  IconInspector,
+  IconRedo,
+  IconUndo,
+  IconUpload,
+} from "@/icons";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
 import { splitPath } from "@/utils/path";
@@ -56,6 +62,31 @@ const lang = computed({
     </div>
     <span class="flex-1" />
     <AppSearch ref="search" />
+    <div
+      class="flex items-center"
+      dir="ltr"
+      role="group"
+      :aria-label="t('common.history')"
+    >
+      <UiIconButton
+        :label="t('common.undo')"
+        shortcut="Ctrl+Z"
+        :disabled="!doc.canUndo"
+        data-undo
+        @click="doc.undo()"
+      >
+        <IconUndo class="size-4" />
+      </UiIconButton>
+      <UiIconButton
+        :label="t('common.redo')"
+        shortcut="Ctrl+Y"
+        :disabled="!doc.canRedo"
+        data-redo
+        @click="doc.redo()"
+      >
+        <IconRedo class="size-4" />
+      </UiIconButton>
+    </div>
     <UiIconButton
       :label="t('import.title')"
       shortcut="Ctrl+Shift+I"

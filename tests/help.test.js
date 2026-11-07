@@ -109,7 +109,7 @@ describe("help matches the code (shortcuts that really exist)", () => {
         ["groupTables", canvas, /k === "g"/],
         ["indexes", canvas, /k === "i"/],
         ["search", app, /k === "k"/],
-        ["inspector", app, /e\.key === "\\\\"/],
+        ["inspector", app, /k === "\\\\"/],
         ["export", app, /k === "e"/],
         ["import", app, /k === "i" && e\.shiftKey/],
         ["save", app, /k === "s"/],

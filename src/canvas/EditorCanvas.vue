@@ -55,6 +55,7 @@ import {
 } from "@/model/relations";
 import { useDocumentStore } from "@/stores/document";
 import { useEditorStore } from "@/stores/editor";
+import { shortcutKey } from "@/utils/keys";
 
 import CanvasFreeNote from "./CanvasFreeNote.vue";
 import CanvasGroup from "./CanvasGroup.vue";
@@ -1124,7 +1125,7 @@ const isTyping = (e) =>
 function onKeyDown(e) {
   if (isTyping(e)) return;
   const mod = e.ctrlKey || e.metaKey;
-  const k = e.key.toLowerCase();
+  const k = shortcutKey(e);
   // plain keys typed while a button inside the Inspector has focus must not act on the canvas
   if (!mod && e.target.closest?.("[data-inspector]")) return;
 

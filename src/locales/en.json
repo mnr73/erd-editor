@@ -13,7 +13,8 @@
     "close": "Close",
     "save": "Save",
     "undo": "Undo",
-    "redo": "Redo"
+    "redo": "Redo",
+    "history": "History"
   },
   "palette": {
     "title": "Palette",

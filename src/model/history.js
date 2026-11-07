@@ -2,10 +2,24 @@
  * Undo/redo over full-state snapshots (strings). Simple and exact; the documents are small.
  * Consecutive records with the same `key` within `coalesceMs` collapse into one entry
  * (dragging, typing in a field).
+ *
+ * Depth: `limit` states (default 501 = 500 undo steps), but never more than `maxChars` of snapshot text in total, so a huge
+ * board cannot eat memory (200 steps of a 1 MB file would be 200 MB). The oldest steps go first and
+ * at least `minKeep` steps always stay, however big the file is.
  */
 export class History {
-    constructor(initial, { limit = 200, coalesceMs = 600 } = {}) {
+    constructor(
+        initial,
+        {
+            limit = 501,
+            coalesceMs = 600,
+            maxChars = 40_000_000,
+            minKeep = 20,
+        } = {},
+    ) {
         this.limit = limit;
+        this.maxChars = maxChars;
+        this.minKeep = minKeep;
         this.coalesceMs = coalesceMs;
         this.reset(initial);
     }
@@ -49,14 +63,33 @@ export class History {
         } else {
             this.states.push(state);
             this.index++;
-            if (this.states.length > this.limit) {
-                this.states.shift();
-                this.index--;
-            }
         }
+        this.trim();
         this.lastKey = key;
         this.lastTime = now;
         return true;
+    }
+
+    /** Drop the oldest steps while over the count limit or the memory budget. */
+    trim() {
+        let chars = 0;
+        for (const s of this.states) chars += s.length;
+        while (
+            this.index > 0 &&
+            (this.states.length > this.limit ||
+                (chars > this.maxChars && this.states.length > this.minKeep))
+        ) {
+            chars -= this.states.shift().length;
+            this.index--;
+        }
+    }
+
+    /** Number of steps that can be undone / redone (for tooltips). */
+    get undoSteps() {
+        return this.index;
+    }
+    get redoSteps() {
+        return this.states.length - 1 - this.index;
     }
 
     undo() {

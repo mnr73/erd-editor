@@ -89,6 +89,12 @@ export const useDocumentStore = defineStore("document", () => {
     const dirty = computed(() => (tick.value, isDirty(active.value)));
     const canUndo = computed(() => (tick.value, active.value.history.canUndo));
     const canRedo = computed(() => (tick.value, active.value.history.canRedo));
+    const undoSteps = computed(
+        () => (tick.value, active.value.history.undoSteps),
+    );
+    const redoSteps = computed(
+        () => (tick.value, active.value.history.redoSteps),
+    );
     const tableById = computed(
         () => (tick.value, new Map(doc.value.tables.map((t) => [t.id, t]))),
     );
@@ -713,6 +719,8 @@ export const useDocumentStore = defineStore("document", () => {
         commit,
         undo,
         redo,
+        undoSteps,
+        redoSteps,
         setView,
         addTable,
         addDefaultTable,

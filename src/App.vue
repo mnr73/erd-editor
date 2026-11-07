@@ -30,6 +30,7 @@ import {
   onWindowCloseRequested,
   readInitialFile,
 } from "@/tauri";
+import { shortcutKey } from "@/utils/keys";
 
 const doc = useDocumentStore();
 const editor = useEditorStore();
@@ -47,7 +48,7 @@ function onKeyDown(e) {
   }
   const mod = e.ctrlKey || e.metaKey;
   if (!mod || e.altKey) return;
-  const k = e.key.toLowerCase();
+  const k = shortcutKey(e);
   const tabs = doc.tabList;
   const at = tabs.findIndex((x) => x.active);
   const run = (fn) => {
@@ -63,7 +64,7 @@ function onKeyDown(e) {
         editor.openExport(editor.selected.size ? "selection" : "all"),
     );
   else if (k === "i" && e.shiftKey) run(() => editor.openImport());
-  else if (e.key === "\\") run(() => editor.toggleInspector());
+  else if (k === "\\") run(() => editor.toggleInspector());
   else if (k === "s") run(() => saveActive({ forceDialog: e.shiftKey }));
   else if (k === "o") run(openWithDialog);
   else if (k === "n") run(newBoard);
