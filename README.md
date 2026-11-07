@@ -1,30 +1,25 @@
 # ERD Editor
 
-Local, cross-platform ERD editor (Tauri 2 + Vue 3). Opens one `*.erd.json` file (Open with) and shows it as a table diagram. DBML/SQL/PNG/SVG are export formats only. Roadmap: [docs/PLAN.md](docs/PLAN.md).
+A local desktop editor for database diagrams (ERD). One `*.erd.json` file is the whole project: open it, edit tables and relationships on an infinite canvas, export SQL / DBML / PNG / SVG / Markdown. Built with Tauri 2 and Vue 3. English and Persian (RTL) UI.
 
-## Layout
-```
-src/            Vue app (JS, no auto-import; icons only via src/icons.js)
-src/locales/    en.json (default), fa.json
-src/model/      file format core: validate, migrate, serialize, history (pure JS, no Vue)
-src/stores/     Pinia: document (all mutations, undo/redo) and editor (tool, selection, viewport)
-src/canvas/     infinite canvas: geometry + viewport math (pure), EditorCanvas, CanvasTable/Group/Minimap, ColumnEditor
-schema/         erd.schema.json (JSON Schema of the file), spec in docs/FORMAT.md
-tests/          vitest
-src-tauri/      Rust shell (single-instance, initial_file, dialog)
-mime/           shared-mime-info type for *.erd.json
-design/         Claude Design mockups (mockups/ is git-ignored, extracted/ is the readable copy)
-```
+Download for Linux, Windows and macOS: [Releases](https://github.com/mnr73/erd-editor/releases).
 
-## Dev
-```bash
+## Docs
+
+- [Development guide](docs/DEVELOPMENT.md): setup, layout, conventions
+- [AGENTS.md](AGENTS.md): the same for AI coding agents
+- [File format](docs/FORMAT.md) and [JSON Schema](schema/erd.schema.json)
+- [Releasing](docs/RELEASING.md), [roadmap](docs/PLAN.md)
+
+## Quick start
+
+```sh
 npm install
-npm run tauri dev        # window + HMR (vite on :1421)
-npm run dev              # UI only in a browser
-npm test                 # vitest
-npm run lint && npm run format
-npm run tauri build -- --bundles deb,appimage
+npm run dev          # UI in a browser, http://localhost:1421
+npm run tauri dev    # desktop window
+npm test && npm run lint
 ```
+
 Linux needs `libwebkit2gtk-4.1-dev build-essential libssl-dev librsvg2-dev libxdo-dev pkg-config`.
 
-Open with: `erd-editor path/to/file.erd.json` (a second launch forwards its file to the running window).
+Open a file from the command line with `erd-editor path/to/file.erd.json`; a second launch hands its file to the running window.
