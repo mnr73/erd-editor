@@ -1,6 +1,6 @@
 [package]
 name = "erd-editor"
-version = "1.0.2"
+version = "1.0.3"
 description = "Local ERD diagram editor"
 authors = ["mnrTech"]
 license = "MIT"

@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "ERD Editor",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "identifier": "ir.shivadev.erdeditor",
   "build": {
     "frontendDist": "../dist",
@@ -80,7 +80,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEE5MTY3ODYwM0FGMDU5NEIKUldSTFdmQTZZSGdXcVg0WW95SGtacm4xZUFqZHo0cVMrTTJZb2VGY3ZqdU11SksrYzJpYUpMcGkK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDM4NEU0N0FBQUI3NEVGMEMKUldRTTczU3Jxa2RPT0N4SHhXc2ZnMlJOSFduN2NqZVZOVVV2aGU0cTNPQ3MxMjN0b3FENjROSWYK",
       "endpoints": [
         "https://github.com/mnr73/erd-editor/releases/latest/download/latest.json"
       ]
