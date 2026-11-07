@@ -1,7 +1,7 @@
 # `.erd.json` file format (version 1)
 
 One JSON file is the single source of truth. DBML / SQL / PNG / SVG are exports only.
-Machine-readable schema: [`schema/erd.schema.json`](../schema/erd.schema.json).
+Machine-readable schema: [`schema/erd.schema.json`](../schema/erd.schema.json). For AI agents there is a ready-made [skill](../skills/erd-editor/SKILL.md) and a checker (`node scripts/check-erd.mjs file.erd.json`).
 Reference implementation: `src/model/`.
 
 ## Principles

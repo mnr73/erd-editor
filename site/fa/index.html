@@ -146,6 +146,11 @@
 }</pre>
     </div>
     <p class="note">خلاصه‌شده است. فایل کامل: <a href="../example.erd.json">example.erd.json</a>.</p>
+    <h3 style="margin:36px 0 10px">استفاده از اسکیل در ۳۰ ثانیه</h3>
+    <p class="sub" style="margin-bottom:14px">اسکیل یک فایل Markdown ساده است، پس با هر ایجنتی کار می‌کند: Claude Code، Codex، Cursor، Copilot، Gemini و غیره. یا آن را جایی بگذارید که ایجنت شما اسکیل یا دستورالعمل را می‌خواند (مثلاً <code>skills/erd-editor/SKILL.md</code> یا <code>AGENTS.md</code>)، یا همین متن را در چت بچسبانید:</p>
+    <pre>Read https://raw.githubusercontent.com/mnr73/erd-editor/main/skills/erd-editor/SKILL.md and follow it.
+Then, in db/shop.erd.json, add an "invoices" table linked to "orders" with ON DELETE CASCADE, and validate the file.</pre>
+    <p class="note">اسکیل ساختار فایل، قواعدی که نمودار را معتبر نگه می‌دارند (شناسه‌ها، جهت رابطه، کاردینالیتی)، دستورالعمل تغییرهای رایج و راه بررسی کار را به ایجنت می‌دهد. بررسی با <a href="https://github.com/mnr73/erd-editor/blob/main/scripts/check-erd.mjs">یک اسکریپت مستقل</a> انجام می‌شود که فقط Node می‌خواهد. فایل ویرایش‌شده مثل همیشه در ویرایشگر باز می‌شود.</p>
   </div>
 </section>
 

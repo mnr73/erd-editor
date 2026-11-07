@@ -9,6 +9,7 @@ ERD Editor: a desktop app (Tauri 2 + Vue 3, plain JavaScript) that edits one `*.
 **The JSON file is the only source of truth.** SQL, DBML, Markdown, SVG and PNG are exports. SQL can be imported into a new unsaved board.
 
 - File format: `docs/FORMAT.md` and `schema/erd.schema.json`. If you touch the format, update both, `src/model/validate.js`, `src/model/migrate.js` and bump `VERSION` in `src/model/constants.js`.
+- Agents that only **use** the diagram file (not develop the app) should read `skills/erd-editor/SKILL.md` instead. If you change the file format, update that skill too: `tests/skill.test.js` checks its examples and constants.
 - Roadmap: `docs/PLAN.md`. Releases: `docs/RELEASING.md`.
 
 ## Commands

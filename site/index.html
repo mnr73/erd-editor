@@ -145,6 +145,11 @@
 }</pre>
     </div>
     <p class="note">Shortened excerpt. The complete file is <a href="example.erd.json">example.erd.json</a>.</p>
+    <h3 style="margin:36px 0 10px">Use the skill in 30 seconds</h3>
+    <p class="sub" style="margin-bottom:14px">The skill is plain Markdown, so it works with any agent: Claude Code, Codex, Cursor, Copilot, Gemini and others. Either save it where your agent loads skills or instructions (for example <code>skills/erd-editor/SKILL.md</code> or <code>AGENTS.md</code>), or just paste this into the chat:</p>
+    <pre>Read https://raw.githubusercontent.com/mnr73/erd-editor/main/skills/erd-editor/SKILL.md and follow it.
+Then, in db/shop.erd.json, add an "invoices" table linked to "orders" with ON DELETE CASCADE, and validate the file.</pre>
+    <p class="note">The skill tells the agent the file structure, the rules that keep a diagram valid (ids, relation direction, cardinality), recipes for common edits, and how to check its work with <a href="https://github.com/mnr73/erd-editor/blob/main/scripts/check-erd.mjs">one standalone script</a> that needs only Node. The edited file opens in the editor as usual.</p>
   </div>
 </section>
 

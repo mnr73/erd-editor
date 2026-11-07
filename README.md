@@ -9,6 +9,7 @@ Download for Linux, Windows and macOS: [Releases](https://github.com/mnr73/erd-e
 - [Development guide](docs/DEVELOPMENT.md): setup, layout, conventions
 - [AGENTS.md](AGENTS.md): the same for AI coding agents
 - [File format](docs/FORMAT.md) and [JSON Schema](schema/erd.schema.json)
+- [Agent skill](skills/erd-editor/SKILL.md): teaches any AI coding agent to read and edit `.erd.json` files. Give your agent the raw link: `https://raw.githubusercontent.com/mnr73/erd-editor/main/skills/erd-editor/SKILL.md`
 - [Releasing](docs/RELEASING.md), [roadmap](docs/PLAN.md)
 
 ## Quick start
