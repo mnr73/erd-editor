@@ -29,6 +29,7 @@
     "active": true,
     "targets": [
       "deb",
+      "rpm",
       "appimage"
     ],
     "category": "DeveloperTool",
@@ -59,7 +60,14 @@
       },
       "appimage": {
         "files": {}
+      },
+      "rpm": {
+        "desktopTemplate": "erd-editor.desktop",
+        "files": {
+          "/usr/share/mime/packages/erd-editor.xml": "../mime/erd-editor.xml"
+        }
       }
-    }
+    },
+    "longDescription": "Local ERD diagram editor. Opens *.erd.json files on a graphical canvas; exports SQL, DBML, PNG, SVG and Markdown."
   }
 }
