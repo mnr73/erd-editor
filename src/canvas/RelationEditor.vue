@@ -66,14 +66,14 @@ function remove() {
         {{ t("relation.title") }}
       </h3>
       <span
-        class="rounded-kbd bg-accent-soft px-1.5 font-mono text-[10.5px] text-accent-text"
+        class="rounded-kbd bg-accent-soft px-1.5 font-mono text-ui-105 text-accent-text"
         data-kind
         >{{ kind }}</span
       >
       <span class="flex-1" />
       <button
         type="button"
-        class="inline-flex h-6 items-center gap-1 rounded-control border border-line-strong px-2 text-[11px] text-fg-soft hover:bg-hover"
+        class="inline-flex h-6 items-center gap-1 rounded-control border border-line-strong px-2 text-ui-11 text-fg-soft hover:bg-hover"
         :title="t('relation.swap')"
         data-swap
         @click="swap"
@@ -92,10 +92,10 @@ function remove() {
     >
       <div class="flex items-center gap-2">
         <span
-          class="w-14 shrink-0 font-sans text-[10.5px] whitespace-nowrap text-muted"
+          class="w-14 shrink-0 font-sans text-ui-105 whitespace-nowrap text-muted"
           >{{ side === "from" ? t("relation.from") : t("relation.to") }}</span
         >
-        <span class="min-w-0 flex-1 truncate font-mono text-[11.5px] text-fg">{{
+        <span class="min-w-0 flex-1 truncate font-mono text-ui-115 text-fg">{{
           endText(ref[side])
         }}</span>
       </div>
@@ -110,7 +110,7 @@ function remove() {
           type="button"
           :aria-pressed="ref[side].cardinality === c"
           :data-card="c"
-          class="h-6 flex-1 rounded-chip border font-mono text-[10.5px] transition-colors"
+          class="h-6 flex-1 rounded-chip border font-mono text-ui-105 transition-colors"
           :class="
             ref[side].cardinality === c
               ? 'border-accent bg-accent-soft text-accent-text'
@@ -124,11 +124,11 @@ function remove() {
     </div>
 
     <div class="grid grid-cols-[70px_1fr] items-center gap-x-2 gap-y-2">
-      <span class="font-mono text-[11px] text-muted">ON DELETE</span>
+      <span class="font-mono text-ui-11 text-muted">ON DELETE</span>
       <select
         :value="ref.onDelete ?? ''"
         :aria-label="'ON DELETE'"
-        class="h-7 rounded-control border border-line-strong bg-canvas px-2 font-mono text-[11px] text-fg"
+        class="h-7 rounded-control border border-line-strong bg-canvas px-2 font-mono text-ui-11 text-fg"
         data-on-delete
         @change="
           doc.updateRef(props.refId, { onDelete: $event.target.value || null })
@@ -138,11 +138,11 @@ function remove() {
           {{ actionLabel(a) }}
         </option>
       </select>
-      <span class="font-mono text-[11px] text-muted">ON UPDATE</span>
+      <span class="font-mono text-ui-11 text-muted">ON UPDATE</span>
       <select
         :value="ref.onUpdate ?? ''"
         :aria-label="'ON UPDATE'"
-        class="h-7 rounded-control border border-line-strong bg-canvas px-2 font-mono text-[11px] text-fg"
+        class="h-7 rounded-control border border-line-strong bg-canvas px-2 font-mono text-ui-11 text-fg"
         data-on-update
         @change="
           doc.updateRef(props.refId, { onUpdate: $event.target.value || null })
@@ -152,7 +152,7 @@ function remove() {
           {{ actionLabel(a) }}
         </option>
       </select>
-      <span class="font-sans text-[11px] text-muted">{{
+      <span class="font-sans text-ui-11 text-muted">{{
         t("relation.label")
       }}</span>
       <UiInput

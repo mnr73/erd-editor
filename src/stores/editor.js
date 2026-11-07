@@ -166,6 +166,13 @@ export const useEditorStore = defineStore("editor", () => {
     const closeHelp = () => (helpOpen.value = false);
     const toggleHelp = () => (helpOpen.value ? closeHelp() : openHelp());
 
+    // Settings dialog (modal; its values are saved by their own composables)
+    const settingsOpen = ref(false);
+    const openSettings = () => (settingsOpen.value = true);
+    const closeSettings = () => (settingsOpen.value = false);
+    const toggleSettings = () =>
+        settingsOpen.value ? closeSettings() : openSettings();
+
     // "New board" chooser (modal, not saved)
     const newOpen = ref(false);
     const openNew = () => (newOpen.value = true);
@@ -266,6 +273,10 @@ export const useEditorStore = defineStore("editor", () => {
         startRename,
         startRenameSoon,
         stopRename,
+        settingsOpen,
+        openSettings,
+        closeSettings,
+        toggleSettings,
         helpOpen,
         helpTab,
         openHelp,

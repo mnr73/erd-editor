@@ -57,6 +57,8 @@ schema/ docs/ tests/ mime/ scripts/
 
 **i18n and RTL**: add every string to both `en.json` and `fa.json`. Layout must work in RTL. Popover controls are deliberately LTR. The Undo/Redo pair is forced `dir="ltr"`.
 
+**Interface font size**: interface text uses the `text-ui-*` tokens (or `text-xs/sm/lg`), which follow the user's `--ui-scale`. Text on the board (`src/canvas/Canvas*.vue`) must use fixed pixel sizes (`text-[12px]`), never those tokens: table width is computed from pixel font sizes in `src/model/geometry.js`.
+
 **Numbers/fonts**: data (tables, Inspector, notes, dialog results) shows Latin digits: such containers need the `data-workspace` attribute. The Persian-digit font is only for app chrome when the UI language is fa.
 
 **Dialogs**: copy the pattern of `AppExportDialog.vue`: root ref with `tabindex="-1"`, `role="dialog"`, focus it in `nextTick`, close on Esc and outside click. Without focus, Esc and Tab do nothing.

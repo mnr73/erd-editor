@@ -125,7 +125,7 @@ function onFocusOut(e) {
 <template>
   <div
     ref="root"
-    class="relative w-[260px] max-w-[40vw]"
+    class="relative w-[calc(260px*var(--ui-scale))] max-w-[40vw]"
     data-search
     @focusout="onFocusOut"
   >
@@ -151,7 +151,7 @@ function onFocusOut(e) {
       <kbd
         v-if="!open"
         dir="ltr"
-        class="rounded-kbd bg-kbd px-1.5 font-mono text-[10px] text-kbd-fg"
+        class="rounded-kbd bg-kbd px-1.5 font-mono text-ui-10 text-kbd-fg"
         >Ctrl K</kbd
       >
     </label>
@@ -185,13 +185,13 @@ function onFocusOut(e) {
       >
         <component :is="ICONS[r.kind]" class="size-3.5 shrink-0 text-muted" />
         <span
-          class="min-w-0 flex-1 truncate font-mono text-[12px] text-fg"
+          class="min-w-0 flex-1 truncate font-mono text-ui-12 text-fg"
           dir="ltr"
           >{{ r.name }}</span
         >
         <span
           v-if="r.detail"
-          class="max-w-[45%] truncate font-mono text-[10.5px] text-faint"
+          class="max-w-[45%] truncate font-mono text-ui-105 text-faint"
           dir="ltr"
           >{{ r.detail }}</span
         >

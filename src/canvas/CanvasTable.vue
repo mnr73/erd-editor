@@ -346,14 +346,14 @@ function focusRow(id) {
       />
       <UiInlineEdit
         v-if="renamingTable"
-        class="flex-1 text-xs font-semibold"
+        class="flex-1 text-[12px] font-semibold"
         mono
         :value="props.table.name"
         :label="t('table.name')"
         @commit="commitTableName"
         @cancel="editor.stopRename()"
       />
-      <span v-else class="flex-1 truncate text-xs font-semibold text-fg">{{
+      <span v-else class="flex-1 truncate text-[12px] font-semibold text-fg">{{
         props.table.name
       }}</span>
       <span

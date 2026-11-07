@@ -208,7 +208,7 @@ async function copy() {
                 :class="format === f.id ? 'text-accent-text' : 'text-fg'"
                 >{{ f.label }}</span
               >
-              <span class="block text-[10.5px] leading-[1.5] text-muted">{{
+              <span class="block text-ui-105 leading-[1.5] text-muted">{{
                 f.hint
               }}</span>
             </button>
@@ -218,7 +218,7 @@ async function copy() {
             <div class="flex flex-wrap items-center gap-3" data-export-options>
               <label
                 v-if="hasSelection"
-                class="flex items-center gap-2 text-[11.5px] text-muted"
+                class="flex items-center gap-2 text-ui-115 text-muted"
               >
                 {{ t("export.scope") }}
                 <UiSegmented
@@ -241,14 +241,14 @@ async function copy() {
               </label>
               <span
                 v-if="scope === 'selection' && subset?.cut"
-                class="text-[11px] text-warn"
+                class="text-ui-11 text-warn"
                 data-cut
               >
                 {{ t("export.cut", { n: subset.cut }) }}
               </span>
               <label
                 v-if="format === 'sql'"
-                class="flex items-center gap-2 text-[11.5px] text-muted"
+                class="flex items-center gap-2 text-ui-115 text-muted"
               >
                 {{ t("export.dialect") }}
                 <UiSegmented
@@ -265,7 +265,7 @@ async function copy() {
               </label>
               <label
                 v-if="format === 'svg' || format === 'png'"
-                class="flex items-center gap-2 text-[11.5px] text-muted"
+                class="flex items-center gap-2 text-ui-115 text-muted"
               >
                 {{ t("export.theme") }}
                 <UiSegmented
@@ -279,7 +279,7 @@ async function copy() {
               </label>
               <label
                 v-if="format === 'png'"
-                class="flex items-center gap-2 text-[11.5px] text-muted"
+                class="flex items-center gap-2 text-ui-115 text-muted"
               >
                 {{ t("export.scale") }}
                 <UiSegmented
@@ -294,7 +294,7 @@ async function copy() {
               </label>
               <label
                 v-if="format === 'agent'"
-                class="flex items-center gap-2 text-[11.5px] text-fg-soft"
+                class="flex items-center gap-2 text-ui-115 text-fg-soft"
               >
                 <input
                   v-model="guide"
@@ -306,14 +306,14 @@ async function copy() {
               </label>
               <span
                 v-if="text"
-                class="ms-auto text-[11px] text-muted"
+                class="ms-auto text-ui-11 text-muted"
                 data-workspace
               >
                 {{ t("export.lines", { n: lineCount }) }}
               </span>
               <span
                 v-else-if="png"
-                class="ms-auto text-[11px] text-muted"
+                class="ms-auto text-ui-11 text-muted"
                 data-workspace
               >
                 {{ png.width }} × {{ png.height }} px
@@ -348,7 +348,7 @@ async function copy() {
               <pre
                 v-else
                 dir="ltr"
-                class="m-0 min-h-full p-3 font-mono text-[11.5px] leading-[1.6] whitespace-pre text-fg-soft"
+                class="m-0 min-h-full p-3 font-mono text-ui-115 leading-[1.6] whitespace-pre text-fg-soft"
                 data-workspace
                 data-export-text
                 >{{ text }}</pre>
@@ -356,7 +356,7 @@ async function copy() {
 
             <ul
               v-if="warnings.length"
-              class="max-h-[84px] shrink-0 space-y-0.5 overflow-y-auto text-[11.5px] text-warn"
+              class="max-h-[84px] shrink-0 space-y-0.5 overflow-y-auto text-ui-115 text-warn"
               data-export-warnings
             >
               <li v-for="(w, i) in warnings" :key="i">• {{ warnText(w) }}</li>

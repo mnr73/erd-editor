@@ -12,7 +12,7 @@ const variants = {
   ghost: "border-transparent text-fg-soft hover:bg-hover",
   danger: "border-line-strong text-danger hover:bg-hover",
 };
-const sizes = { sm: "h-6 px-2 text-[11.5px]", md: "h-7 px-3 text-xs" };
+const sizes = { sm: "h-6 px-2 text-ui-115", md: "h-7 px-3 text-xs" };
 </script>
 
 <template>

@@ -43,7 +43,7 @@ function confirmAdd() {
     :class="props.flush ? 'w-full' : 'w-[236px] p-3'"
   >
     <section class="flex flex-col gap-2">
-      <h3 class="text-[11px] font-medium text-muted">
+      <h3 class="text-ui-11 font-medium text-muted">
         {{ t("palette.title") }}
       </h3>
       <div class="grid grid-cols-6 justify-items-center gap-2">
@@ -66,7 +66,7 @@ function confirmAdd() {
     </section>
 
     <section class="flex flex-col gap-2">
-      <h3 class="text-[11px] font-medium text-muted">
+      <h3 class="text-ui-11 font-medium text-muted">
         {{ t("palette.mine") }}
       </h3>
       <div class="grid grid-cols-6 justify-items-center gap-2">

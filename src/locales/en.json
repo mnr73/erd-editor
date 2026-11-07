@@ -588,5 +588,15 @@
     "restart": "Restart now",
     "upToDate": "You are on the latest version.",
     "failed": "Could not check for updates: {reason}"
+  },
+  "settings": {
+    "title": "Settings",
+    "fontSize": "Interface font size",
+    "fontSizeHint": "Makes the text of menus, panels, dialogs and the Inspector bigger or smaller. Tables and notes on the board keep their size; zoom the board to change those.",
+    "smaller": "Smaller text",
+    "bigger": "Bigger text",
+    "previewTitle": "Preview",
+    "previewText": "This is how text in panels and dialogs looks at this size.",
+    "reset": "Back to 100%"
   }
 }

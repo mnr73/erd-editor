@@ -17,6 +17,7 @@
 
 /** Info / hint */
 export { default as IconBug } from "~icons/hugeicons/bug-01";
+export { default as IconSettings } from "~icons/hugeicons/settings-02";
 export { default as IconGithub } from "~icons/hugeicons/github";
 export { default as IconGlobe } from "~icons/hugeicons/globe-02";
 export { default as IconInfo } from "~icons/hugeicons/information-circle";

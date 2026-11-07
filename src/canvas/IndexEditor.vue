@@ -110,7 +110,7 @@ const freeFor = (ix) =>
 
     <!-- existing -->
     <section :aria-label="t('index.existing')" class="flex flex-col gap-1.5">
-      <p v-if="!table.indexes.length" class="text-[11.5px] text-muted">
+      <p v-if="!table.indexes.length" class="text-ui-115 text-muted">
         {{ t("index.none") }}
       </p>
       <div
@@ -125,16 +125,15 @@ const freeFor = (ix) =>
           :aria-expanded="open === ix.id"
           @click="open = open === ix.id ? null : ix.id"
         >
-          <span
-            class="min-w-0 flex-1 truncate font-mono text-[11.5px] text-fg"
-            >{{ indexName(table, ix) }}</span
-          >
+          <span class="min-w-0 flex-1 truncate font-mono text-ui-115 text-fg">{{
+            indexName(table, ix)
+          }}</span>
           <span
             v-if="ix.unique"
-            class="rounded-kbd bg-accent-soft px-1 font-mono text-[9.5px] text-accent-text"
+            class="rounded-kbd bg-accent-soft px-1 font-mono text-ui-95 text-accent-text"
             >UNIQUE</span
           >
-          <span class="font-mono text-[10.5px] text-faint">{{
+          <span class="font-mono text-ui-105 text-faint">{{
             ix.columns.map(colName).join(", ")
           }}</span>
         </button>
@@ -151,7 +150,7 @@ const freeFor = (ix) =>
             @update:model-value="patch(ix, { name: $event }, 'ixname')"
           />
           <div class="flex flex-wrap items-center gap-2" dir="ltr">
-            <label class="flex items-center gap-1.5 text-[11px] text-muted">
+            <label class="flex items-center gap-1.5 text-ui-11 text-muted">
               <UiSwitch
                 :model-value="ix.unique"
                 :label="t('index.unique')"
@@ -174,11 +173,11 @@ const freeFor = (ix) =>
               :key="id"
               class="flex items-center gap-1.5 rounded-kbd bg-canvas px-1.5 py-1"
             >
-              <span class="w-4 text-center font-mono text-[10px] text-faint">{{
+              <span class="w-4 text-center font-mono text-ui-10 text-faint">{{
                 i + 1
               }}</span>
               <span
-                class="min-w-0 flex-1 truncate font-mono text-[11.5px] text-fg"
+                class="min-w-0 flex-1 truncate font-mono text-ui-115 text-fg"
                 >{{ colName(id) }}</span
               >
               <button
@@ -214,7 +213,7 @@ const freeFor = (ix) =>
               v-for="c in freeFor(ix)"
               :key="c.id"
               type="button"
-              class="inline-flex h-5 items-center gap-1 rounded-chip border border-dashed border-line-strong px-1.5 font-mono text-[10.5px] text-muted hover:border-accent hover:text-accent-text"
+              class="inline-flex h-5 items-center gap-1 rounded-chip border border-dashed border-line-strong px-1.5 font-mono text-ui-105 text-muted hover:border-accent hover:text-accent-text"
               :aria-label="t('index.addColumn', { name: c.name })"
               @click="addColumn(ix, c.id)"
             >
@@ -239,10 +238,10 @@ const freeFor = (ix) =>
       class="flex flex-col gap-2 border-t border-line pt-3"
       :aria-label="t('index.newTitle')"
     >
-      <h4 class="font-sans text-[11px] font-semibold text-muted">
+      <h4 class="font-sans text-ui-11 font-semibold text-muted">
         {{ t("index.newTitle") }}
       </h4>
-      <p class="text-[11px] text-muted">{{ t("index.pick") }}</p>
+      <p class="text-ui-11 text-muted">{{ t("index.pick") }}</p>
 
       <ol
         v-if="draft.columns.length"
@@ -255,13 +254,12 @@ const freeFor = (ix) =>
           :key="id"
           class="flex items-center gap-1.5 rounded-kbd bg-canvas px-1.5 py-1"
         >
-          <span class="w-4 text-center font-mono text-[10px] text-faint">{{
+          <span class="w-4 text-center font-mono text-ui-10 text-faint">{{
             i + 1
           }}</span>
-          <span
-            class="min-w-0 flex-1 truncate font-mono text-[11.5px] text-fg"
-            >{{ colName(id) }}</span
-          >
+          <span class="min-w-0 flex-1 truncate font-mono text-ui-115 text-fg">{{
+            colName(id)
+          }}</span>
           <button
             type="button"
             class="size-5 rounded-kbd text-muted hover:bg-hover hover:text-fg disabled:opacity-30"
@@ -300,7 +298,7 @@ const freeFor = (ix) =>
           v-for="c in free"
           :key="c.id"
           type="button"
-          class="inline-flex h-5 items-center gap-1 rounded-chip border border-dashed border-line-strong px-1.5 font-mono text-[10.5px] text-muted hover:border-accent hover:text-accent-text"
+          class="inline-flex h-5 items-center gap-1 rounded-chip border border-dashed border-line-strong px-1.5 font-mono text-ui-105 text-muted hover:border-accent hover:text-accent-text"
           :aria-label="t('index.addColumn', { name: c.name })"
           @click="pick(c.id)"
         >
@@ -315,7 +313,7 @@ const freeFor = (ix) =>
         :placeholder="t('index.namePlaceholder')"
       />
       <div class="flex items-center gap-2" dir="ltr">
-        <label class="flex items-center gap-1.5 text-[11px] text-muted">
+        <label class="flex items-center gap-1.5 text-ui-11 text-muted">
           <UiSwitch v-model="draft.unique" :label="t('index.unique')" />
           {{ t("index.unique") }}
         </label>
@@ -327,7 +325,7 @@ const freeFor = (ix) =>
         />
       </div>
 
-      <p v-if="duplicate" class="text-[11px] text-warn" role="status">
+      <p v-if="duplicate" class="text-ui-11 text-warn" role="status">
         {{ indexName(table, duplicate) }}
       </p>
       <div class="flex items-center gap-2">
@@ -339,7 +337,7 @@ const freeFor = (ix) =>
         >
           {{ t("index.create") }}
         </UiButton>
-        <span v-if="!draft.columns.length" class="text-[11px] text-muted">{{
+        <span v-if="!draft.columns.length" class="text-ui-11 text-muted">{{
           t("index.needColumn")
         }}</span>
         <span class="flex-1" />

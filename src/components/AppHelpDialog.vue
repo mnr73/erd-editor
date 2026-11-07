@@ -231,7 +231,7 @@ const kinds = computed(() =>
               <h3 class="mb-1 text-xs font-semibold text-fg">
                 {{ t("help.icons.relations") }}
               </h3>
-              <p class="mb-3 text-[11.5px] leading-[1.7] text-muted">
+              <p class="mb-3 text-ui-115 leading-[1.7] text-muted">
                 {{ t("help.icons.relationsIntro") }}
               </p>
               <ul class="grid gap-2 sm:grid-cols-2">
@@ -259,13 +259,13 @@ const kinds = computed(() =>
                       fill="var(--c-canvas)"
                     />
                   </svg>
-                  <span class="flex-1 text-[11.5px] text-fg-soft">{{
+                  <span class="flex-1 text-ui-115 text-fg-soft">{{
                     t(`help.icons.end.${r.key}`)
                   }}</span>
                   <UiKbd>{{ r.card }}</UiKbd>
                 </li>
               </ul>
-              <h4 class="mt-4 mb-2 text-[11.5px] font-semibold text-fg">
+              <h4 class="mt-4 mb-2 text-ui-115 font-semibold text-fg">
                 {{ t("help.icons.kinds") }}
               </h4>
               <ul class="grid gap-2 sm:grid-cols-2" data-help-kinds>
@@ -291,16 +291,16 @@ const kinds = computed(() =>
                     <path v-if="k.a.c" :d="k.a.c" fill="var(--c-canvas)" />
                     <path v-if="k.b.c" :d="k.b.c" fill="var(--c-canvas)" />
                   </svg>
-                  <span class="flex-1 text-[11.5px] text-fg-soft">{{
+                  <span class="flex-1 text-ui-115 text-fg-soft">{{
                     t(`help.icons.kind.${k.id}`)
                   }}</span>
                   <UiKbd>{{ k.id }}</UiKbd>
                 </li>
               </ul>
-              <p class="mt-3 text-[11.5px] leading-[1.7] text-muted">
+              <p class="mt-3 text-ui-115 leading-[1.7] text-muted">
                 {{ t("help.icons.kindsNote") }}
               </p>
-              <p class="mt-2 text-[11.5px] leading-[1.7] text-muted">
+              <p class="mt-2 text-ui-115 leading-[1.7] text-muted">
                 {{ t("help.icons.readHow") }}
               </p>
             </section>
@@ -322,13 +322,13 @@ const kinds = computed(() =>
                   >
                     <span
                       v-if="c.cap"
-                      class="text-[10px] font-semibold"
+                      class="text-ui-10 font-semibold"
                       :class="c.cls"
                       >{{ c.cap }}</span
                     >
                     <component :is="c.icon" v-else class="size-3.5" />
                   </span>
-                  <span class="text-[11.5px] leading-[1.6] text-fg-soft">{{
+                  <span class="text-ui-115 leading-[1.6] text-fg-soft">{{
                     t(`help.icons.col.${c.id}`)
                   }}</span>
                 </li>
@@ -350,7 +350,7 @@ const kinds = computed(() =>
                   >
                     <component :is="c.icon" class="size-3.5" />
                   </span>
-                  <span class="text-[11.5px] leading-[1.6] text-fg-soft">{{
+                  <span class="text-ui-115 leading-[1.6] text-fg-soft">{{
                     t(`help.icons.ctl.${c.id}`)
                   }}</span>
                 </li>
@@ -362,7 +362,7 @@ const kinds = computed(() =>
                       class="size-[10px] rounded-full border-2 border-accent bg-card"
                     />
                   </span>
-                  <span class="text-[11.5px] leading-[1.6] text-fg-soft">{{
+                  <span class="text-ui-115 leading-[1.6] text-fg-soft">{{
                     t("help.icons.ctl.linkDot")
                   }}</span>
                 </li>
@@ -381,10 +381,9 @@ const kinds = computed(() =>
                   >
                     <component :is="c.icon" class="size-3.5" />
                   </span>
-                  <span
-                    class="flex-1 text-[11.5px] leading-[1.6] text-fg-soft"
-                    >{{ t(`help.icons.tool.${c.id}`) }}</span
-                  >
+                  <span class="flex-1 text-ui-115 leading-[1.6] text-fg-soft">{{
+                    t(`help.icons.tool.${c.id}`)
+                  }}</span>
                   <UiKbd>{{ c.key }}</UiKbd>
                 </li>
               </ul>
@@ -416,10 +415,10 @@ const kinds = computed(() =>
                   :key="f"
                   class="rounded-control border border-line bg-canvas p-3"
                 >
-                  <div class="text-[11.5px] font-semibold text-fg">
+                  <div class="text-ui-115 font-semibold text-fg">
                     {{ t(`help.f.${f}.title`) }}
                   </div>
-                  <p class="mt-1 text-[11.5px] leading-[1.8] text-muted">
+                  <p class="mt-1 text-ui-115 leading-[1.8] text-muted">
                     {{ t(`help.f.${f}.text`) }}
                   </p>
                 </li>
@@ -481,7 +480,7 @@ const kinds = computed(() =>
                       t(`help.info.link.${l.id}`)
                     }}</span>
                     <span
-                      class="font-mono text-[11px] whitespace-nowrap text-muted"
+                      class="font-mono text-ui-11 whitespace-nowrap text-muted"
                       dir="ltr"
                       >{{ l.url.replace("https://", "") }}</span
                     >
@@ -505,7 +504,7 @@ const kinds = computed(() =>
                 <li
                   v-for="tip in TIPS"
                   :key="tip"
-                  class="flex gap-2 text-[11.5px] leading-[1.8] text-fg-soft"
+                  class="flex gap-2 text-ui-115 leading-[1.8] text-fg-soft"
                 >
                   <span
                     class="mt-[7px] size-1 shrink-0 rounded-full bg-accent"
@@ -541,7 +540,7 @@ const kinds = computed(() =>
                   class="flex items-center gap-3 border-b border-line py-1.5 last:border-0"
                 >
                   <span
-                    class="min-w-0 flex-1 text-[11.5px] leading-[1.6] text-fg-soft"
+                    class="min-w-0 flex-1 text-ui-115 leading-[1.6] text-fg-soft"
                     >{{ t(`help.s.${it.id}`) }}</span
                   >
                   <span
@@ -550,7 +549,7 @@ const kinds = computed(() =>
                     data-workspace
                   >
                     <template v-for="(chord, ci) in it.keys" :key="ci">
-                      <span v-if="ci" class="text-[10px] text-faint">/</span>
+                      <span v-if="ci" class="text-ui-10 text-faint">/</span>
                       <span class="inline-flex items-center gap-0.5">
                         <UiKbd
                           v-for="cap in chord"
@@ -568,7 +567,7 @@ const kinds = computed(() =>
         </div>
 
         <div
-          class="flex items-center gap-2 border-t border-line px-4 py-2 text-[11px] text-muted"
+          class="flex items-center gap-2 border-t border-line px-4 py-2 text-ui-11 text-muted"
         >
           <span class="flex-1">{{ t("help.footer") }}</span>
           <UiKbd>Esc</UiKbd>

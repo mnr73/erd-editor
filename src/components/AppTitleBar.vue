@@ -55,7 +55,7 @@ const lang = computed({
       </span>
       <template v-if="doc.dirty">
         <span class="size-[7px] shrink-0 rounded-full bg-warn" />
-        <span class="shrink-0 text-[11.5px] text-muted">{{
+        <span class="shrink-0 text-ui-115 text-muted">{{
           t("title.unsaved")
         }}</span>
       </template>

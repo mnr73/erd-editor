@@ -106,7 +106,7 @@
     --size-tool-button: 34px;
     --size-titlebar: 40px;
     --size-statusbar: 26px;
-    --size-inspector: 320px;
+    --size-inspector: calc(320px * (1 + (var(--ui-scale) - 1) * 0.6));
     --size-toolbar: 48px;
     --canvas-grid: 16px;
     /* table header = table color mixed into the card surface */
@@ -152,6 +152,23 @@
 }
 
 @theme inline {
+    --text-xs: calc(0.75rem * var(--ui-scale));
+    --text-xs--line-height: calc(1rem * var(--ui-scale));
+    --text-sm: calc(0.875rem * var(--ui-scale));
+    --text-sm--line-height: calc(1.25rem * var(--ui-scale));
+    --text-base: calc(1rem * var(--ui-scale));
+    --text-base--line-height: calc(1.5rem * var(--ui-scale));
+    --text-lg: calc(1.125rem * var(--ui-scale));
+    --text-lg--line-height: calc(1.75rem * var(--ui-scale));
+    --text-ui-95: calc(9.5px * var(--ui-scale));
+    --text-ui-10: calc(10px * var(--ui-scale));
+    --text-ui-105: calc(10.5px * var(--ui-scale));
+    --text-ui-11: calc(11px * var(--ui-scale));
+    --text-ui-115: calc(11.5px * var(--ui-scale));
+    --text-ui-12: calc(12px * var(--ui-scale));
+    --text-ui-125: calc(12.5px * var(--ui-scale));
+    --text-ui-13: calc(13px * var(--ui-scale));
+
     --font-sans: var(--font-workspace);
     --font-mono: var(--font-code);
 
@@ -198,12 +215,21 @@ body,
     height: 100%;
 }
 
+/*
+ * Interface text scale (Settings -> Font size). Only the interface follows it: menus, panels,
+ * dialogs, the Inspector. Text drawn on the board (tables, sections, notes) has fixed pixel sizes,
+ * because the board has its own zoom and its layout is computed from those sizes.
+ */
+:root {
+    --ui-scale: 1;
+}
+
 body {
     margin: 0;
     background: var(--c-app);
     color: var(--c-fg);
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale));
     overflow: hidden;
     user-select: none;
 }

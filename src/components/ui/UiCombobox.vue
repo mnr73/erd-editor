@@ -82,7 +82,7 @@ function onKey(e) {
         :key="it"
         role="option"
         :aria-selected="i === active"
-        class="cursor-pointer px-2 py-1 font-mono text-[11.5px] text-fg-soft"
+        class="cursor-pointer px-2 py-1 font-mono text-ui-115 text-fg-soft"
         :class="i === active ? 'bg-hover text-fg' : 'hover:bg-hover'"
         @pointerdown.prevent="accept(it)"
         @pointerenter="active = i"

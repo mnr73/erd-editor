@@ -58,6 +58,7 @@ The file is the model; the UI edits it; exporters read it.
 - **Strings** go in both `src/locales/en.json` and `fa.json`. Check your change in RTL.
 - **Shortcuts** use `shortcutKey(e)` from `src/utils/keys.js`. On a Persian keyboard `e.key` is not Latin, so `e.key === "z"` never matches. Add the shortcut to `src/help/shortcuts.js`; a test checks the list against the code.
 - **Dialogs** copy `AppExportDialog.vue`: focusable root, `role="dialog"`, focus on open, Esc and outside click close.
+- **Interface font size** (Settings, gear in the tool rail) scales text through `--ui-scale`. Use the `text-ui-115`-style tokens or Tailwind's `text-xs/sm/lg` for interface text. Text drawn on the board (`src/canvas/Canvas*.vue`) must keep fixed pixel sizes, because table widths are computed in `src/model/geometry.js` from those sizes; `tests/uiscale.test.js` enforces this.
 - **Data digits**: containers that show data carry `data-workspace` so numbers stay Latin even when the UI is Persian.
 
 ## Changing the file format

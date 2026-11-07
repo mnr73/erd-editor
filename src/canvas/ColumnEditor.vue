@@ -116,7 +116,7 @@ function onKey(e) {
         type="button"
         :aria-pressed="f.on"
         :title="f.title"
-        class="h-6 rounded-chip border px-2 font-mono text-[10.5px] transition-colors"
+        class="h-6 rounded-chip border px-2 font-mono text-ui-105 transition-colors"
         :class="
           f.on
             ? 'border-accent bg-accent-soft text-accent-text'
@@ -129,7 +129,7 @@ function onKey(e) {
     </div>
 
     <label class="flex items-center gap-2">
-      <span class="w-[70px] shrink-0 text-[11px] text-muted">{{
+      <span class="w-[70px] shrink-0 text-ui-11 text-muted">{{
         t("column.default")
       }}</span>
       <UiInput
@@ -142,20 +142,20 @@ function onKey(e) {
     </label>
 
     <label class="flex items-start gap-2">
-      <span class="w-[70px] shrink-0 pt-[5px] text-[11px] text-muted">{{
+      <span class="w-[70px] shrink-0 pt-[5px] text-ui-11 text-muted">{{
         t("column.comment")
       }}</span>
       <textarea
         :value="column.note"
         :aria-label="t('column.comment')"
         rows="2"
-        class="min-w-0 flex-1 resize-none rounded-control border border-line-strong bg-canvas px-2 py-[5px] text-[11.5px] leading-[1.6] text-fg focus-visible:border-accent"
+        class="min-w-0 flex-1 resize-none rounded-control border border-line-strong bg-canvas px-2 py-[5px] text-ui-115 leading-[1.6] text-fg focus-visible:border-accent"
         @input="set({ note: $event.target.value }, 'note')"
       />
     </label>
 
     <div class="flex items-center gap-2" dir="ltr">
-      <span class="w-[70px] shrink-0 text-[11px] text-muted">{{
+      <span class="w-[70px] shrink-0 text-ui-11 text-muted">{{
         t("index.title")
       }}</span>
       <div class="flex min-w-0 flex-1 flex-wrap items-center gap-1">
@@ -163,7 +163,7 @@ function onKey(e) {
           v-for="ix in columnIndexes"
           :key="ix.id"
           type="button"
-          class="max-w-full truncate rounded-chip border border-line-strong px-1.5 py-px font-mono text-[10.5px] text-fg-soft hover:border-accent hover:text-accent-text"
+          class="max-w-full truncate rounded-chip border border-line-strong px-1.5 py-px font-mono text-ui-105 text-fg-soft hover:border-accent hover:text-accent-text"
           :title="t('index.badge', { names: ix.columns.length })"
           @click="emit('index', ix.id)"
         >
@@ -171,7 +171,7 @@ function onKey(e) {
         </button>
         <button
           type="button"
-          class="inline-flex h-5 items-center gap-1 rounded-chip border border-dashed border-line-strong px-1.5 text-[10.5px] text-muted hover:border-accent hover:text-accent-text"
+          class="inline-flex h-5 items-center gap-1 rounded-chip border border-dashed border-line-strong px-1.5 text-ui-105 text-muted hover:border-accent hover:text-accent-text"
           @click="emit('index', null)"
         >
           <IconColIndex class="size-3" />
@@ -185,7 +185,7 @@ function onKey(e) {
         t("column.delete")
       }}</UiButton>
       <span class="flex-1" />
-      <span class="text-[10.5px] text-muted">
+      <span class="text-ui-105 text-muted">
         <kbd dir="ltr" class="font-mono">Alt ↑↓</kbd> {{ t("column.nav") }}
       </span>
     </div>

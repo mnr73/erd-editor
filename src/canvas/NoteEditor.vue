@@ -58,10 +58,9 @@ onMounted(async () => {
       <h3 class="font-sans text-xs font-semibold text-fg">
         {{ t("note.title") }}
       </h3>
-      <span
-        class="min-w-0 flex-1 truncate font-mono text-[11.5px] text-muted"
-        >{{ item.name }}</span
-      >
+      <span class="min-w-0 flex-1 truncate font-mono text-ui-115 text-muted">{{
+        item.name
+      }}</span>
     </div>
     <textarea
       ref="area"
@@ -70,7 +69,7 @@ onMounted(async () => {
       :placeholder="t('note.placeholder')"
       rows="6"
       dir="auto"
-      class="resize-y rounded-control border border-line-strong bg-canvas px-2.5 py-2 text-[12.5px] leading-[1.8] text-fg focus-visible:border-accent"
+      class="resize-y rounded-control border border-line-strong bg-canvas px-2.5 py-2 text-ui-125 leading-[1.8] text-fg focus-visible:border-accent"
       data-note-text
       @input="patch({ note: $event.target.value }, 'note')"
     />
@@ -83,7 +82,7 @@ onMounted(async () => {
         @update:model-value="patch({ noteVisible: $event })"
       />
     </label>
-    <p class="text-[11px] text-muted">{{ t("note.hint") }}</p>
+    <p class="text-ui-11 text-muted">{{ t("note.hint") }}</p>
     <div class="flex items-center">
       <UiButton
         variant="danger"

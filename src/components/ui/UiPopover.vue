@@ -33,7 +33,7 @@ const surfaceClass = computed(
     ({
       popover: "rounded-popover bg-popover text-fg shadow-popover",
       tooltip:
-        "rounded-chip bg-popover px-2 py-1 text-[11.5px] text-fg shadow-popover pointer-events-none",
+        "rounded-chip bg-popover px-2 py-1 text-ui-115 text-fg shadow-popover pointer-events-none",
       plain: "",
     })[props.surface],
 );

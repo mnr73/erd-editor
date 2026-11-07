@@ -99,7 +99,7 @@ const showArray = computed(
       <button
         v-if="parseType(model) || !model"
         type="button"
-        class="h-7 shrink-0 rounded-control border border-line-strong px-2 text-[11px] text-muted hover:text-fg"
+        class="h-7 shrink-0 rounded-control border border-line-strong px-2 text-ui-11 text-muted hover:text-fg"
         data-use-picker
         @click="forceFree = false"
       >
@@ -111,7 +111,7 @@ const showArray = computed(
       <select
         :value="parsed.base"
         :aria-label="props.label"
-        class="h-7 w-full rounded-control border border-line-strong bg-canvas px-2 font-mono text-[11.5px] text-fg"
+        class="h-7 w-full rounded-control border border-line-strong bg-canvas px-2 font-mono text-ui-115 text-fg"
         data-type-base
         @change="onBase"
       >
@@ -133,7 +133,7 @@ const showArray = computed(
           :key="spec.key"
           class="flex min-w-0 flex-1 flex-col gap-0.5"
         >
-          <span class="font-sans text-[10.5px] text-fg-soft">{{
+          <span class="font-sans text-ui-105 text-fg-soft">{{
             paramLabel(spec)
           }}</span>
           <input
@@ -146,7 +146,7 @@ const showArray = computed(
             :aria-label="paramLabel(spec)"
             :data-param="spec.key"
             spellcheck="false"
-            class="h-7 w-full min-w-0 rounded-control border border-line-strong bg-canvas px-2 font-mono text-[11.5px] text-fg focus-visible:border-accent"
+            class="h-7 w-full min-w-0 rounded-control border border-line-strong bg-canvas px-2 font-mono text-ui-115 text-fg focus-visible:border-accent"
             @change="onParam(i, $event)"
             @keydown.enter.prevent="onParam(i, $event)"
           />
@@ -154,7 +154,7 @@ const showArray = computed(
       </div>
 
       <label v-if="def.list" class="flex flex-col gap-0.5">
-        <span class="font-sans text-[10.5px] text-fg-soft">{{
+        <span class="font-sans text-ui-105 text-fg-soft">{{
           t("type.values")
         }}</span>
         <input
@@ -163,7 +163,7 @@ const showArray = computed(
           :placeholder="t('type.valuesHint')"
           spellcheck="false"
           data-param="values"
-          class="h-7 w-full min-w-0 rounded-control border border-line-strong bg-canvas px-2 font-mono text-[11.5px] text-fg focus-visible:border-accent"
+          class="h-7 w-full min-w-0 rounded-control border border-line-strong bg-canvas px-2 font-mono text-ui-115 text-fg focus-visible:border-accent"
           @change="onEnum"
         />
       </label>
@@ -174,7 +174,7 @@ const showArray = computed(
           type="button"
           :aria-pressed="parsed.unsigned"
           data-mod="unsigned"
-          class="h-6 rounded-chip border px-2 font-mono text-[10.5px]"
+          class="h-6 rounded-chip border px-2 font-mono text-ui-105"
           :class="
             parsed.unsigned
               ? 'border-accent bg-accent-soft text-accent-text'
@@ -189,7 +189,7 @@ const showArray = computed(
           type="button"
           :aria-pressed="parsed.array"
           data-mod="array"
-          class="h-6 rounded-chip border px-2 font-mono text-[10.5px]"
+          class="h-6 rounded-chip border px-2 font-mono text-ui-105"
           :class="
             parsed.array
               ? 'border-accent bg-accent-soft text-accent-text'

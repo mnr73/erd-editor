@@ -130,7 +130,7 @@ function open() {
               <template #icon><IconDownload class="size-3.5" /></template>
               {{ t("import.chooseFile") }}
             </UiButton>
-            <label class="flex items-center gap-2 text-[11.5px] text-muted">
+            <label class="flex items-center gap-2 text-ui-115 text-muted">
               {{ t("import.dialect") }}
               <UiSegmented
                 :model-value="dialect"
@@ -145,7 +145,7 @@ function open() {
                 @update:model-value="pickDialect"
               />
             </label>
-            <span v-if="auto && text.trim()" class="text-[11px] text-muted">{{
+            <span v-if="auto && text.trim()" class="text-ui-11 text-muted">{{
               t("import.detected")
             }}</span>
           </div>
@@ -157,7 +157,7 @@ function open() {
               spellcheck="false"
               :placeholder="t('import.placeholder')"
               :aria-label="t('import.sql')"
-              class="min-h-0 resize-none rounded-control border border-line-strong bg-canvas p-3 font-mono text-[11.5px] leading-[1.6] text-fg placeholder:text-muted focus-visible:border-accent"
+              class="min-h-0 resize-none rounded-control border border-line-strong bg-canvas p-3 font-mono text-ui-115 leading-[1.6] text-fg placeholder:text-muted focus-visible:border-accent"
               data-workspace
               data-import-text
             />
@@ -175,7 +175,7 @@ function open() {
                   }}
                 </div>
                 <ul
-                  class="min-h-0 flex-1 space-y-0.5 overflow-y-auto font-mono text-[11px] text-fg-soft"
+                  class="min-h-0 flex-1 space-y-0.5 overflow-y-auto font-mono text-ui-11 text-fg-soft"
                   dir="ltr"
                   data-workspace
                 >
@@ -187,12 +187,12 @@ function open() {
                     {{ t("import.noTables") }}
                   </li>
                 </ul>
-                <div v-if="result.stats.skipped" class="text-[11px] text-muted">
+                <div v-if="result.stats.skipped" class="text-ui-11 text-muted">
                   {{ t("import.skipped", { n: result.stats.skipped }) }}
                 </div>
                 <ul
                   v-if="result.warnings.length"
-                  class="max-h-[110px] space-y-0.5 overflow-y-auto text-[11px] text-warn"
+                  class="max-h-[110px] space-y-0.5 overflow-y-auto text-ui-11 text-warn"
                   data-import-warnings
                 >
                   <li v-for="(w, i) in result.warnings" :key="i">
@@ -200,7 +200,7 @@ function open() {
                   </li>
                 </ul>
               </template>
-              <p v-else class="text-[11.5px] leading-[1.7] text-muted">
+              <p v-else class="text-ui-115 leading-[1.7] text-muted">
                 {{ t("import.waiting") }}
               </p>
             </div>

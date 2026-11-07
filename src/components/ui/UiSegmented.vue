@@ -19,7 +19,7 @@ const props = defineProps({
       :key="o.value"
       type="button"
       :aria-pressed="model === o.value"
-      class="h-[22px] min-w-[30px] rounded-[5px] px-2 text-[11.5px] transition-colors"
+      class="h-[22px] min-w-[30px] rounded-[5px] px-2 text-ui-115 transition-colors"
       :class="
         model === o.value
           ? 'bg-accent-soft font-semibold text-accent-text'

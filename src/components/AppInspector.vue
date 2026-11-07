@@ -206,7 +206,7 @@ const title = computed(() => {
       class="flex flex-1 flex-col gap-4 p-4"
       data-inspector-empty
     >
-      <h2 class="font-sans text-[13px] font-semibold text-fg">
+      <h2 class="font-sans text-ui-13 font-semibold text-fg">
         {{ t("inspector.title") }}
       </h2>
       <p class="text-xs leading-[1.8] text-muted">{{ t("inspector.empty") }}</p>
@@ -222,7 +222,7 @@ const title = computed(() => {
           class="rounded-control border border-line bg-canvas p-2.5"
         >
           <div class="text-lg font-semibold text-fg">{{ s[0] }}</div>
-          <div class="text-[10.5px] text-muted">{{ s[1] }}</div>
+          <div class="text-ui-105 text-muted">{{ s[1] }}</div>
         </div>
       </div>
     </div>
@@ -233,7 +233,7 @@ const title = computed(() => {
         <button
           v-if="target.mode === 'ref' && editor.inspectorBack"
           type="button"
-          class="inline-flex h-6 items-center rounded-control px-1.5 text-[11px] text-accent-text hover:bg-hover"
+          class="inline-flex h-6 items-center rounded-control px-1.5 text-ui-11 text-accent-text hover:bg-hover"
           @click="back"
         >
           ← {{ t("inspector.back") }}
@@ -249,14 +249,14 @@ const title = computed(() => {
           :style="{ background: accent(group.color) }"
         />
         <span
-          class="min-w-0 flex-1 truncate font-mono text-[13px] font-semibold text-fg"
+          class="min-w-0 flex-1 truncate font-mono text-ui-13 font-semibold text-fg"
           dir="ltr"
           data-workspace
           >{{ title }}</span
         >
         <span
           v-if="target.mode === 'table' && section"
-          class="shrink-0 text-[11px] text-muted"
+          class="shrink-0 text-ui-11 text-muted"
           >· {{ section.name }}</span
         >
         <UiIconButton
@@ -283,7 +283,7 @@ const title = computed(() => {
             role="tab"
             :aria-selected="tab === tb.id"
             :data-tab="tb.id"
-            class="h-[34px] border-b-2 px-2.5 text-xs transition-colors"
+            class="h-[34px] border-b-2 px-2 text-xs whitespace-nowrap transition-colors"
             :class="
               tab === tb.id
                 ? 'border-accent text-fg'
@@ -303,7 +303,7 @@ const title = computed(() => {
             data-pane="table"
           >
             <label class="flex flex-col gap-1.5">
-              <span class="text-[11px] text-muted">{{ t("table.name") }}</span>
+              <span class="text-ui-11 text-muted">{{ t("table.name") }}</span>
               <UiInput
                 :model-value="table.name"
                 mono
@@ -313,7 +313,7 @@ const title = computed(() => {
               />
             </label>
             <div class="flex flex-col gap-2">
-              <span class="text-[11px] text-muted">{{
+              <span class="text-ui-11 text-muted">{{
                 t("inspector.headerColor")
               }}</span>
               <UiColorPalette
@@ -326,7 +326,7 @@ const title = computed(() => {
               />
             </div>
             <label class="flex flex-col gap-1.5">
-              <span class="text-[11px] text-muted">{{
+              <span class="text-ui-11 text-muted">{{
                 t("inspector.section")
               }}</span>
               <select
@@ -357,7 +357,7 @@ const title = computed(() => {
                 <div class="text-lg font-semibold text-fg">
                   {{ table.columns.length }}
                 </div>
-                <div class="text-[11px] text-muted">
+                <div class="text-ui-11 text-muted">
                   {{ t("inspector.columns") }}
                 </div>
               </div>
@@ -365,7 +365,7 @@ const title = computed(() => {
                 <div class="text-lg font-semibold text-fg">
                   {{ relations.length }}
                 </div>
-                <div class="text-[11px] text-muted">
+                <div class="text-ui-11 text-muted">
                   {{ t("inspector.relations") }}
                 </div>
               </div>
@@ -401,12 +401,12 @@ const title = computed(() => {
                 v-if="openColumn !== c.id"
                 type="button"
                 :data-col-row="c.id"
-                class="flex h-[30px] items-center gap-2 ps-2.5 pe-2.5 text-start font-mono text-[11.5px] text-fg hover:bg-hover"
+                class="flex h-[30px] items-center gap-2 ps-2.5 pe-2.5 text-start font-mono text-ui-115 text-fg hover:bg-hover"
                 data-workspace
                 @click="toggleColumn(c.id)"
               >
                 <span
-                  class="w-4 text-[9.5px] font-semibold"
+                  class="w-4 text-ui-95 font-semibold"
                   :class="c.pk ? 'text-key-pk' : 'text-key-fk'"
                   >{{
                     c.pk
@@ -487,15 +487,13 @@ const title = computed(() => {
               @click="openRef(r.id)"
             >
               <span class="flex flex-1 flex-col gap-0.5">
-                <span class="font-mono text-[11.5px] text-fg">{{
-                  r.other
-                }}</span>
-                <span class="font-mono text-[10.5px] text-faint">{{
+                <span class="font-mono text-ui-115 text-fg">{{ r.other }}</span>
+                <span class="font-mono text-ui-105 text-faint">{{
                   r.mine
                 }}</span>
               </span>
               <span
-                class="rounded-chip bg-accent-soft px-1.5 font-mono text-[10.5px] text-accent-text"
+                class="rounded-chip bg-accent-soft px-1.5 font-mono text-ui-105 text-accent-text"
                 >{{ r.kind }}</span
               >
             </button>
@@ -523,7 +521,7 @@ const title = computed(() => {
       >
         <div class="flex flex-col gap-4 p-3.5">
           <label class="flex flex-col gap-1.5">
-            <span class="text-[11px] text-muted">{{
+            <span class="text-ui-11 text-muted">{{
               t("inspector.sectionName")
             }}</span>
             <UiInput
@@ -535,7 +533,7 @@ const title = computed(() => {
             />
           </label>
           <div class="flex flex-col gap-2">
-            <span class="text-[11px] text-muted">{{
+            <span class="text-ui-11 text-muted">{{
               t("inspector.headerColor")
             }}</span>
             <UiColorPalette
@@ -550,14 +548,14 @@ const title = computed(() => {
             />
           </div>
           <div class="flex flex-col gap-1.5">
-            <span class="text-[11px] text-muted">{{
+            <span class="text-ui-11 text-muted">{{
               t("inspector.sectionTables")
             }}</span>
             <ul class="flex flex-wrap gap-1" dir="ltr" data-workspace>
               <li
                 v-for="tb in tablesInSection(doc.doc, group.id)"
                 :key="tb.id"
-                class="rounded-chip border border-line-strong px-1.5 py-px font-mono text-[11px] text-fg-soft"
+                class="rounded-chip border border-line-strong px-1.5 py-px font-mono text-ui-11 text-fg-soft"
               >
                 {{ tb.name }}
               </li>
@@ -592,14 +590,14 @@ const title = computed(() => {
       >
         <div class="flex flex-col gap-4 p-3.5" data-workspace>
           <label class="flex flex-col gap-1.5">
-            <span class="text-[11px] text-muted">{{ t("freeNote.text") }}</span>
+            <span class="text-ui-11 text-muted">{{ t("freeNote.text") }}</span>
             <textarea
               :value="freeNote.text"
               :placeholder="t('freeNote.placeholder')"
               :aria-label="t('freeNote.text')"
               rows="8"
               dir="auto"
-              class="resize-y rounded-control border border-line-strong bg-canvas px-2.5 py-2 text-[12.5px] leading-[1.8] text-fg focus-visible:border-accent"
+              class="resize-y rounded-control border border-line-strong bg-canvas px-2.5 py-2 text-ui-125 leading-[1.8] text-fg focus-visible:border-accent"
               data-free-note-field
               @input="
                 doc.updateNote(
@@ -611,9 +609,7 @@ const title = computed(() => {
             />
           </label>
           <div class="flex flex-col gap-2">
-            <span class="text-[11px] text-muted">{{
-              t("freeNote.color")
-            }}</span>
+            <span class="text-ui-11 text-muted">{{ t("freeNote.color") }}</span>
             <UiColorPalette
               flush
               :allow-none="false"
@@ -628,7 +624,7 @@ const title = computed(() => {
           </div>
           <div class="grid grid-cols-2 gap-2">
             <label class="flex flex-col gap-1">
-              <span class="text-[11px] text-muted">{{
+              <span class="text-ui-11 text-muted">{{
                 t("freeNote.width")
               }}</span>
               <input
@@ -644,7 +640,7 @@ const title = computed(() => {
               />
             </label>
             <label class="flex flex-col gap-1">
-              <span class="text-[11px] text-muted">{{
+              <span class="text-ui-11 text-muted">{{
                 t("freeNote.height")
               }}</span>
               <input
@@ -700,7 +696,7 @@ const title = computed(() => {
           <li
             v-for="x in [...target.tables, ...target.groups, ...target.notes]"
             :key="x.id"
-            class="max-w-full truncate rounded-chip border border-line-strong px-1.5 py-px font-mono text-[11px] text-fg-soft"
+            class="max-w-full truncate rounded-chip border border-line-strong px-1.5 py-px font-mono text-ui-11 text-fg-soft"
           >
             {{ x.name ?? (x.text.split("\n")[0] || t("freeNote.title")) }}
           </li>

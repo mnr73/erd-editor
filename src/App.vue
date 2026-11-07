@@ -8,6 +8,7 @@ import AppHelpDialog from "@/components/AppHelpDialog.vue";
 import AppImportDialog from "@/components/AppImportDialog.vue";
 import AppInspector from "@/components/AppInspector.vue";
 import AppNewBoardDialog from "@/components/AppNewBoardDialog.vue";
+import AppSettingsDialog from "@/components/AppSettingsDialog.vue";
 import AppTabBar from "@/components/AppTabBar.vue";
 import AppTitleBar from "@/components/AppTitleBar.vue";
 import StartPage from "@/components/StartPage.vue";
@@ -136,6 +137,7 @@ onBeforeUnmount(() => cleanups.forEach((fn) => fn?.()));
   <AppHelpDialog />
   <AppImportDialog />
   <AppNewBoardDialog />
+  <AppSettingsDialog />
   <AppDropOverlay :show="dragging" />
   <UiToastHost />
 </template>

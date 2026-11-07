@@ -8,6 +8,7 @@ import { useTheme } from "@/composables/useTheme";
 import {
   IconFit,
   IconHelp,
+  IconSettings,
   IconThemeDark,
   IconThemeLight,
   IconToolNote,
@@ -96,6 +97,17 @@ const { theme, toggleTheme } = useTheme();
     </UiIconButton>
 
     <span class="flex-1" />
+
+    <UiIconButton
+      size="lg"
+      :label="t('settings.title')"
+      tooltip-side="inline-end"
+      :active="editor.settingsOpen"
+      data-open-settings
+      @click="editor.toggleSettings()"
+    >
+      <IconSettings class="size-[18px]" />
+    </UiIconButton>
 
     <UiIconButton
       size="lg"
