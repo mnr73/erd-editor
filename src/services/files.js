@@ -1,4 +1,5 @@
 import { askChoice } from "@/composables/useAsk";
+import { useRecent } from "@/composables/useRecent";
 import { useToast } from "@/composables/useToast";
 import { i18n } from "@/i18n";
 import { buildSampleDocument } from "@/model/sample";
@@ -46,13 +47,18 @@ function toastIssues(issues, name) {
 export async function openPaths(paths) {
     const doc = useDocumentStore();
     const toast = useToast();
+    const { remember, forget } = useRecent();
     for (const path of paths) {
         try {
             const text = await readFile(path);
             const { id, issues } = doc.openText(text, path);
             if (!id) toastIssues(issues, baseName(path));
-            else if (issues.length) toastIssues(issues, baseName(path));
+            else {
+                remember(path);
+                if (issues.length) toastIssues(issues, baseName(path));
+            }
         } catch (e) {
+            forget(path); // moved or deleted: stop offering it
             toast.push({
                 kind: "error",
                 timeout: 0,
@@ -77,6 +83,7 @@ export async function openDropped(entries) {
         try {
             const text = file ? await file.text() : await readFile(path);
             const { id, issues } = doc.openText(text, path ?? null);
+            if (id && path) useRecent().remember(path);
             if (!id || issues.length) toastIssues(issues, baseName(name));
         } catch (e) {
             toast.push({
@@ -132,6 +139,7 @@ export async function saveActive({ forceDialog = false } = {}) {
         const text = doc.serialize();
         await writeFile(path, text);
         doc.markSaved(path);
+        useRecent().remember(path);
         toast.push({
             kind: "success",
             timeout: 1800,

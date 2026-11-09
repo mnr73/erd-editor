@@ -1,6 +1,8 @@
 <script setup>
 import { useI18n } from "vue-i18n";
 
+import RecentFiles from "@/components/RecentFiles.vue";
+
 import { IconNewFile, IconOpenFile, IconSampleBoard } from "@/icons";
 import {
   newEmptyBoard,
@@ -54,5 +56,6 @@ async function choose(c) {
         }}</span>
       </span>
     </button>
+    <RecentFiles class="mt-3" @done="emit('done')" />
   </div>
 </template>

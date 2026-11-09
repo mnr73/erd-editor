@@ -159,6 +159,7 @@
     "new": "New board",
     "open": "Open file…",
     "openHint": "Pick a .erd.json from disk",
+    "recent": "Recent files",
     "browserNote": "File dialogs are only available in the desktop app.",
     "empty": "Empty board",
     "emptyHint": "Start with an empty canvas",

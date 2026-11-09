@@ -37,7 +37,7 @@ watch(
         role="dialog"
         aria-modal="true"
         :aria-label="t('start.new')"
-        class="w-[min(440px,96vw)] rounded-popover bg-popover shadow-popover outline-none"
+        class="max-h-[94vh] w-[min(440px,96vw)] overflow-auto rounded-popover bg-popover shadow-popover outline-none"
         data-new-dialog
       >
         <div class="flex items-center gap-2 border-b border-line px-4 py-3">

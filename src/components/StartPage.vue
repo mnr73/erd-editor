@@ -15,7 +15,7 @@ const { t } = useI18n();
 
 <template>
   <div
-    class="flex h-full items-center justify-center bg-canvas p-8"
+    class="flex h-full items-start justify-center overflow-auto bg-canvas p-8 sm:items-center"
     data-start-page
   >
     <div class="w-full max-w-md">
