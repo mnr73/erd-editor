@@ -97,3 +97,24 @@ export function minimapTransform(bounds, size, pad = 8) {
         oy: (size.h - bounds.h * scale) / 2 - bounds.y * scale,
     };
 }
+
+/** Distance from the edge where auto-scroll starts, and the fastest speed (screen px per frame at 60 fps). */
+export const EDGE_ZONE = 48;
+export const EDGE_MAX_SPEED = 12;
+
+/**
+ * Auto-scroll while something is dragged to the edge of the canvas. `p` is the pointer relative to the
+ * canvas, `size` its { w, h }. Returns how far to move the view this frame ({ dx, dy }, the view moves
+ * opposite to the pointer so the content under it scrolls into sight). Speed grows the closer the pointer
+ * is to the edge, and keeps growing a little past it, so dragging outside the window still scrolls.
+ */
+export function edgeScroll(p, size, zone = EDGE_ZONE, max = EDGE_MAX_SPEED) {
+    const axis = (v, len) => {
+        // a canvas smaller than two zones would scroll all the time: shrink the zone to fit
+        const z = Math.min(zone, len / 3);
+        if (v < z) return Math.min(1, (z - v) / z) * max;
+        if (v > len - z) return -Math.min(1, (v - (len - z)) / z) * max;
+        return 0;
+    };
+    return { dx: axis(p.x, size.w), dy: axis(p.y, size.h) };
+}

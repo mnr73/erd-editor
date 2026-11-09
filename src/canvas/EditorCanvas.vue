@@ -68,7 +68,7 @@ import IndexEditor from "./IndexEditor.vue";
 import NoteEditor from "./NoteEditor.vue";
 import RelationEditor from "./RelationEditor.vue";
 import { useCanvasCamera } from "./useCanvasCamera";
-import { screenToWorld, worldToScreen } from "./viewport";
+import { edgeScroll, screenToWorld, worldToScreen } from "./viewport";
 
 /**
  * The infinite canvas: dot grid, pan / zoom, selection (click, shift, marquee), dragging tables and
@@ -356,7 +356,27 @@ function startLink(e, tableId, columnId) {
   root.value.setPointerCapture(e.pointerId);
 }
 
-function updateLink(e) {
+/** Last pointer position while a link is being drawn, so the view can keep scrolling when the mouse rests. */
+let linkPointer = null;
+let linkFrame = 0;
+
+function linkScrollTick() {
+  linkFrame = 0;
+  if (!link.value || !linkPointer) return;
+  const box = root.value.getBoundingClientRect();
+  const { dx, dy } = edgeScroll(
+    { x: linkPointer.clientX - box.left, y: linkPointer.clientY - box.top },
+    { w: box.width, h: box.height },
+  );
+  if (dx || dy) {
+    camera.pan(dx, dy);
+    moveLink(linkPointer); // the world moved under a resting pointer
+  }
+  linkFrame = requestAnimationFrame(linkScrollTick);
+}
+
+/** Follow the pointer: the line end and the column under it. */
+function moveLink(e) {
   const p = worldPoint(e);
   const hit = document.elementFromPoint(e.clientX, e.clientY);
   const row = hit?.closest("[data-column-id]");
@@ -368,9 +388,22 @@ function updateLink(e) {
   link.value = { ...link.value, x: p.x, y: p.y, target };
 }
 
+function updateLink(e) {
+  linkPointer = { clientX: e.clientX, clientY: e.clientY };
+  if (!linkFrame) linkFrame = requestAnimationFrame(linkScrollTick);
+  moveLink(e);
+}
+
+function stopLinkScroll() {
+  cancelAnimationFrame(linkFrame);
+  linkFrame = 0;
+  linkPointer = null;
+}
+
 function finishLink() {
   const l = link.value;
   link.value = null;
+  stopLinkScroll();
   if (!l?.target) return;
   const id = doc.connectColumns(
     l.tableId,
@@ -1220,8 +1253,10 @@ function onKeyDown(e) {
   } else if (!mod && !e.shiftKey && k === "h") {
     editor.setTool("pan");
   } else if (k === "escape") {
-    if (link.value) link.value = null;
-    else if (editor.tool !== "select") editor.setTool("select");
+    if (link.value) {
+      link.value = null;
+      stopLinkScroll();
+    } else if (editor.tool !== "select") editor.setTool("select");
     else if (editor.selectedRefId) editor.selectRef(null);
     else editor.clearSelection();
   }
@@ -1261,6 +1296,7 @@ onMounted(() => {
   root.value.addEventListener("wheel", onWheel, { passive: false });
 });
 onBeforeUnmount(() => {
+  stopLinkScroll();
   clearTimeout(fitTimer);
   observer?.disconnect();
   window.removeEventListener("keydown", onKeyDown);
