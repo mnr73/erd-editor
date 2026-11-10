@@ -182,15 +182,17 @@ const cursor = computed(() =>
   panning.value ? "grabbing" : panMode.value ? "grab" : "default",
 );
 
+// Whole-pixel translate: a fractional offset makes the browser resample the text of every table
+// (soft glyphs after a wheel zoom or pan). The file keeps the exact view; only the drawing rounds.
 const worldStyle = computed(() => ({
-  transform: `translate(${view.value.x}px, ${view.value.y}px) scale(${view.value.zoom})`,
+  transform: `translate(${Math.round(view.value.x)}px, ${Math.round(view.value.y)}px) scale(${view.value.zoom})`,
 }));
 const gridStyle = computed(() => {
   const s = 16 * view.value.zoom;
   // dots fade out when they would be denser than ~6px
   return {
     backgroundSize: `${s}px ${s}px`,
-    backgroundPosition: `${view.value.x}px ${view.value.y}px`,
+    backgroundPosition: `${Math.round(view.value.x)}px ${Math.round(view.value.y)}px`,
     backgroundImage: s < 6 ? "none" : undefined,
   };
 });
