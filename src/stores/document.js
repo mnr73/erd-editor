@@ -51,6 +51,10 @@ function createTab(
         // untouched start-up tab: the UI shows the start page (new board / open file) instead of a canvas
         fresh,
         savedSnapshot: baseline,
+        // { mtime, size } of the file as last read or written by this app (null: never on disk)
+        stamp: null,
+        // disk state the user chose to ignore ("keep my version"), see model/external.js
+        dismissed: null,
         // not reactive on purpose: changes are announced through `tick`
         history: markRaw(new History(baseline)),
     };
@@ -83,6 +87,7 @@ export const useDocumentStore = defineStore("document", () => {
         set: (v) => (active.value.path = v),
     });
     const issues = computed(() => active.value.issues);
+    const activeStamp = computed(() => active.value.stamp);
     const isFresh = computed(() => active.value.fresh);
 
     const isDirty = (tab) => snapshotErd(tab.doc) !== tab.savedSnapshot;
@@ -152,7 +157,7 @@ export const useDocumentStore = defineStore("document", () => {
      * Open file text in a tab: an already open path is just activated; a pristine untitled tab is
      * reused; otherwise a new tab is added. Returns { id, issues } (id null on a fatal issue).
      */
-    function openText(text, filePath = null) {
+    function openText(text, filePath = null, stamp = null) {
         const same = filePath && tabs.value.find((t) => t.path === filePath);
         if (same) {
             activateTab(same.id);
@@ -161,6 +166,7 @@ export const useDocumentStore = defineStore("document", () => {
         const result = parseErd(text);
         if (!result.doc) return { id: null, issues: result.issues };
         const tab = createTab(result.doc, filePath, result.issues);
+        tab.stamp = stamp;
         const reuse = isPristine(active.value);
         if (reuse) tabs.value.splice(tabs.value.indexOf(active.value), 1, tab);
         else tabs.value.push(tab);
@@ -231,10 +237,46 @@ export const useDocumentStore = defineStore("document", () => {
         return serializeErd(doc.value);
     }
 
-    function markSaved(filePath = path.value) {
+    function markSaved(filePath = path.value, stamp = null) {
         active.value.path = filePath;
         active.value.savedSnapshot = snapshotErd(doc.value);
+        active.value.stamp = stamp;
+        active.value.dismissed = null;
         tick.value++;
+    }
+
+    /** Remember "keep my version" for the disk state `now` ("gone" for a deleted file). */
+    function dismissDisk(tabId, now) {
+        const tab = tabs.value.find((t) => t.id === tabId);
+        if (!tab) return;
+        tab.dismissed = now;
+        tick.value++;
+    }
+
+    /**
+     * Replace a tab's content with the text now on disk. It is ONE undo step on top of the old
+     * history (Ctrl+Z brings back what was in the app), and the tab is clean afterwards. A text that
+     * does not parse changes nothing and returns false. The view (pan/zoom) stays.
+     */
+    function replaceFromDisk(tabId, text, stamp) {
+        const tab = tabs.value.find((t) => t.id === tabId);
+        if (!tab) return false;
+        const result = parseErd(text);
+        if (!result.doc) return false;
+        result.doc.view = tab.doc.view;
+        tab.doc = result.doc;
+        tab.issues = result.issues;
+        const snap = snapshotErd(result.doc);
+        tab.history.record(snap);
+        tab.savedSnapshot = snap;
+        tab.stamp = stamp;
+        tab.dismissed = null;
+        tick.value++; // not `loadId`: the camera and the selection stay where they are
+        return true;
+    }
+
+    function tabById(id) {
+        return tabs.value.find((t) => t.id === id) ?? null;
     }
 
     /** Apply `fn(doc)` as one undo step. `key` coalesces rapid edits (drag, typing). */
@@ -700,6 +742,7 @@ export const useDocumentStore = defineStore("document", () => {
         doc,
         path,
         issues,
+        activeStamp,
         isFresh,
         loadId,
         dirty,
@@ -716,6 +759,9 @@ export const useDocumentStore = defineStore("document", () => {
         closeTab,
         serialize,
         markSaved,
+        dismissDisk,
+        replaceFromDisk,
+        tabById,
         commit,
         undo,
         redo,

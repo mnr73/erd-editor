@@ -119,18 +119,65 @@ fn read_import(path: String) -> Result<String, String> {
     String::from_utf8(bytes).map_err(|_| "file is not UTF-8 text".to_string())
 }
 
-/// Read an ERD file as UTF-8 text.
-#[tauri::command]
-fn read_erd(path: String) -> Result<String, String> {
-    check_path(&path)?;
-    std::fs::read_to_string(&path).map_err(|e| e.to_string())
+/// What the app remembers about a file on disk, to notice that something else changed it:
+/// modification time (ms) and size. A missing file is `None`, not an error.
+#[derive(serde::Serialize, serde::Deserialize, Clone, PartialEq, Debug)]
+struct Stamp {
+    mtime: u64,
+    size: u64,
 }
 
-/// A crash or full disk never leaves a half-written document.
+fn stamp_of(path: &str) -> Option<Stamp> {
+    let meta = std::fs::metadata(path).ok()?;
+    let mtime = meta
+        .modified()
+        .ok()
+        .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+        .map(|d| d.as_millis() as u64)
+        .unwrap_or(0);
+    Some(Stamp { mtime, size: meta.len() })
+}
+
+#[derive(serde::Serialize, Debug)]
+struct ReadResult {
+    text: String,
+    stamp: Option<Stamp>,
+}
+
+/// Read an ERD file as UTF-8 text, together with its stamp. The stamp is taken BEFORE reading, so a
+/// write that lands in between shows up as a change on the next check instead of being missed.
 #[tauri::command]
-fn write_erd(path: String, contents: String) -> Result<(), String> {
+fn read_erd(path: String) -> Result<ReadResult, String> {
     check_path(&path)?;
-    atomic_write(&path, contents.as_bytes())
+    let stamp = stamp_of(&path);
+    let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+    Ok(ReadResult { text, stamp })
+}
+
+/// Cheap check used for polling: the current stamp, or `None` when the file is gone.
+#[tauri::command]
+fn stat_erd(path: String) -> Result<Option<Stamp>, String> {
+    check_path(&path)?;
+    Ok(stamp_of(&path))
+}
+
+/// Write the document. With `expected` (the stamp the app last saw) the write is refused with
+/// `changed` when the file on disk is no longer that one, so an edit made outside the app is never
+/// overwritten without asking. `None` means "no check" (first save, or the user chose to overwrite).
+/// Returns the new stamp. A crash or full disk never leaves a half-written document.
+#[tauri::command]
+fn write_erd(
+    path: String,
+    contents: String,
+    expected: Option<Stamp>,
+    check: bool,
+) -> Result<Option<Stamp>, String> {
+    check_path(&path)?;
+    if check && stamp_of(&path) != expected {
+        return Err("changed".into());
+    }
+    atomic_write(&path, contents.as_bytes())?;
+    Ok(stamp_of(&path))
 }
 
 pub fn run() {
@@ -152,6 +199,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             initial_file,
             read_erd,
+            stat_erd,
             write_erd,
             write_export,
             write_export_bytes,
@@ -178,9 +226,9 @@ mod tests {
     #[test]
     fn writes_and_reads_back_without_leaving_temp_files() {
         let p = scratch("a.erd.json");
-        write_erd(p.clone(), "{\"x\":1}".into()).unwrap();
-        write_erd(p.clone(), "{\"x\":2}".into()).unwrap();
-        assert_eq!(read_erd(p.clone()).unwrap(), "{\"x\":2}");
+        write_erd(p.clone(), "{\"x\":1}".into(), None, false).unwrap();
+        write_erd(p.clone(), "{\"x\":2}".into(), None, false).unwrap();
+        assert_eq!(read_erd(p.clone()).unwrap().text, "{\"x\":2}");
         let dir = std::path::Path::new(&p).parent().unwrap();
         let leftovers = std::fs::read_dir(dir)
             .unwrap()
@@ -192,18 +240,19 @@ mod tests {
     #[test]
     fn refuses_other_extensions() {
         assert!(read_erd("/etc/passwd".into()).is_err());
-        assert!(write_erd(scratch("x.txt"), "no".into()).is_err());
+        assert!(write_erd(scratch("x.txt"), "no".into(), None, false).is_err());
+        assert!(stat_erd("/etc/passwd".into()).is_err());
         assert!(check_path("/a/B.ERD.JSON").is_ok());
     }
 
     #[test]
     fn failed_write_keeps_the_old_file() {
         let p = scratch("keep.erd.json");
-        write_erd(p.clone(), "old".into()).unwrap();
+        write_erd(p.clone(), "old".into(), None, false).unwrap();
         // a directory in place of the temp target's parent makes the write fail
         let bad = format!("{p}/nested.erd.json");
-        assert!(write_erd(bad, "new".into()).is_err());
-        assert_eq!(read_erd(p).unwrap(), "old");
+        assert!(write_erd(bad, "new".into(), None, false).is_err());
+        assert_eq!(read_erd(p).unwrap().text, "old");
     }
 
     #[test]
@@ -233,6 +282,40 @@ mod tests {
         atomic_write(&bin, &[0xff, 0xfe, 0x00]).unwrap();
         assert!(read_import(bin).unwrap_err().contains("UTF-8"));
         assert!(read_import(scratch("missing.sql")).is_err());
+    }
+
+    #[test]
+    fn stamps_follow_the_file_and_a_checked_write_refuses_a_changed_file() {
+        let p = scratch("stamp.erd.json");
+        assert_eq!(stat_erd(p.clone()).unwrap(), None, "missing file: no stamp, no error");
+        // first save: nothing to compare with
+        let first = write_erd(p.clone(), "one".into(), None, false).unwrap();
+        assert!(first.is_some());
+        // the app saw `first`; nobody touched the file: the checked write goes through
+        let second = write_erd(p.clone(), "two!".into(), first.clone(), true).unwrap();
+        assert_ne!(second, first, "size changed, so the stamp changed");
+        // someone else rewrites the file behind our back (different size, so even a coarse mtime shows it)
+        std::fs::write(&p, "changed outside the app").unwrap();
+        let err = write_erd(p.clone(), "mine".into(), second.clone(), true).unwrap_err();
+        assert_eq!(err, "changed");
+        assert_eq!(std::fs::read_to_string(&p).unwrap(), "changed outside the app");
+        // the user chose to overwrite: unchecked write
+        assert!(write_erd(p.clone(), "mine".into(), None, false).is_ok());
+        assert_eq!(read_erd(p.clone()).unwrap().text, "mine");
+        // deleted behind our back: a checked write is refused too (stamp None != Some)
+        let known = stat_erd(p.clone()).unwrap();
+        std::fs::remove_file(&p).unwrap();
+        assert_eq!(stat_erd(p.clone()).unwrap(), None);
+        assert_eq!(write_erd(p, "x".into(), known, true).unwrap_err(), "changed");
+    }
+
+    #[test]
+    fn read_returns_the_stamp_of_what_it_read() {
+        let p = scratch("readstamp.erd.json");
+        write_erd(p.clone(), "abc".into(), None, false).unwrap();
+        let r = read_erd(p.clone()).unwrap();
+        assert_eq!(r.stamp, stat_erd(p).unwrap());
+        assert_eq!(r.stamp.unwrap().size, 3);
     }
 
     #[test]

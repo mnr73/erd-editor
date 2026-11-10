@@ -1,7 +1,10 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
+import { useI18n } from "vue-i18n";
+
 import AppAskDialog from "@/components/AppAskDialog.vue";
+import AppDiskBanner from "@/components/AppDiskBanner.vue";
 import AppDropOverlay from "@/components/AppDropOverlay.vue";
 import AppExportDialog from "@/components/AppExportDialog.vue";
 import AppHelpDialog from "@/components/AppHelpDialog.vue";
@@ -16,7 +19,10 @@ import ToolRail from "@/components/ToolRail.vue";
 import UiToastHost from "@/components/ui/UiToastHost.vue";
 
 import EditorCanvas from "@/canvas/EditorCanvas.vue";
+import { askChoice } from "@/composables/useAsk";
+import { useToast } from "@/composables/useToast";
 import ComponentsPage from "@/dev/ComponentsPage.vue";
+import { watchDisk } from "@/services/disk";
 import {
   closeTabWithConfirm,
   confirmCloseAll,
@@ -24,6 +30,7 @@ import {
   openDropped,
   openPaths,
   openWithDialog,
+  reloadTab,
   saveActive,
 } from "@/services/files";
 import { autoUpdate } from "@/services/updates";
@@ -36,7 +43,9 @@ import {
   readInitialFile,
 } from "@/tauri";
 import { shortcutKey } from "@/utils/keys";
+import { baseName } from "@/utils/path";
 
+const { t } = useI18n();
 const doc = useDocumentStore();
 const editor = useEditorStore();
 const showGallery = new URLSearchParams(location.search).has("components");
@@ -59,6 +68,11 @@ function inDocumentField(el) {
 
 /** App-wide file shortcuts. They work even while typing (they never insert text). */
 function onKeyDown(e) {
+  if (e.key === "F5") {
+    e.preventDefault();
+    reloadActive();
+    return;
+  }
   if (e.key === "F1") {
     e.preventDefault();
     e.stopPropagation();
@@ -77,6 +91,7 @@ function onKeyDown(e) {
   };
   if ((k === "z" || k === "y") && inDocumentField(e.target))
     run(() => (k === "y" || e.shiftKey ? doc.redo() : doc.undo()));
+  else if (k === "r" && !e.shiftKey) run(reloadActive);
   else if (k === "k") run(() => titleBar.value?.focusSearch());
   else if (k === "e" && !e.shiftKey)
     run(
@@ -104,7 +119,33 @@ function onKeyDown(e) {
     );
 }
 
+/** Reloading throws away unsaved changes (Ctrl+Z brings them back), so ask first. */
+async function askReload() {
+  const answer = await askChoice({
+    title: t("disk.reload"),
+    message: t("file.unsavedMessage"),
+    choices: [
+      { id: "cancel", label: t("common.cancel") },
+      { id: "reload", label: t("disk.reload"), variant: "danger" },
+    ],
+  });
+  return answer === "reload";
+}
+
+/** Reload the active tab's file from disk (F5 / Ctrl+R / tab menu). */
+async function reloadActive() {
+  const toast = useToast();
+  if (!doc.path) return toast.push({ kind: "info", text: t("disk.noFile") });
+  if (doc.dirty && !(await askReload())) return;
+  if (await reloadTab(doc.activeId))
+    toast.push({
+      kind: "info",
+      text: t("disk.reloadedManual", { name: baseName(doc.path) }),
+    });
+}
+
 onMounted(async () => {
+  cleanups.push(watchDisk());
   window.addEventListener("keydown", onKeyDown, true);
   cleanups.push(() => window.removeEventListener("keydown", onKeyDown, true));
 
@@ -143,6 +184,7 @@ onBeforeUnmount(() => cleanups.forEach((fn) => fn?.()));
       <ToolRail />
       <main class="relative min-w-0 flex-1">
         <EditorCanvas />
+        <AppDiskBanner />
       </main>
       <AppInspector v-if="editor.inspectorOpen" />
     </div>

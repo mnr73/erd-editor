@@ -1,4 +1,5 @@
 import { askChoice } from "@/composables/useAsk";
+import { useDiskWarnings } from "@/composables/useDiskWatch";
 import { useRecent } from "@/composables/useRecent";
 import { useToast } from "@/composables/useToast";
 import { i18n } from "@/i18n";
@@ -50,8 +51,8 @@ export async function openPaths(paths) {
     const { remember, forget } = useRecent();
     for (const path of paths) {
         try {
-            const text = await readFile(path);
-            const { id, issues } = doc.openText(text, path);
+            const { text, stamp } = await readFile(path);
+            const { id, issues } = doc.openText(text, path, stamp);
             if (!id) toastIssues(issues, baseName(path));
             else {
                 remember(path);
@@ -81,8 +82,14 @@ export async function openDropped(entries) {
             continue;
         }
         try {
-            const text = file ? await file.text() : await readFile(path);
-            const { id, issues } = doc.openText(text, path ?? null);
+            const read = file
+                ? { text: await file.text() }
+                : await readFile(path);
+            const { id, issues } = doc.openText(
+                read.text,
+                path ?? null,
+                read.stamp ?? null,
+            );
             if (id && path) useRecent().remember(path);
             if (!id || issues.length) toastIssues(issues, baseName(name));
         } catch (e) {
@@ -137,8 +144,39 @@ export async function saveActive({ forceDialog = false } = {}) {
     }
     try {
         const text = doc.serialize();
-        await writeFile(path, text);
-        doc.markSaved(path);
+        // overwriting the file this tab was read from: refuse when someone else changed it meanwhile
+        const sameFile = !forceDialog && path === doc.path;
+        // a deleted file has nothing to compare with: just write it again
+        const gone = useDiskWarnings().value[doc.activeId] === "gone";
+        let stamp;
+        try {
+            stamp = await writeFile(path, text, {
+                expected: doc.activeStamp,
+                force: !sameFile || !doc.activeStamp || gone,
+            });
+        } catch (e) {
+            if (e !== "changed") throw e;
+            const answer = await askChoice({
+                title: t("disk.saveTitle", { name: baseName(path) }),
+                message: t("disk.saveMessage"),
+                choices: [
+                    { id: "cancel", label: t("common.cancel") },
+                    { id: "load", label: t("disk.loadDisk") },
+                    {
+                        id: "overwrite",
+                        label: t("disk.overwrite"),
+                        variant: "danger",
+                    },
+                ],
+            });
+            if (answer === "load") {
+                await reloadTab(doc.activeId);
+                return false;
+            }
+            if (answer !== "overwrite") return false;
+            stamp = await writeFile(path, text);
+        }
+        doc.markSaved(path, stamp);
         useRecent().remember(path);
         toast.push({
             kind: "success",
@@ -151,6 +189,39 @@ export async function saveActive({ forceDialog = false } = {}) {
             kind: "error",
             timeout: 0,
             text: t("file.saveFailed", { reason: e }),
+        });
+        return false;
+    }
+}
+
+/**
+ * Take the file's current content from disk into a tab (the "Reload" action). One undo step, so a
+ * wrong reload is a Ctrl+Z away. Returns true when it was reloaded. `quiet` (the automatic check)
+ * reports nothing when the file cannot be read or parsed: a half-written file is retried later.
+ */
+export async function reloadTab(tabId, { quiet = false } = {}) {
+    const doc = useDocumentStore();
+    const toast = useToast();
+    const tab = doc.tabById(tabId);
+    if (!tab?.path) return false;
+    try {
+        const { text, stamp } = await readFile(tab.path);
+        if (!doc.replaceFromDisk(tabId, text, stamp)) {
+            if (quiet) return false;
+            toast.push({
+                kind: "error",
+                timeout: 0,
+                text: t("disk.reloadInvalid", { name: baseName(tab.path) }),
+            });
+            return false;
+        }
+        return true;
+    } catch (e) {
+        if (quiet) return false;
+        toast.push({
+            kind: "error",
+            timeout: 0,
+            text: t("file.openFailed", { name: baseName(tab.path), reason: e }),
         });
         return false;
     }

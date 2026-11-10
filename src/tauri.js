@@ -114,9 +114,19 @@ export function ensureExt(path) {
         : `${path.replace(/\.json$/i, "").replace(/\.erd$/i, "")}${EXT}`;
 }
 
+/** Read a file: `{ text, stamp }` (the stamp is what `statFile` returns while the file is unchanged). */
 export const readFile = (path) => invoke("read_erd", { path });
-export const writeFile = (path, contents) =>
-    invoke("write_erd", { path, contents });
+/** Current `{ mtime, size }` of a file, or null when it no longer exists. */
+export const statFile = (path) => invoke("stat_erd", { path });
+/**
+ * Write a file atomically and return its new stamp. With `expected` the write is refused (the error
+ * is the string "changed") when the file on disk is not the one we last saw; `force: true` skips that.
+ */
+export const writeFile = (
+    path,
+    contents,
+    { expected = null, force = true } = {},
+) => invoke("write_erd", { path, contents, expected, check: !force });
 
 /** Native yes/no confirmation (falls back to window.confirm in a browser). */
 export async function confirmDialog(message, { okLabel, cancelLabel } = {}) {

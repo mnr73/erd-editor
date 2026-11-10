@@ -17,6 +17,7 @@ export const SHORTCUT_GROUPS = [
             { id: "save", keys: [k(MOD, "S")] },
             { id: "saveAs", keys: [k(MOD, "Shift", "S")] },
             { id: "closeTab", keys: [k(MOD, "W")] },
+            { id: "reload", keys: [k("F5"), k(MOD, "R")] },
             { id: "nextTab", keys: [k(MOD, "Tab"), k(MOD, "Shift", "Tab")] },
             { id: "gotoTab", keys: [k(MOD, "1", "…", "9")] },
             { id: "export", keys: [k(MOD, "E")] },

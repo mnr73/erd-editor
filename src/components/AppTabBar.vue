@@ -3,10 +3,12 @@ import { nextTick, useTemplateRef, watch } from "vue";
 
 import { useI18n } from "vue-i18n";
 
+import UiContextMenu from "@/components/ui/UiContextMenu.vue";
 import UiIconButton from "@/components/ui/UiIconButton.vue";
 
-import { IconClose, IconNewFile } from "@/icons";
-import { closeTabWithConfirm, newBoard } from "@/services/files";
+import { askChoice } from "@/composables/useAsk";
+import { IconClose, IconNewFile, IconReload } from "@/icons";
+import { closeTabWithConfirm, newBoard, reloadTab } from "@/services/files";
 import { useDocumentStore } from "@/stores/document";
 import { baseName } from "@/utils/path";
 
@@ -17,6 +19,43 @@ import { baseName } from "@/utils/path";
 const { t } = useI18n();
 const doc = useDocumentStore();
 const strip = useTemplateRef("strip");
+const menu = useTemplateRef("menu");
+let menuTab = null;
+
+/** Right-click on a tab: reload its file from disk (only for tabs that have a file). */
+function openMenu(e, tab) {
+  if (!tab.path) return;
+  menuTab = tab;
+  menu.value.show(e, [
+    {
+      id: "reload",
+      label: t("disk.menuReload"),
+      icon: IconReload,
+      shortcut: "F5",
+    },
+    { id: "close", label: t("common.close") },
+  ]);
+}
+
+async function onMenu(item) {
+  const tab = menuTab;
+  if (!tab) return;
+  if (item.id === "close") return closeTabWithConfirm(tab.id);
+  doc.activateTab(tab.id);
+  if (
+    tab.dirty &&
+    (await askChoice({
+      title: t("disk.reload"),
+      message: t("file.unsavedMessage"),
+      choices: [
+        { id: "cancel", label: t("common.cancel") },
+        { id: "reload", label: t("disk.reload"), variant: "danger" },
+      ],
+    })) !== "reload"
+  )
+    return;
+  reloadTab(tab.id);
+}
 
 const label = (tab) =>
   tab.path ? baseName(tab.path) : tab.name || t("title.untitled");
@@ -84,6 +123,7 @@ watch(
         "
         @pointerdown.left="doc.activateTab(tab.id)"
         @auxclick.middle.prevent="closeTabWithConfirm(tab.id)"
+        @contextmenu="openMenu($event, tab)"
         @keydown="onKey($event, tab, i)"
       >
         <span
@@ -123,5 +163,6 @@ watch(
     >
       <IconNewFile class="size-4" />
     </UiIconButton>
+    <UiContextMenu ref="menu" @select="onMenu" />
   </div>
 </template>

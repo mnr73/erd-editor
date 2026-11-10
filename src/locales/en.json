@@ -557,7 +557,8 @@
       "linkDrag": "Draw a relationship from a column's dot",
       "lineEdit": "Edit a relationship line",
       "middleTab": "Close a tab",
-      "rightClick": "Context menu on anything"
+      "rightClick": "Context menu on anything",
+      "reload": "Reload the file from disk"
     },
     "tipsTitle": "Tips that save time",
     "info": {
@@ -599,5 +600,22 @@
     "previewTitle": "Preview",
     "previewText": "This is how text in panels and dialogs looks at this size.",
     "reset": "Back to 100%"
+  },
+  "disk": {
+    "reload": "Reload from disk",
+    "keepMine": "Keep my version",
+    "dismiss": "Dismiss",
+    "saveAgain": "Save again",
+    "changedBanner": "{name} was changed outside the app, and you have unsaved changes here.",
+    "goneBanner": "{name} no longer exists on disk (deleted or moved). Saving writes it again.",
+    "reloaded": "{name} changed on disk and was reloaded. Ctrl+Z brings back the previous version.",
+    "reloadedManual": "Reloaded {name} from disk",
+    "reloadInvalid": "{name} on disk is not a valid ERD file, so it was not loaded.",
+    "saveTitle": "{name} changed outside the app",
+    "saveMessage": "The file on disk is not the one you opened. Overwriting loses the outside change; loading the disk version loses your unsaved changes (undo brings them back).",
+    "loadDisk": "Load disk version",
+    "overwrite": "Overwrite",
+    "menuReload": "Reload from disk",
+    "noFile": "This board is not saved to a file yet."
   }
 }
