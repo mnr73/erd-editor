@@ -44,6 +44,19 @@ const cleanups = [];
 const titleBar = ref(null);
 const dragging = ref(false);
 
+/**
+ * Fields whose text is written straight into the document (table name, notes, inspector, ...).
+ * Ctrl+Z there must undo the document: the field's own undo would only make a new change and leave
+ * the real history untouched. Search, dialogs and the import text keep the browser's undo.
+ */
+function inDocumentField(el) {
+  const editable =
+    ["INPUT", "TEXTAREA"].includes(el?.tagName) || el?.isContentEditable;
+  return (
+    editable && !el.closest("[data-search], [role=dialog], [data-native-undo]")
+  );
+}
+
 /** App-wide file shortcuts. They work even while typing (they never insert text). */
 function onKeyDown(e) {
   if (e.key === "F1") {
@@ -62,7 +75,9 @@ function onKeyDown(e) {
     e.stopPropagation();
     fn();
   };
-  if (k === "k") run(() => titleBar.value?.focusSearch());
+  if ((k === "z" || k === "y") && inDocumentField(e.target))
+    run(() => (k === "y" || e.shiftKey ? doc.redo() : doc.undo()));
+  else if (k === "k") run(() => titleBar.value?.focusSearch());
   else if (k === "e" && !e.shiftKey)
     run(
       () =>
