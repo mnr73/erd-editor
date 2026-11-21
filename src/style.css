@@ -258,6 +258,16 @@ html[lang="fa"] body {
 }
 
 /*
+ * WebKitGTK (the Linux webview) resamples the whole scaled canvas with a bilinear filter, so every
+ * table turns soft, while a scrollable <textarea> is on screen (the note field of the Inspector, of a
+ * column, of a table). Giving the field its own paint boundary keeps the canvas layer out of that
+ * path. Measured on the real app at 216% zoom: soft with overflow:auto, sharp with contain:paint.
+ */
+textarea {
+    contain: paint;
+}
+
+/*
  * Focus ring: keyboard focus on real controls only. Must live in @layer base, otherwise this
  * unlayered rule beats Tailwind utilities (outline-none) and rings appear on popovers, menus
  * and anything focused by script (right-click, open popover, ...).
